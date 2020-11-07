@@ -19,7 +19,7 @@ function ui_send_log() {
     Common.send_log(
         function() { btn.button('reset'); },
         function() { window.location.href = "index.html"; },
-        ui_display_error
+        uiDisplayError
     );
 }
 

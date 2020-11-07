@@ -1,5 +1,5 @@
 <template>
-  <Menu v-bind:activeTab="currentPath" v-bind:onLogout="checkUserSession" v-bind:loggedIn="loggedIn" v-bind:email="email"/>
+  <Menu v-bind:activeTab="currentPath" v-bind:onLogout="checkUserSession" v-bind:loggedIn="loggedIn"/>
   <router-view v-bind:onLogin="checkUserSession" v-bind:onLogout="checkUserSession"/>
 </template>
 <script>
@@ -12,13 +12,9 @@ var $ = global.jQuery
 window.jQuery = window.$ = $
 
 const publicRoutes = [
-  '/register',
   '/activate',
-  '/forgot',
-  '/reset',
   '/error',
-  '/login',
-  ''
+  '/login'
 ]
 
 export default {
@@ -41,16 +37,20 @@ export default {
   },
   methods: {
     checkUserSession: function () {
-      axios.get('/api/user/get')
+      axios.get('/rest/activation_status')
         .then(response => {
-          this.email = response.data.email
+          if (response.activated) {
+            this.$router.push('/login')
+          }
+        })
+      axios.get('/rest/user')
+        .then(response => {
           this.loggedIn = true
           if (this.currentPath === '/login') {
             this.$router.push('/')
           }
         })
         .catch(_ => {
-          this.email = ''
           this.loggedIn = false
           if (!publicRoutes.includes(this.currentPath)) {
             console.log('redirect to login from ' + this.currentPath)
@@ -66,4 +66,6 @@ export default {
 </script>
 <style>
 @import '~bootstrap/dist/css/bootstrap.css';
+@import '~bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css';
+@import '~font-awesome/css/font-awesome.css';
 </style>

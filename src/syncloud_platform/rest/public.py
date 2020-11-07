@@ -31,10 +31,7 @@ login_manager.init_app(app)
 
 @login_manager.unauthorized_handler
 def _callback():
-    if request.is_xhr:
-        return 'Unauthorised', 401
-    else:
-        return redirect('/login.html')
+    return 'Unauthorised', 401
 
 
 @app.route("/rest/id", methods=["GET"])
@@ -98,7 +95,7 @@ def load_user(email):
     return FlaskUser(User(email))
 
 
-@app.route("/rest/login", methods=["GET", "POST"])
+@app.route("/rest/login", methods=["POST"])
 @redirect_if_not_activated
 def login():
 
