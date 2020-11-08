@@ -28,8 +28,8 @@ steps:
   commands:
   - cd backend
   - go test ./... -cover
-  - CGO_ENABLED=0 go build -o build/bin/backend cmd/backend/main.go
-  - CGO_ENABLED=0 go build -o build/bin/cli cmd/cli/main.go
+  - CGO_ENABLED=0 go build -o build/platform/bin/backend cmd/backend/main.go
+  - CGO_ENABLED=0 go build -o build/platform/bin/cli cmd/cli/main.go
 
 - name: package
   image: syncloud/build-deps-arm
@@ -137,8 +137,8 @@ steps:
   commands:
   - cd backend
   - go test ./... -cover
-  - CGO_ENABLED=0 go build -o build/bin/backend cmd/backend/main.go
-  - CGO_ENABLED=0 go build -o build/bin/cli cmd/cli/main.go
+  - CGO_ENABLED=0 go build -o build/platform/bin/backend cmd/backend/main.go
+  - CGO_ENABLED=0 go build -o build/platform/bin/cli cmd/cli/main.go
 
 - name: package
   image: syncloud/build-deps-amd64
@@ -257,8 +257,8 @@ steps:
   commands:
   - cd backend
   - go test ./... -cover
-  - CGO_ENABLED=0 go build -o build/bin/backend cmd/backend/main.go
-  - CGO_ENABLED=0 go build -o build/bin/cli cmd/cli/main.go
+  - CGO_ENABLED=0 go build -o build/platform/bin/backend cmd/backend/main.go
+  - CGO_ENABLED=0 go build -o build/platform/bin/cli cmd/cli/main.go
 
 - name: package
   image: syncloud/build-deps-arm
@@ -366,8 +366,8 @@ steps:
   commands:
   - cd backend
   - go test ./... -cover
-  - CGO_ENABLED=0 go build -o build/bin/backend cmd/backend/main.go
-  - CGO_ENABLED=0 go build -o build/bin/cli cmd/cli/main.go
+  - CGO_ENABLED=0 go build -o build/platform/bin/backend cmd/backend/main.go
+  - CGO_ENABLED=0 go build -o build/platform/bin/cli cmd/cli/main.go
 
 - name: package
   image: syncloud/build-deps-amd64
