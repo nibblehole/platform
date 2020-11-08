@@ -36,8 +36,8 @@ local build(arch, distro) = {
             commands: [
                 "cd backend",
                 "go test ./... -cover",
-                "CGO_ENABLED=0 go build -o build/platform/bin/backend cmd/backend/main.go",
-                "CGO_ENABLED=0 go build -o build/platform/bin/cli cmd/cli/main.go"
+                "CGO_ENABLED=0 go build -o ../build/platform/bin/backend cmd/backend/main.go",
+                "CGO_ENABLED=0 go build -o ../build/platform/bin/cli cmd/cli/main.go"
             ]
         },
         {
