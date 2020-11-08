@@ -13,6 +13,17 @@ steps:
   - echo $(date +%y%m%d)$DRONE_BUILD_NUMBER > version
   - echo arm-$DRONE_BRANCH > domain
 
+- name: build web
+  image: node
+  commands:
+  - mkdir -p build/platform
+  - cd www
+  - npm install --unsafe-perm=true
+  - npm run test:unit
+  - npm run lint
+  - npm run build
+  - cp -r dist ../build/platform/www
+
 - name: build
   image: syncloud/build-deps-arm
   commands:
@@ -110,6 +121,17 @@ steps:
   commands:
   - echo $(date +%y%m%d)$DRONE_BUILD_NUMBER > version
   - echo amd64-$DRONE_BRANCH > domain
+
+- name: build web
+  image: node
+  commands:
+  - mkdir -p build/platform
+  - cd www
+  - npm install --unsafe-perm=true
+  - npm run test:unit
+  - npm run lint
+  - npm run build
+  - cp -r dist ../build/platform/www
 
 - name: build
   image: syncloud/build-deps-amd64
@@ -220,6 +242,17 @@ steps:
   - echo $(date +%y%m%d)$DRONE_BUILD_NUMBER > version
   - echo arm-$DRONE_BRANCH > domain
 
+- name: build web
+  image: node
+  commands:
+  - mkdir -p build/platform
+  - cd www
+  - npm install --unsafe-perm=true
+  - npm run test:unit
+  - npm run lint
+  - npm run build
+  - cp -r dist ../build/platform/www
+
 - name: build
   image: syncloud/build-deps-arm
   commands:
@@ -317,6 +350,17 @@ steps:
   commands:
   - echo $(date +%y%m%d)$DRONE_BUILD_NUMBER > version
   - echo amd64-$DRONE_BRANCH > domain
+
+- name: build web
+  image: node
+  commands:
+  - mkdir -p build/platform
+  - cd www
+  - npm install --unsafe-perm=true
+  - npm run test:unit
+  - npm run lint
+  - npm run build
+  - cp -r dist ../build/platform/www
 
 - name: build
   image: syncloud/build-deps-amd64
