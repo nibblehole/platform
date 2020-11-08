@@ -71,7 +71,7 @@ tar xzf node.tar.gz
 mv node-v${NODE_VERSION}-linux-${NODE_ARCH} node
 
 cd ${DIR}/www
-npm install
+npm install --unsafe-perm=true
 npm run build
 
 cd ${DIR}/backend
