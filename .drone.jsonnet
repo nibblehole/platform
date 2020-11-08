@@ -17,26 +17,26 @@ local build(arch, distro) = {
                 "echo " + arch + "-$DRONE_BRANCH > domain"
             ]
         },
-	{
-	    name: "build web",
-	    image: "node",
-	    commands: [
+        {
+            name: "build web",
+            image: "node",
+            commands: [
                 "mkdir -p build/platform",
-		"cd www",
-		"npm install --unsafe-perm=true",
-		#"npm run test:unit",
-		"npm run lint",
-		"npm run build",
+                "cd www",
+                "npm install --unsafe-perm=true",
+                #"npm run test:unit",
+                "npm run lint",
+                "npm run build",
                 "cp -r dist ../build/platform/www"
-	    ]
-	},
+            ]
+        },
         {
             name: "build backend",
             image: "golang:1.14",
             commands: [
                 "cd backend",
                 "go test ./... -cover",
-		"CGO_ENABLED=0 go build -o build/bin/backend cmd/backend/main.go",
+                "CGO_ENABLED=0 go build -o build/bin/backend cmd/backend/main.go",
                 "CGO_ENABLED=0 go build -o build/bin/cli cmd/cli/main.go"
             ]
         },

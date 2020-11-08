@@ -18,7 +18,7 @@ PYTHON_DIR=${BUILD_DIR}/python
 export PATH=${PYTHON_DIR}/bin:$PATH
 SNAP_DIR=${DIR}/build/snap
 
-cp -r ${DIR}/bin ${BUILD_DIR}
+cp -r ${DIR}/bin/* ${BUILD_DIR}/bin
 
 wget --progress=dot:giga https://github.com/syncloud/3rdparty/releases/download/1/nginx-${ARCH}.tar.gz
 tar xf nginx-${ARCH}.tar.gz
