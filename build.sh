@@ -11,17 +11,14 @@ NAME=$1
 ARCH=$(uname -m)
 VERSION=$2
 GO_VERSION=1.11.5
-NODE_VERSION=10.15.1
 
 cd ${DIR}
 
 BUILD_DIR=${DIR}/build/${NAME}
 GOROOT=${DIR}/go
 PYTHON_DIR=${BUILD_DIR}/python
-export PATH=${PYTHON_DIR}/bin:$GOROOT/bin:${DIR}/node/bin:$PATH
+export PATH=${PYTHON_DIR}/bin:$GOROOT/bin:$PATH
 SNAP_DIR=${DIR}/build/snap
-rm -rf build
-mkdir -p ${BUILD_DIR}
 
 cp -r ${DIR}/bin ${BUILD_DIR}
 
@@ -54,10 +51,8 @@ cp --remove-destination /usr/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/libja
 ${PYTHON_DIR}/bin/uwsgi --help
 
 GO_ARCH=armv6l
-NODE_ARCH=armv6l
 if [[ ${ARCH} == "x86_64" ]]; then
     GO_ARCH=amd64
-    NODE_ARCH=x64
 fi
 
 wget https://dl.google.com/go/go${GO_VERSION}.linux-${GO_ARCH}.tar.gz --progress dot:giga
@@ -65,14 +60,6 @@ tar xf go${GO_VERSION}.linux-${GO_ARCH}.tar.gz
 
 go version
 
-wget https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-${NODE_ARCH}.tar.gz \
-    --progress dot:giga -O node.tar.gz
-tar xzf node.tar.gz
-mv node-v${NODE_VERSION}-linux-${NODE_ARCH} node
-
-cd ${DIR}/www
-npm install --unsafe-perm=true
-npm run build
 
 cd ${DIR}/backend
 go test ./... -cover
@@ -86,7 +73,6 @@ ${PYTHON_DIR}/bin/python setup.py install
 cd ..
 
 cp -r ${DIR}/config ${BUILD_DIR}/config.templates
-cp -r ${DIR}/www/dist ${BUILD_DIR}/www
 
 mkdir ${BUILD_DIR}/META
 echo ${NAME} >> ${BUILD_DIR}/META/app

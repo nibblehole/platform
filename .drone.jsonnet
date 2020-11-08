@@ -17,6 +17,19 @@ local build(arch, distro) = {
                 "echo " + arch + "-$DRONE_BRANCH > domain"
             ]
         },
+	{
+	    name: "build web",
+	    image: "node",
+	    commands: [
+                "mkdir -p build/platform",
+		"cd www",
+		"npm install --unsafe-perm=true",
+		"npm run test:unit",
+		"npm run lint",
+		"npm run build",
+                "cp -r dist ../build/platform/www"
+	    ]
+	},
         {
             name: "build",
             image: "syncloud/build-deps-" + arch,
