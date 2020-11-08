@@ -10,14 +10,12 @@ fi
 NAME=$1
 ARCH=$(uname -m)
 VERSION=$2
-GO_VERSION=1.11.5
 
 cd ${DIR}
 
 BUILD_DIR=${DIR}/build/${NAME}
-GOROOT=${DIR}/go
 PYTHON_DIR=${BUILD_DIR}/python
-export PATH=${PYTHON_DIR}/bin:$GOROOT/bin:$PATH
+export PATH=${PYTHON_DIR}/bin:$PATH
 SNAP_DIR=${DIR}/build/snap
 
 cp -r ${DIR}/bin ${BUILD_DIR}
@@ -49,22 +47,6 @@ cp --remove-destination /lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/libz.so* 
 cp --remove-destination /lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/libuuid.so* ${PYTHON_DIR}/lib
 cp --remove-destination /usr/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/libjansson.so* ${PYTHON_DIR}/lib
 ${PYTHON_DIR}/bin/uwsgi --help
-
-GO_ARCH=armv6l
-if [[ ${ARCH} == "x86_64" ]]; then
-    GO_ARCH=amd64
-fi
-
-wget https://dl.google.com/go/go${GO_VERSION}.linux-${GO_ARCH}.tar.gz --progress dot:giga
-tar xf go${GO_VERSION}.linux-${GO_ARCH}.tar.gz
-
-go version
-
-
-cd ${DIR}/backend
-go test ./... -cover
-CGO_ENABLED=0 go build -o ${BUILD_DIR}/bin/backend cmd/backend/main.go
-CGO_ENABLED=0 go build -o ${BUILD_DIR}/bin/cli cmd/cli/main.go
 
 cd ${DIR}/src
 rm -f version

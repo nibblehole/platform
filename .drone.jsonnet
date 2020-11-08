@@ -31,7 +31,17 @@ local build(arch, distro) = {
 	    ]
 	},
         {
-            name: "build",
+            name: "build backend",
+            image: "golang:1.14",
+            commands: [
+                "cd backend",
+                "go test ./... -cover",
+		"CGO_ENABLED=0 go build -o build/bin/backend cmd/backend/main.go",
+                "CGO_ENABLED=0 go build -o build/bin/cli cmd/cli/main.go"
+            ]
+        },
+        {
+            name: "package",
             image: "syncloud/build-deps-" + arch,
             commands: [
                 "VERSION=$(cat version)",
@@ -44,15 +54,6 @@ local build(arch, distro) = {
             image: "syncloud/build-deps-" + arch,
             commands: [
                 "./unit-test.sh",
-            ]
-        },
-        {
-            name: "test-js",
-            image: "syncloud/build-deps-" + arch,
-            commands: [
-              "export PATH=$(pwd)/node/bin:$PATH",
-              "cd www",
-              "npm run test"
             ]
         },
         {
