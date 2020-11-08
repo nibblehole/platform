@@ -23,7 +23,15 @@ steps:
   - npm run build
   - cp -r dist ../build/platform/www
 
-- name: build
+- name: build backend
+  image: golang:1.14
+  commands:
+  - cd backend
+  - go test ./... -cover
+  - CGO_ENABLED=0 go build -o build/bin/backend cmd/backend/main.go
+  - CGO_ENABLED=0 go build -o build/bin/cli cmd/cli/main.go
+
+- name: package
   image: syncloud/build-deps-arm
   commands:
   - VERSION=$(cat version)
@@ -34,13 +42,6 @@ steps:
   image: syncloud/build-deps-arm
   commands:
   - ./unit-test.sh
-
-- name: test-js
-  image: syncloud/build-deps-arm
-  commands:
-  - export PATH=$(pwd)/node/bin:$PATH
-  - cd www
-  - npm run test
 
 - name: test-intergation
   image: syncloud/build-deps-arm
@@ -131,7 +132,15 @@ steps:
   - npm run build
   - cp -r dist ../build/platform/www
 
-- name: build
+- name: build backend
+  image: golang:1.14
+  commands:
+  - cd backend
+  - go test ./... -cover
+  - CGO_ENABLED=0 go build -o build/bin/backend cmd/backend/main.go
+  - CGO_ENABLED=0 go build -o build/bin/cli cmd/cli/main.go
+
+- name: package
   image: syncloud/build-deps-amd64
   commands:
   - VERSION=$(cat version)
@@ -142,13 +151,6 @@ steps:
   image: syncloud/build-deps-amd64
   commands:
   - ./unit-test.sh
-
-- name: test-js
-  image: syncloud/build-deps-amd64
-  commands:
-  - export PATH=$(pwd)/node/bin:$PATH
-  - cd www
-  - npm run test
 
 - name: test-intergation
   image: syncloud/build-deps-amd64
@@ -250,7 +252,15 @@ steps:
   - npm run build
   - cp -r dist ../build/platform/www
 
-- name: build
+- name: build backend
+  image: golang:1.14
+  commands:
+  - cd backend
+  - go test ./... -cover
+  - CGO_ENABLED=0 go build -o build/bin/backend cmd/backend/main.go
+  - CGO_ENABLED=0 go build -o build/bin/cli cmd/cli/main.go
+
+- name: package
   image: syncloud/build-deps-arm
   commands:
   - VERSION=$(cat version)
@@ -261,13 +271,6 @@ steps:
   image: syncloud/build-deps-arm
   commands:
   - ./unit-test.sh
-
-- name: test-js
-  image: syncloud/build-deps-arm
-  commands:
-  - export PATH=$(pwd)/node/bin:$PATH
-  - cd www
-  - npm run test
 
 - name: test-intergation
   image: syncloud/build-deps-arm
@@ -358,7 +361,15 @@ steps:
   - npm run build
   - cp -r dist ../build/platform/www
 
-- name: build
+- name: build backend
+  image: golang:1.14
+  commands:
+  - cd backend
+  - go test ./... -cover
+  - CGO_ENABLED=0 go build -o build/bin/backend cmd/backend/main.go
+  - CGO_ENABLED=0 go build -o build/bin/cli cmd/cli/main.go
+
+- name: package
   image: syncloud/build-deps-amd64
   commands:
   - VERSION=$(cat version)
@@ -369,13 +380,6 @@ steps:
   image: syncloud/build-deps-amd64
   commands:
   - ./unit-test.sh
-
-- name: test-js
-  image: syncloud/build-deps-amd64
-  commands:
-  - export PATH=$(pwd)/node/bin:$PATH
-  - cd www
-  - npm run test
 
 - name: test-intergation
   image: syncloud/build-deps-amd64
