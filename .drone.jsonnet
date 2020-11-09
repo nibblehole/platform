@@ -41,6 +41,13 @@ local build(arch, distro) = {
             ]
         },
         {
+            name: "build uwsgi",
+            image: "syncloud/build-deps-" + arch,
+            commands: [
+                "./build-uwsgi.sh"
+            ]
+        },
+        {
             name: "package",
             image: "syncloud/build-deps-" + arch,
             commands: [
