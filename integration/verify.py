@@ -190,14 +190,8 @@ def test_activation_status_true(device_host):
     assert json.loads(response.text)["activated"], response.text
 
     
-def test_public_web_unauthorized_browser_redirect(device_host):
+def test_unauthorized(device_host):
     response = requests.get('https://{0}/rest/user'.format(device_host), allow_redirects=False, verify=False)
-    assert response.status_code == 302
-
-
-def test_public_web_unauthorized_ajax_not_redirect(device_host):
-    response = requests.get('https://{0}/rest/user'.format(device_host),
-                            allow_redirects=False, verify=False, headers={'X-Requested-With': 'XMLHttpRequest'})
     assert response.status_code == 401
 
 
