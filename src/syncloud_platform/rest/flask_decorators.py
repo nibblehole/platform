@@ -19,7 +19,7 @@ def redirect_if_not_activated(f):
         if _is_activated():
             return make_response(f(*args, **kwargs))
         else:
-            return redirect('/activate.html')
+            return redirect('/activate')
 
     return update_wrapper(new_func, f)
 
