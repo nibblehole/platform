@@ -7,9 +7,9 @@ if [[ -z "$1" ]]; then
     exit 1
 fi
 
-NAME=$1
+NAME=platform
 ARCH=$(uname -m)
-VERSION=$2
+VERSION=$1
 
 cd ${DIR}
 

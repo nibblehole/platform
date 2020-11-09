@@ -52,7 +52,7 @@ local build(arch, distro) = {
             image: "syncloud/build-deps-" + arch,
             commands: [
                 "VERSION=$(cat version)",
-                "./build.sh " + name + " $VERSION",
+                "./build.sh $VERSION",
                 "./integration/testapp/build.sh "
             ]
         },

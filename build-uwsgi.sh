@@ -14,10 +14,8 @@ tar xf python3-${ARCH}.tar.gz
 mv python3 ${BUILD_DIR}/python
 
 cd ${DIR}
-#export UWSGI_INCLUDES=${PYTHON_DIR}/include,${PYTHON_DIR}/include/openssl
-export CFLAGS=-I${PYTHON_DIR}/include/openssl
 export UWSGI_PROFILE_OVERRIDE=ssl=false
-export CPPFLAGS="-I${PYTHON_DIR}/include -I${PYTHON_DIR}/include/openssl"
+export CPPFLAGS=-I${PYTHON_DIR}/include
 export LDFLAGS=-L${PYTHON_DIR}/lib
 export LD_LIBRARY_PATH=${PYTHON_DIR}/lib
 

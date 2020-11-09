@@ -40,7 +40,7 @@ steps:
   image: syncloud/build-deps-arm
   commands:
   - VERSION=$(cat version)
-  - ./build.sh platform $VERSION
+  - ./build.sh $VERSION
   - "./integration/testapp/build.sh "
 
 - name: test-unit
@@ -154,7 +154,7 @@ steps:
   image: syncloud/build-deps-amd64
   commands:
   - VERSION=$(cat version)
-  - ./build.sh platform $VERSION
+  - ./build.sh $VERSION
   - "./integration/testapp/build.sh "
 
 - name: test-unit
@@ -279,7 +279,7 @@ steps:
   image: syncloud/build-deps-arm
   commands:
   - VERSION=$(cat version)
-  - ./build.sh platform $VERSION
+  - ./build.sh $VERSION
   - "./integration/testapp/build.sh "
 
 - name: test-unit
@@ -393,7 +393,7 @@ steps:
   image: syncloud/build-deps-amd64
   commands:
   - VERSION=$(cat version)
-  - ./build.sh platform $VERSION
+  - ./build.sh $VERSION
   - "./integration/testapp/build.sh "
 
 - name: test-unit
