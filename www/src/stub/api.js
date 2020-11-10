@@ -25,7 +25,7 @@ const app_info = {
       required: true,
       ui: false,
       url: "http://wordpress.odroid-c2.syncloud.it",
-      icon: "appsimages/wordpress-128.png"
+      icon: "/images/wordpress-128.png"
     },
     current_version: "190411412",
     installed_version: "190211412"
@@ -64,6 +64,15 @@ const mock = function (app, server, compiler) {
   })
   app.get('/rest/app', function (req, res) {
     res.json(app_info)
+  })
+  app.get('/rest/upgrade', function (req, res) {
+    res.json({success: true})
+  })
+  app.get('/rest/remove', function (req, res) {
+    res.json({success: true})
+  })
+  app.get('/rest/settings/installer_status', function (req, res) {
+    res.json({success: true, is_running: false})
   })
 }
 

@@ -7,7 +7,7 @@
           <div class="row-no-gutters appcenterlist" id="block_apps">
             <div v-if="apps.length === 0">
               <h2 class="bh2">You don't have any installed apps yet. You can install one from App Center</h2>
-              <router-link :to="/appcenter" class="appcenterh">App Center</router-link>
+              <router-link to="/appcenter" class="appcenterh">App Center</router-link>
             </div>
             <div v-for="(app, index) in apps" :key="index">
               <div v-if="app.id !== 'store' && app.id !== 'settings'">
@@ -31,12 +31,12 @@ import $ from 'jquery'
 
 export default {
   name: 'Apps',
-  data() {
+  data () {
     return {
       apps: undefined
     }
   },
-  mounted() {
+  mounted () {
     this.apps = []
     $.get('/rest/installed_apps')
       .done(data => {

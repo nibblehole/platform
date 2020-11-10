@@ -2,10 +2,10 @@
   <div class="wrapper">
     <div class="content">
       <div class="block1 wd12" id="block_app">
-        <div class="appblock">
+        <div class="appblock" v-if="info !== undefined">
           <div>
             <div>
-              <img src="<%= info.app.icon %>" class="appimg" alt="">
+              <img :src="info.app.icon" class="appimg" alt="">
             </div>
             <div class="appinfo">
               <h1>{{ info.app.name }}</h1>
@@ -20,29 +20,31 @@
           </div>
           <div>
             <div class="buttonblock">
-              <div v-if="info.installed_version !== null">
-                <button id="btn_open" :data-url="info.app.url" class="buttonblue bwidth smbutton">Open</button>
-              </div>
-              <div v-if="info.installed_version === null">
-                <button id="btn_install" class="buttonblue bwidth smbutton"
-                        data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Installing...">Install
+                <button id="btn_open" :data-url="info.app.url" class="buttonblue bwidth smbutton" @click="open"
+                        v-if="info.installed_version !== null">
+                  Open
                 </button>
-              </div>
-              <div v-if="info.installed_version !== null && info.installed_version !== info.current_version">
-              <button id="btn_upgrade" class="buttongreen bwidth smbutton"
-                      data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Upgrading...">Upgrade
-              </button>
-              </div>
-              <div v-if="info.installed_version !== null">
-              <button id="btn_remove" class="buttongrey bwidth smbutton"
-                      data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Removing...">Remove
-              </button>
-              </div>
-              <div v-if="info.installed_version !== null">
-              <button id="btn_backup" class="buttonblue bwidth smbutton"
-                      data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Creating backup...">Backup
-              </button>
-              </div>
+                <button id="btn_install" class="buttonblue bwidth smbutton"
+                        data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Installing..." @click="install"
+                        v-if="info.installed_version === null">
+                  Install
+                </button>
+                <button id="btn_upgrade" class="buttongreen bwidth smbutton"
+                        data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Upgrading..." @click="upgrade"
+                        v-if="info.installed_version !== null && info.installed_version !== info.current_version">
+                  Upgrade
+                </button>
+                <button id="btn_remove" class="buttongrey bwidth smbutton"
+                        data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Removing..."
+                        v-if="info.installed_version !== null">
+                  Remove
+                </button>
+                <button id="btn_backup" class="buttonblue bwidth smbutton"
+                        data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Creating backup..."
+                        @click="$('#backup_confirmation').modal('show')"
+                        v-if="info.installed_version !== null">
+                  Backup
+                </button>
             </div>
             <div class="btext">{{ info.app.description }}</div>
           </div>
@@ -61,13 +63,9 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
             aria-hidden="true">&times;</span>
           </button>
-          <h4 class="modal-title"><span id="confirm_caption"></span></h4>
+          <h4 class="modal-title"><span id="confirm_caption">{{ action }}</span></h4>
         </div>
         <div class="modal-body">
-          <input type="hidden" id="app_id" value=""/>
-          <input type="hidden" id="app_action" value=""/>
-          <input type="hidden" id="app_action_url" value=""/>
-          <input type="hidden" id="app_action_status_url" value=""/>
           <div class="bodymod">
             <div class="btext">
               Are you sure?
@@ -78,7 +76,7 @@
             <button type="button" class="btn buttonlight bwidth smbutton" data-dismiss="modal">Close
             </button>
             <button type="button" id="btn_confirm" class="btn buttonlight bwidth smbutton"
-                    data-dismiss="modal">OK
+                    data-dismiss="modal" @click="confirm">OK
             </button>
           </div>
         </div>
@@ -109,7 +107,7 @@
             <button type="button" class="btn buttonlight bwidth smbutton" data-dismiss="modal">Close
             </button>
             <button type="button" id="btn_backup_confirm" class="btn buttonlight bwidth smbutton"
-                    data-dismiss="modal">OK
+                    data-dismiss="modal" @click="backup">OK
             </button>
           </div>
         </div>
@@ -121,121 +119,93 @@
 <script>
 import * as UiCommon from '../js/ui/common.js'
 import $ from 'jquery'
-import Error from "@/components/Error";
-// import URI from "urijs";
-
-import 'bootstrap';
-import 'bootstrap-switch';
-// import './ui/menu.js'
-
+import Error from '@/components/Error'
+import 'bootstrap'
+import 'bootstrap-switch'
 import * as Common from '../js/common.js'
-
-function loadApp(app_id, on_complete, on_error) {
-  $.get('/rest/app', {app_id: app_id}).done(on_complete).fail(on_error);
-};
-
-export function run_app_action(url, app_id, status_url, status_predicate, on_complete, on_error) {
-  $.get(url, {app_id: app_id})
-    .always((data) => {
-      Common.checkForServiceError(data, () => {
-        Common.runAfterJobIsComplete(
-          setTimeout,
-          on_complete,
-          on_error,
-          status_url,
-          status_predicate);
-      }, on_error)
-    })
-    .fail(on_error);
-}
-
-function register_btn_open_click() {
-  $("#btn_open").off('click').on('click', function () {
-    var btn = $(this);
-    var app_url = btn.data('url');
-    window.location.href = app_url;
-  });
-}
-
-function register_btn_action_click(name, url) {
-  const action = name.toLowerCase();
-
-  $("#btn_" + action).off('click').on('click', function () {
-    $('#app_action').val(action);
-    $('#app_action_url').val(url);
-    $('#confirm_caption').html(name);
-    $('#app_action_confirmation').modal('show');
-  });
-}
-
-function uiDisplayApp(data) {
-  // $("#block_app").html(_.template(AppTemplate)(data));
-  this.info = data
-  const app_id = data.info.app.id;
-  register_btn_open_click();
-  register_btn_action_click('Install', '/rest/install');
-  register_btn_action_click('Upgrade', '/rest/upgrade');
-  register_btn_action_click('Remove', '/rest/remove');
-
-  $("#btn_backup").off('click').on('click', function () {
-    $('#backup_confirmation').modal('show');
-  });
-
-  $("#btn_backup_confirm").off('click').on('click', function () {
-    var btn = $("#btn_backup");
-    btn.button('loading');
-
-    $.get('/rest/backup/create', {app: app_id})
-      .always((data) => {
-        Common.checkForServiceError(data, () => {
-          Common.runAfterJobIsComplete(
-            setTimeout,
-            () => {
-              btn.button('reset');
-              ui_load_app();
-            },
-            UiCommon.ui_display_error,
-            Common.JOB_STATUS_URL,
-            Common.JOB_STATUS_PREDICATE);
-        }, UiCommon.ui_display_error)
-      })
-      .fail(UiCommon.ui_display_error);
-  });
-
-  $("#btn_confirm").off('click').on('click', function () {
-    var btn = $("#btn_" + $('#app_action').val());
-    btn.button('loading');
-
-    run_app_action(
-      $('#app_action_url').val(),
-      app_id,
-      Common.INSTALLER_STATUS_URL,
-      Common.DEFAULT_STATUS_PREDICATE,
-      () => {
-        btn.button('reset');
-        ui_load_app();
-      },
-      UiCommon.ui_display_error);
-  });
-}
-
-function ui_load_app() {
-  const app_id = this.$route.query.id
-  loadApp(app_id, uiDisplayApp, UiCommon.ui_display_error);
-}
 
 export default {
   name: 'App',
-  data() {
+  data () {
     return {
-      info: undefined
+      info: undefined,
+      appId: undefined,
+      action: ''
     }
   },
   components: {
     Error
   },
-  mounted() {
-    ui_load_app();
+  mounted () {
+    this.appId = this.$route.query.id
+    this.uiLoadApp()
+  },
+  methods: {
+    uiLoadApp: function () {
+      $.get('/rest/app', { app_id: this.appId })
+        .done(data => {
+          this.info = data.info
+        })
+        .fail(UiCommon.uiDisplayError)
+    },
+    open: function (event) {
+      window.location.href = this.info.app.url
+    },
+    install: function (event) {
+      this.action = 'Install'
+      this.actionUrl = '/rest/install'
+      $('#app_action_confirmation').modal('show')
+    },
+    upgrade: function (event) {
+      this.action = 'Upgrade'
+      this.actionUrl = '/rest/upgrade'
+      $('#app_action_confirmation').modal('show')
+    },
+    remove: function (event) {
+      this.action = 'Remove'
+      this.actionUrl = '/rest/remove'
+      $('#app_action_confirmation').modal('show')
+    },
+    backup: function () {
+      const btn = $('#btn_backup')
+      btn.button('loading')
+
+      $.get('/rest/backup/create', { app: this.appId })
+        .always((data) => {
+          Common.checkForServiceError(data, () => {
+            Common.runAfterJobIsComplete(
+              setTimeout,
+              () => {
+                btn.button('reset')
+                this.uiLoadApp()
+              },
+              UiCommon.uiDisplayError,
+              Common.JOB_STATUS_URL,
+              Common.JOB_STATUS_PREDICATE)
+          }, UiCommon.uiDisplayError)
+        })
+        .fail(UiCommon.uiDisplayError)
+    },
+    confirm: function () {
+      const btn = $('#btn_' + this.action.toLowerCase())
+      btn.button('loading')
+
+      $.get(this.actionUrl, { app_id: this.appId })
+        .always((data) => {
+          Common.checkForServiceError(data, () => {
+            Common.runAfterJobIsComplete(
+              setTimeout,
+              () => {
+                btn.button('reset')
+                this.uiLoadApp()
+              },
+              UiCommon.uiDisplayError,
+              Common.INSTALLER_STATUS_URL,
+              Common.DEFAULT_STATUS_PREDICATE)
+          }, UiCommon.uiDisplayError)
+        })
+        .fail(UiCommon.uiDisplayError)
+    }
   }
 }
 </script>

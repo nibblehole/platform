@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
-import App from './App.vue'
+import VueApp from './VueApp.vue'
 import router from './router'
 import 'bootstrap'
 import 'bootstrap-switch'
 
-createApp(App).use(router).mount('#app')
+createApp(VueApp).use(router).mount('#app')
