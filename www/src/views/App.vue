@@ -20,28 +20,32 @@
           </div>
           <div>
             <div class="buttonblock">
-                <button id="btn_open" :data-url="info.app.url" class="buttonblue bwidth smbutton" @click="open"
+                <button id="btn_open" :data-url="info.app.url" class="buttonblue bwidth smbutton"
+                        @click="open"
                         v-if="info.installed_version !== null">
                   Open
                 </button>
                 <button id="btn_install" class="buttonblue bwidth smbutton"
-                        data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Installing..." @click="install"
+                        data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Installing..."
+                        @click="install"
                         v-if="info.installed_version === null">
                   Install
                 </button>
                 <button id="btn_upgrade" class="buttongreen bwidth smbutton"
-                        data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Upgrading..." @click="upgrade"
+                        data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Upgrading..."
+                        @click="upgrade"
                         v-if="info.installed_version !== null && info.installed_version !== info.current_version">
                   Upgrade
                 </button>
                 <button id="btn_remove" class="buttongrey bwidth smbutton"
                         data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Removing..."
+                        @click="remove"
                         v-if="info.installed_version !== null">
                   Remove
                 </button>
                 <button id="btn_backup" class="buttonblue bwidth smbutton"
                         data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Creating backup..."
-                        @click="$('#backup_confirmation').modal('show')"
+                        @click="backupConfirm"
                         v-if="info.installed_version !== null">
                   Backup
                 </button>
@@ -138,10 +142,10 @@ export default {
   },
   mounted () {
     this.appId = this.$route.query.id
-    this.uiLoadApp()
+    this.loadApp()
   },
   methods: {
-    uiLoadApp: function () {
+    loadApp: function () {
       $.get('/rest/app', { app_id: this.appId })
         .done(data => {
           this.info = data.info
@@ -166,6 +170,9 @@ export default {
       this.actionUrl = '/rest/remove'
       $('#app_action_confirmation').modal('show')
     },
+    backupConfirm: function () {
+      $('#backup_confirmation').modal('show')
+    },
     backup: function () {
       const btn = $('#btn_backup')
       btn.button('loading')
@@ -177,7 +184,7 @@ export default {
               setTimeout,
               () => {
                 btn.button('reset')
-                this.uiLoadApp()
+                this.loadApp()
               },
               UiCommon.uiDisplayError,
               Common.JOB_STATUS_URL,
@@ -197,7 +204,7 @@ export default {
               setTimeout,
               () => {
                 btn.button('reset')
-                this.uiLoadApp()
+                this.loadApp()
               },
               UiCommon.uiDisplayError,
               Common.INSTALLER_STATUS_URL,

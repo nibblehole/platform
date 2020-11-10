@@ -5,9 +5,9 @@
         <header class="wd12">
           <div class="logo">Syncloud</div>
           <div class="menulinks" v-if="loggedIn">
-            <a href="index.html" class="apps hlink">Apps</a>
-            <a href="appcenter.html" class="appcenter hlink">App Center</a>
-            <a href="settings.html" class="settings hlink active">Settings</a>
+            <router-link to="/" class="apps hlink">Apps</router-link>
+            <router-link to="/appcenter" class="appcenter hlink">App Center</router-link>
+            <router-link to="/settings" class="settings hlink active">Settings</router-link>
           </div>
           <div class="menuoff" v-if="loggedIn">
             <a href="#" id="btn_logout_large" class="hlink">
@@ -31,9 +31,9 @@
           </div>
         </header>
         <div class="navi">
-          <a href="index.html" v-if="loggedIn">Apps</a>
-          <a href="appcenter.html" v-if="loggedIn">App Center</a>
-          <a href="settings.html" v-if="loggedIn">Settings</a>
+          <router-link to="/" v-if="loggedIn">Apps</router-link>
+          <router-link to="/appcenter" v-if="loggedIn">App Center</router-link>
+          <router-link to="/settings" v-if="loggedIn">Settings</router-link>
           <div class="menucolor2">
             <a href="#" id="btn_logout_small" v-if="loggedIn" @click="logout">Log out</a>
             <a href="#" id="btn_restart_small" v-if="loggedIn">Restart</a>
