@@ -10,8 +10,8 @@
           </div>
           <div v-for="(app, index) in apps" :key="index">
             <div v-if="app.id !== 'store' && app.id !== 'settings'">
-              <a href="app.html?app_id={{ app.id }}" class="colapp app">
-                <img src="{{ app.icon }}" class="appimg">
+              <a :href="'app.html?app_id=' + app.id" class="colapp app">
+                <img :src="app.icon" class="appimg">
                 <div class="appname"><span class="withline">{{ app.name }}</span></div>
                 <div class="appdesc"></div>
               </a>
@@ -32,7 +32,8 @@ export default {
   name: 'Apps',
   data () {
     return {
-      apps: Array
+      apps: [],
+      publicPath: process.env.BASE_URL
     }
   },
   mounted () {

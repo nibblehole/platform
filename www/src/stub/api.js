@@ -6,6 +6,17 @@ let state = {
   }
 }
 
+const apps_data = {
+  "apps": [
+    {
+      "id": "wordpress",
+      "name": "WordPress",
+      "icon": "/images/wordpress-128.png",
+      "url": "http://wordpress.odroid-c2.syncloud.it"
+    }
+  ]
+};
+
 var express = require('express')
 var bodyparser = require('body-parser')
 const mock = function (app, server, compiler) {
@@ -34,7 +45,7 @@ const mock = function (app, server, compiler) {
     res.json({activated: true})
   })
   app.get('/rest/installed_apps', function (req, res) {
-    res.json({apps: []})
+    res.json(apps_data)
   })
 }
 

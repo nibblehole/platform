@@ -7,8 +7,8 @@
         <h1>Log in</h1>
         <div class="formblock">
           <form id="form-login" @submit="login">
-            <input placeholder="Login" class="nameinput" id="name" type="text" v-model="username">
-            <input placeholder="Password" class="passinput" id="password" type="password" v-model="password">
+            <input placeholder="Login" class="nameinput" id="name" type="text" required="" v-model="username">
+            <input placeholder="Password" class="passinput" id="password" type="password" required="" v-model="password">
             <button class="submit buttongreen control" id="btn_login" type="submit"
                     data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Logging in...">Log in
             </button>
@@ -55,15 +55,10 @@ export default {
   },
   data () {
     return {
-      username: String,
-      password: String,
-      loading: Boolean
+      username: '',
+      password: '',
+      loading: false
     }
-  },
-  mounted () {
-    this.loading = false
-    this.username = ''
-    this.password = ''
   },
   methods: {
     login: function (event) {
@@ -89,4 +84,7 @@ export default {
 <style>
 @import '../style/site.css';
 @import '../style/material-icons.css';
+input:required {
+  box-shadow:none;
+}
 </style>
