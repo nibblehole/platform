@@ -25,7 +25,7 @@ export default {
       email: ''
     }
   },
-  name: 'app',
+  name: 'VueApp',
   components: {
     Menu
   },

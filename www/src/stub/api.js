@@ -6,15 +6,30 @@ let state = {
   }
 }
 
-const apps_data = {
-  "apps": [
+const apps = {
+  apps: [
     {
-      "id": "wordpress",
-      "name": "WordPress",
-      "icon": "/images/wordpress-128.png",
-      "url": "http://wordpress.odroid-c2.syncloud.it"
+      id: "wordpress",
+      name: "WordPress",
+      icon: "/images/wordpress-128.png",
+      url: "http://wordpress.odroid-c2.syncloud.it"
     }
   ]
+};
+
+const app_info = {
+  info: {
+    app: {
+      id: "wordpress",
+      name: "Wordpress",
+      required: true,
+      ui: false,
+      url: "http://wordpress.odroid-c2.syncloud.it",
+      icon: "appsimages/wordpress-128.png"
+    },
+    current_version: "190411412",
+    installed_version: "190211412"
+  }
 };
 
 var express = require('express')
@@ -45,7 +60,10 @@ const mock = function (app, server, compiler) {
     res.json({activated: true})
   })
   app.get('/rest/installed_apps', function (req, res) {
-    res.json(apps_data)
+    res.json(apps)
+  })
+  app.get('/rest/app', function (req, res) {
+    res.json(app_info)
   })
 }
 
