@@ -53,7 +53,7 @@ const mock = function (app, server, compiler) {
       res.status(401).json({ message: 'Authentication failed' })
     }
   })
-  app.get('/rest/logout', function (req, res) {
+  app.post('/rest/logout', function (req, res) {
     state.loggedIn = false
     res.json({ message: 'OK' })
   })
@@ -66,10 +66,19 @@ const mock = function (app, server, compiler) {
   app.get('/rest/app', function (req, res) {
     res.json(appInfo)
   })
-  app.get('/rest/upgrade', function (req, res) {
+  app.post('/rest/upgrade', function (req, res) {
     res.json({ success: true })
   })
-  app.get('/rest/remove', function (req, res) {
+  app.post('/rest/install', function (req, res) {
+    res.json({ success: true })
+  })
+  app.post('/rest/remove', function (req, res) {
+    res.json({ success: true })
+  })
+  app.post('/rest/restart', function (req, res) {
+    res.json({ success: true })
+  })
+  app.post('/rest/shutdown', function (req, res) {
     res.json({ success: true })
   })
   app.get('/rest/settings/installer_status', function (req, res) {

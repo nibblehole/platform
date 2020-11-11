@@ -20,35 +20,35 @@
           </div>
           <div>
             <div class="buttonblock">
-                <button id="btn_open" :data-url="info.app.url" class="buttonblue bwidth smbutton"
-                        @click="open"
-                        v-if="info.installed_version !== null">
-                  Open
-                </button>
-                <button id="btn_install" class="buttonblue bwidth smbutton"
-                        data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Installing..."
-                        @click="install"
-                        v-if="info.installed_version === null">
-                  Install
-                </button>
-                <button id="btn_upgrade" class="buttongreen bwidth smbutton"
-                        data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Upgrading..."
-                        @click="upgrade"
-                        v-if="info.installed_version !== null && info.installed_version !== info.current_version">
-                  Upgrade
-                </button>
-                <button id="btn_remove" class="buttongrey bwidth smbutton"
-                        data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Removing..."
-                        @click="remove"
-                        v-if="info.installed_version !== null">
-                  Remove
-                </button>
-                <button id="btn_backup" class="buttonblue bwidth smbutton"
-                        data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Creating backup..."
-                        @click="backupConfirm"
-                        v-if="info.installed_version !== null">
-                  Backup
-                </button>
+              <button id="btn_open" :data-url="info.app.url" class="buttonblue bwidth smbutton"
+                      @click="open"
+                      v-if="info.installed_version !== null">
+                Open
+              </button>
+              <button id="btn_install" class="buttonblue bwidth smbutton"
+                      data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Installing..."
+                      @click="install"
+                      v-if="info.installed_version === null">
+                Install
+              </button>
+              <button id="btn_upgrade" class="buttongreen bwidth smbutton"
+                      data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Upgrading..."
+                      @click="upgrade"
+                      v-if="info.installed_version !== null && info.installed_version !== info.current_version">
+                Upgrade
+              </button>
+              <button id="btn_remove" class="buttongrey bwidth smbutton"
+                      data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Removing..."
+                      @click="remove"
+                      v-if="info.installed_version !== null">
+                Remove
+              </button>
+              <button id="btn_backup" class="buttonblue bwidth smbutton"
+                      data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Creating backup..."
+                      @click="backupConfirm"
+                      v-if="info.installed_version !== null">
+                Backup
+              </button>
             </div>
             <div class="btext">{{ info.app.description }}</div>
           </div>
@@ -197,7 +197,7 @@ export default {
       const btn = $('#btn_' + this.action.toLowerCase())
       btn.button('loading')
 
-      $.get(this.actionUrl, { app_id: this.appId })
+      $.post(this.actionUrl, { app_id: this.appId })
         .always((data) => {
           Common.checkForServiceError(data, () => {
             Common.runAfterJobIsComplete(

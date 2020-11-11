@@ -142,7 +142,7 @@ def app_status():
     return jsonify(info=convertible.to_dict(public.get_app(request.args['app_id']))), 200
 
 
-@app.route("/rest/install", methods=["GET"])
+@app.route("/rest/install", methods=["POST"])
 @redirect_if_not_activated
 @login_required
 def install():
@@ -150,14 +150,14 @@ def install():
     return 'OK', 200
 
 
-@app.route("/rest/remove", methods=["GET"])
+@app.route("/rest/remove", methods=["POST"])
 @redirect_if_not_activated
 @login_required
 def remove():
     return jsonify(message=public.remove(request.args['app_id'])), 200
 
 
-@app.route("/rest/restart", methods=["GET"])
+@app.route("/rest/restart", methods=["POST"])
 @redirect_if_not_activated
 @login_required
 def restart():
@@ -165,7 +165,7 @@ def restart():
     return 'OK', 200
 
 
-@app.route("/rest/shutdown", methods=["GET"])
+@app.route("/rest/shutdown", methods=["POST"])
 @redirect_if_not_activated
 @login_required
 def shutdown():
@@ -173,7 +173,7 @@ def shutdown():
     return 'OK', 200
 
 
-@app.route("/rest/upgrade", methods=["GET"])
+@app.route("/rest/upgrade", methods=["POST"])
 @redirect_if_not_activated
 @login_required
 def upgrade():
@@ -328,7 +328,7 @@ def app_image():
                     content_type=r.headers['Content-Type'])
 
 
-@app.route("/rest/backup/<path:path>", methods=["GET"])
+@app.route("/rest/backup/<path:path>", methods=["POST"])
 @app.route("/rest/installer/<path:path>", methods=["GET"])
 @app.route("/rest/job/<path:path>", methods=["GET"])
 @app.route("/rest/storage/<path:path>", methods=["POST"])

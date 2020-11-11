@@ -37,7 +37,6 @@ export default {
     }
   },
   mounted () {
-    this.apps = []
     $.get('/rest/installed_apps')
       .done(data => {
         if ('apps' in data) {

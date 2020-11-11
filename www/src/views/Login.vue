@@ -62,6 +62,7 @@ export default {
   },
   methods: {
     login: function (event) {
+      console.log('login')
       event.preventDefault()
       var btn = $('#btn_login')
       btn.button('loading')
