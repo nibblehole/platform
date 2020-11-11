@@ -18,7 +18,7 @@ const apps = {
   ]
 }
 
-const app_info = {
+const appInfo = {
   info: {
     app: {
       id: 'wordpress',
@@ -64,7 +64,7 @@ const mock = function (app, server, compiler) {
     res.json(apps)
   })
   app.get('/rest/app', function (req, res) {
-    res.json(app_info)
+    res.json(appInfo)
   })
   app.get('/rest/upgrade', function (req, res) {
     res.json({ success: true })
