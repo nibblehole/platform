@@ -177,7 +177,7 @@ export default {
       const btn = $('#btn_backup')
       btn.button('loading')
 
-      $.get('/rest/backup/create', { app: this.appId })
+      $.post('/rest/backup/create', { app: this.appId })
         .always((data) => {
           Common.checkForServiceError(data, () => {
             Common.runAfterJobIsComplete(

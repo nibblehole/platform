@@ -20,3 +20,59 @@
     </div>
   </div>
 </template>
+<script>
+import $ from 'jquery'
+
+function showFieldError (field, error) {
+  var txtFieldSelector = '#' + field
+  var errorBlockId = getErrorBlockId(field)
+  var errorBlockSelector = '#' + errorBlockId
+  var errorHtml = '<div class=\'alert alert-danger alert90\' id=\'' + errorBlockId + '\'><b>' + error + '</b></div>'
+  $(errorHtml).insertAfter(txtFieldSelector)
+  $(txtFieldSelector).bind('keyup change', function () {
+    $(errorBlockSelector).remove()
+  })
+}
+
+function getErrorBlockId (field) {
+  return field + '_alert'
+}
+
+export default {
+  name: 'Error',
+  methods: {
+    show: function (xhr) {
+      console.log('error')
+      const status = xhr.status
+      let error = null
+      if ('responseJSON' in xhr) {
+        error = xhr.responseJSON
+      }
+
+      if (status === 401) {
+        this.$router.push('/login')
+      } else if (status === 0) {
+        console.log('user navigated away from the page')
+      } else {
+        if (error) {
+          if ('parameters_messages' in error) {
+            for (let i = 0; i < error.parameters_messages.length; i++) {
+              const pm = error.parameters_messages[i]
+              const messageText = pm.messages.join('\n')
+              showFieldError(pm.parameter, messageText)
+            }
+          } else {
+            if (!('message' in error && error.message)) {
+              error.message = 'Server Error'
+            }
+            $('#txt_error').text(error.message)
+            $('#block_error').modal()
+          }
+        } else {
+          this.$router.push('/error')
+        }
+      }
+    }
+  }
+}
+</script>

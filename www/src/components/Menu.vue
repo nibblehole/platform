@@ -79,13 +79,13 @@ export default {
         })
     },
     restart: function () {
-      $.get('/rest/restart')
+      $.post('/rest/restart')
         .done(_ => {
         })
         .fail(UiCommon.uiDisplayError)
     },
     shutdown: function () {
-      $.get('/rest/shutdown')
+      $.post('/rest/shutdown')
         .done(_ => {
         })
         .fail(UiCommon.uiDisplayError)

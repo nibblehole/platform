@@ -4,7 +4,8 @@ let state = {
     user: '11',
     password: '2'
   },
-  jobStatusRunning: false
+  jobStatusRunning: false,
+  availableAppsSuccess: false
 }
 
 const apps = {
@@ -32,9 +33,43 @@ const appInfo = {
     installed_version: '190211412'
   }
 }
+const appcenterData = {
+  apps: [
+    {
+      id: 'wordpress',
+      name: 'WordPress',
+      icon: '/images/wordpress-128.png'
+    },
+    {
+      id: 'diaspora',
+      name: 'Diaspora',
+      icon: '/images/penguin.png'
+    },
+    {
+      id: 'mail',
+      name: 'Mail',
+      icon: '/images/penguin.png'
+    },
+    {
+      id: 'talk',
+      name: 'Talk',
+      icon: '/images/penguin.png'
+    },
+    {
+      id: 'files',
+      name: 'Files Browser',
+      icon: '/images/penguin.png'
+    }
+  ]
+}
 
-var express = require('express')
-var bodyparser = require('body-parser')
+const appcenterDataError = {
+  message: 'error',
+  success: false
+}
+
+const express = require('express')
+const bodyparser = require('body-parser')
 const mock = function (app, server, compiler) {
   app.use(express.urlencoded())
   app.use(bodyparser.json())
@@ -84,7 +119,7 @@ const mock = function (app, server, compiler) {
   app.get('/rest/settings/installer_status', function (req, res) {
     res.json({ success: true, is_running: false })
   })
-  app.get('/rest/backup/create', function (req, res) {
+  app.post('/rest/backup/create', function (req, res) {
     res.json({})
   })
   app.get('/rest/job/status', function (req, res) {
@@ -97,6 +132,17 @@ const mock = function (app, server, compiler) {
     state.jobStatusRunning = !state.jobStatusRunning
     res.json(response)
   })
+
+  app.get('/rest/available_apps', function (req, res) {
+    let response = {}
+    if (state.availableAppsSuccess) {
+      response = appcenterData
+    } else {
+      response = appcenterDataError
+    }
+    res.json(response)
+  })
+
 }
 
 exports.mock = mock
