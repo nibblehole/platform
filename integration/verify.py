@@ -404,7 +404,7 @@ def test_real_certificate(app_dir, ssh_env_vars, device_host):
 
 def test_install_app(device, device_host):
     session = device.login()
-    session.get('https://{0}/rest/install?app_id={1}'.format(device_host, 'files'), verify=False)
+    session.post('https://{0}/rest/install?app_id={1}'.format(device_host, 'files'), verify=False)
     wait_for_installer(session, device_host)
 
 
@@ -435,12 +435,12 @@ def test_rest_not_installed_app(device, device_host, artifact_dir):
 
 def test_installer_upgrade(device, device_host):
     session = device.login()
-    response = device.http_get('/rest/installer/upgrade')
+    response = session.post('https://{0}/rest/installer/upgrade'.format(device_host), verify=False)
     assert response.status_code == 200, response.text
     wait_for_response(session, 'https://{0}/rest/job/status'.format(device_host),
                       lambda r:  json.loads(r.text)['data'] == 'JobStatusIdle')
 
-    response = device.http_get('/rest/installer/upgrade')
+    response = session.post('https://{0}/rest/installer/upgrade'.format(device_host), verify=False)
     assert response.status_code == 200, response.text
     wait_for_response(session, 'https://{0}/rest/job/status'.format(device_host),
                       lambda r:  json.loads(r.text)['data'] == 'JobStatusIdle')
@@ -449,8 +449,7 @@ def test_installer_upgrade(device, device_host):
 def test_backup_app(device, artifact_dir, device_host):
     
     session = device.login()
-    
-    response = device.http_get('/rest/backup/create?app=files')
+    response = session.post('https://{0}/rest/backup/create?app=files'.format(device_host), verify=False)
     assert response.status_code == 200
     assert json.loads(response.text)['success']
 
@@ -464,7 +463,7 @@ def test_backup_app(device, artifact_dir, device_host):
     backup = json.loads(response.text)['data'][0]
     device.run_ssh('tar tvf {0}/{1}'.format(backup['path'], backup['file']))
     
-    response = device.http_get('/rest/backup/restore?app=files&file={0}/{1}'.format(backup['path'], backup['file']))
+    response = session.post('https://{0}/rest/backup/restore?app=files&file={0}/{1}'.format(device_host, backup['path'], backup['file']), verify=False)
     assert response.status_code == 200
     wait_for_response(session, 'https://{0}/rest/job/status'.format(device_host),
                       lambda r:  json.loads(r.text)['data'] == 'JobStatusIdle')

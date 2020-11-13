@@ -31,15 +31,15 @@ func NewBackend(master *job.Master, backup *backup.Backup, eventTrigger *event.T
 
 func (backend *Backend) Start(socket string) {
 	go backend.worker.Start()
-	http.HandleFunc("/job/status", Handle(backend.JobStatus))
-	http.HandleFunc("/backup/list", Handle(backend.BackupList))
-	http.HandleFunc("/backup/create", Handle(backend.BackupCreate))
-	http.HandleFunc("/backup/restore", Handle(backend.BackupRestore))
-	http.HandleFunc("/backup/remove", Handle(backend.BackupRemove))
-	http.HandleFunc("/installer/upgrade", Handle(backend.InstallerUpgrade))
-	http.HandleFunc("/storage/disk_format", Handle(backend.StorageFormat))
-	http.HandleFunc("/storage/boot_extend", Handle(backend.StorageBootExtend))
-	http.HandleFunc("/event/trigger", Handle(backend.EventTrigger))
+	http.HandleFunc("/job/status", Handle(http.MethodGet, backend.JobStatus))
+	http.HandleFunc("/backup/list", Handle(http.MethodGet, backend.BackupList))
+	http.HandleFunc("/backup/create", Handle(http.MethodPost, backend.BackupCreate))
+	http.HandleFunc("/backup/restore", Handle(http.MethodPost, backend.BackupRestore))
+	http.HandleFunc("/backup/remove", Handle(http.MethodPost, backend.BackupRemove))
+	http.HandleFunc("/installer/upgrade", Handle(http.MethodPost, backend.InstallerUpgrade))
+	http.HandleFunc("/storage/disk_format", Handle(http.MethodPost, backend.StorageFormat))
+	http.HandleFunc("/storage/boot_extend", Handle(http.MethodPost, backend.StorageBootExtend))
+	http.HandleFunc("/event/trigger", Handle(http.MethodPost, backend.EventTrigger))
 
 	server := http.Server{}
 
@@ -85,9 +85,12 @@ func success(w http.ResponseWriter, data interface{}) {
 	}
 }
 
-func Handle(f func(w http.ResponseWriter, req *http.Request) (interface{}, error)) func(w http.ResponseWriter, req *http.Request) {
+func Handle(method string, f func(w http.ResponseWriter, req *http.Request) (interface{}, error)) func(w http.ResponseWriter, req *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
 		log.Printf("request: %s\n", req.URL.Path)
+		if req.Method != method {
+			fail(w, errors.New(fmt.Sprintf("wrong method %s, should be %s", req.Method, method)))
+		}
 		w.Header().Add("Content-Type", "application/json")
 		data, err := f(w, req)
 		if err != nil {

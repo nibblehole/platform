@@ -328,14 +328,18 @@ def app_image():
                     content_type=r.headers['Content-Type'])
 
 
-@app.route("/rest/backup/<path:path>", methods=["POST"])
-@app.route("/rest/installer/<path:path>", methods=["GET"])
-@app.route("/rest/job/<path:path>", methods=["GET"])
-@app.route("/rest/storage/<path:path>", methods=["POST"])
-@app.route("/rest/event/<path:path>", methods=["POST"])
+@app.route("/rest/backup/list", methods=["GET"])
+@app.route("/rest/backup/create", methods=["POST"])
+@app.route("/rest/backup/restore", methods=["POST"])
+@app.route("/rest/backup/remove", methods=["POST"])
+@app.route("/rest/installer/upgrade", methods=["POST"])
+@app.route("/rest/job/status", methods=["GET"])
+@app.route("/rest/storage/disk_format", methods=["POST"])
+@app.route("/rest/storage/boot_extend", methods=["POST"])
+@app.route("/rest/event/trigger", methods=["POST"])
 @redirect_if_not_activated
 @login_required
-def backend_proxy(path):
+def backend_proxy():
     response = backend_request(request.method, request.full_path.replace("/rest", "", 1), request.form)
     return response.text, response.status_code
 
