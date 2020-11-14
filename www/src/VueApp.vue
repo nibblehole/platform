@@ -37,12 +37,6 @@ export default {
   },
   methods: {
     checkUserSession: function () {
-      axios.get('/rest/activation_status')
-        .then(response => {
-          if (response.activated) {
-            this.$router.push('/login')
-          }
-        })
       axios.get('/rest/user')
         .then(response => {
           this.loggedIn = true
@@ -51,11 +45,19 @@ export default {
           }
         })
         .catch(_ => {
-          this.loggedIn = false
-          if (!publicRoutes.includes(this.currentPath)) {
-            console.log('redirect to login from ' + this.currentPath)
-            this.$router.push('/login')
-          }
+          axios.get('/rest/activation_status')
+            .then(response => {
+              if (!response.activated) {
+                this.$router.push('/activate')
+              }
+              this.loggedIn = false
+              if (!publicRoutes.includes(this.currentPath)) {
+                console.log('redirect to login from ' + this.currentPath)
+                this.$router.push('/login')
+              }
+            }).catch(error => {
+            }
+          )
         })
     }
   },

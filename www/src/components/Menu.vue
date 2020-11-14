@@ -43,12 +43,13 @@
       </div>
     </div>
   </div>
+  <Error ref="menu_error"/>
 </template>
 
 <script>
 import axios from 'axios'
-import * as UiCommon from '../js/ui/common'
 import $ from 'jquery'
+import Error from '@/components/Error'
 
 export default {
   props: {
@@ -61,8 +62,11 @@ export default {
       menuOpen: false
     }
   },
+  components: {
+    Error
+  },
   methods: {
-    close: function (event) {
+    close: function () {
       this.menuOpen = false
     },
     toggle: function (event) {
@@ -79,16 +83,18 @@ export default {
         })
     },
     restart: function () {
+      const error = this.$refs.menu_error
       $.post('/rest/restart')
         .done(_ => {
         })
-        .fail(UiCommon.uiDisplayError)
+        .fail((xhr) => error.show(xhr))
     },
     shutdown: function () {
+      const error = this.$refs.menu_error
       $.post('/rest/shutdown')
         .done(_ => {
         })
-        .fail(UiCommon.uiDisplayError)
+        .fail((xhr) => error.show(xhr))
     }
   }
 }

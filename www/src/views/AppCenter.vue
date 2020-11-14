@@ -44,9 +44,9 @@ export default {
             function () {
               that.apps = data.apps
             },
-            (xhr, textStatus, errorThrown) => error.show(xhr))
+            (xhr) => error.show(xhr))
         })
-      .fail((xhr, textStatus, errorThrown) => error.show(xhr))
+      .fail((xhr) => error.show(xhr))
   }
 }
 </script>

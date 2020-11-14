@@ -26,7 +26,6 @@
 </template>
 
 <script>
-import * as UiCommon from '../js/ui/common.js'
 import $ from 'jquery'
 
 export default {
@@ -37,13 +36,15 @@ export default {
     }
   },
   mounted () {
+    const error = this.$refs.error
+
     $.get('/rest/installed_apps')
       .done(data => {
         if ('apps' in data) {
           this.apps = data.apps
         }
       })
-      .fail((xhr, textStatus, errorThrown) => UiCommon.uiDisplayError(xhr, this.$router))
+      .fail((xhr, textStatus, errorThrown) => error.show(xhr))
   }
 }
 </script>

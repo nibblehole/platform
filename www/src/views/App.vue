@@ -57,8 +57,6 @@
     </div>
   </div>
 
-  <Error/>
-
   <div id="app_action_confirmation" class="modal fade bs-are-use-sure" tabindex="-1" role="dialog"
        aria-labelledby="mySmallModalLabel">
     <div class="modal-dialog" role="document">
@@ -118,10 +116,12 @@
       </div>
     </div>
   </div>
+
+  <Error ref="error"/>
+
 </template>
 
 <script>
-import * as UiCommon from '../js/ui/common.js'
 import $ from 'jquery'
 import Error from '@/components/Error'
 import 'bootstrap'
@@ -146,11 +146,12 @@ export default {
   },
   methods: {
     loadApp: function () {
+      const error = this.$refs.error
       $.get('/rest/app', { app_id: this.appId })
         .done(data => {
           this.info = data.info
         })
-        .fail(UiCommon.uiDisplayError)
+        .fail((xhr, textStatus, errorThrown) => error.show(xhr))
     },
     open: function (event) {
       window.location.href = this.info.app.url
@@ -174,6 +175,8 @@ export default {
       $('#backup_confirmation').modal('show')
     },
     backup: function () {
+      const error = this.$refs.error
+
       const btn = $('#btn_backup')
       btn.button('loading')
 
@@ -186,14 +189,16 @@ export default {
                 btn.button('reset')
                 this.loadApp()
               },
-              UiCommon.uiDisplayError,
+              (xhr, textStatus, errorThrown) => error.show(xhr),
               Common.JOB_STATUS_URL,
               Common.JOB_STATUS_PREDICATE)
-          }, UiCommon.uiDisplayError)
+          }, (xhr, textStatus, errorThrown) => error.show(xhr))
         })
-        .fail(UiCommon.uiDisplayError)
+        .fail((xhr, textStatus, errorThrown) => error.show(xhr))
     },
     confirm: function () {
+      const error = this.$refs.error
+
       const btn = $('#btn_' + this.action.toLowerCase())
       btn.button('loading')
 
@@ -206,12 +211,12 @@ export default {
                 btn.button('reset')
                 this.loadApp()
               },
-              UiCommon.uiDisplayError,
+              (xhr, textStatus, errorThrown) => error.show(xhr),
               Common.INSTALLER_STATUS_URL,
               Common.DEFAULT_STATUS_PREDICATE)
-          }, UiCommon.uiDisplayError)
+          }, (xhr, textStatus, errorThrown) => error.show(xhr))
         })
-        .fail(UiCommon.uiDisplayError)
+        .fail((xhr, textStatus, errorThrown) => error.show(xhr))
     }
   }
 }

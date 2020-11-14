@@ -2,7 +2,6 @@
 
   <div class="wrapper">
     <div class="content">
-      <!--Login_block1-->
       <div class="block1 wd12" id="block1">
         <h1>Log in</h1>
         <div class="formblock">
@@ -39,14 +38,16 @@
       </div>
     </div>
   </div>
+
+  <Error ref="error"/>
+
 </template>
 
 <script>
 import * as UiCommon from '../js/ui/common.js'
-// import './ui/menu.js'
-// import Common from './common.js'
 import $ from 'jquery'
 import querystring from 'querystring'
+import Error from '@/components/Error'
 
 export default {
   name: 'Login',
@@ -60,11 +61,15 @@ export default {
       loading: false
     }
   },
+  components: {
+    Error
+  },
   methods: {
     login: function (event) {
-      console.log('login')
+      const error = this.$refs.error
+
       event.preventDefault()
-      var btn = $('#btn_login')
+      const btn = $('#btn_login')
       btn.button('loading')
       $('#form-login input').prop('disabled', true)
       UiCommon.hideFieldsErrors('form-login')
@@ -73,7 +78,7 @@ export default {
           this.onLogin()
           this.$router.push('/')
         })
-        .fail((xhr, textStatus, errorThrown) => UiCommon.uiDisplayError(xhr, this.$router))
+        .fail((xhr, textStatus, errorThrown) => error.show(xhr))
         .always(() => {
           btn.button('reset')
           $('#form-login input').prop('disabled', false)

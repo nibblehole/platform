@@ -5,22 +5,6 @@ export function hideFieldsErrors (form) {
   $('#' + form + ' .alert').remove()
 }
 
-export function checkActivationStatus () {
-  $.get('/rest/activation_status').done(function (data) {
-    if (!data.activated) {
-      window.location.href = 'activate.html'
-    }
-  })
-}
-
-export function checkDeactivationStatus () {
-  $.get('/rest/activation_status').done(function (data) {
-    if (data.activated) {
-      window.location.href = 'login.html'
-    }
-  })
-}
-
 export function uiDisplayErrorToast (xhr, textStatus, errorThrown) {
   var status = xhr.status
   var error = null
