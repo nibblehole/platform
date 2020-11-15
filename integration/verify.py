@@ -122,7 +122,7 @@ def test_activate_device(device_host, domain, main_domain, redirect_user, redire
     assert response.status_code == 200, response.text
 
    
-def test_reactivate_bad(device_host, domain, main_domain, device_user, device_password,
+def test_reactivate_activated_device(device_host, domain, main_domain, device_user, device_password,
                         redirect_user, redirect_password):
 
     response = requests.post('https://{0}/rest/activate'.format(device_host),
@@ -132,7 +132,7 @@ def test_reactivate_bad(device_host, domain, main_domain, device_user, device_pa
                                    'user_domain': domain,
                                    'device_username': device_user,
                                    'device_password': device_password}, allow_redirects=False, verify=False)
-    assert response.status_code == 302
+    assert response.status_code == 501
 
 
 def test_drop_activation(device_host):
