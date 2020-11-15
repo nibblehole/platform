@@ -41,6 +41,12 @@ function getErrorBlockId (field) {
 export default {
   name: 'Error',
   methods: {
+    showAxios: function (error) {
+      this.show({
+        status: error.response.status,
+        responseJSON: error.response.data
+      })
+    },
     show: function (xhr) {
       console.log('error')
       const status = xhr.status

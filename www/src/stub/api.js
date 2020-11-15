@@ -5,7 +5,7 @@ let state = {
     password: '2'
   },
   jobStatusRunning: false,
-  availableAppsSuccess: false
+  availableAppsSuccess: true
 }
 
 const apps = {
@@ -94,6 +94,7 @@ const mock = function (app, server, compiler) {
   })
   app.get('/rest/activation_status', function (req, res) {
     res.json({ activated: true })
+    // res.status(500).json({ message: "unknown activation status" })
   })
   app.get('/rest/installed_apps', function (req, res) {
     res.json(apps)

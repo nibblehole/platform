@@ -1,10 +1,12 @@
 <template>
   <Menu v-bind:activeTab="currentPath" v-bind:onLogout="checkUserSession" v-bind:loggedIn="loggedIn"/>
   <router-view v-bind:onLogin="checkUserSession" v-bind:onLogout="checkUserSession"/>
+  <Error ref="app_error"/>
 </template>
 <script>
 import axios from 'axios'
 import Menu from '@/components/Menu'
+import Error from '@/components/Error'
 
 // TODO: migrate to any Material Design UI frameworks for Vue v3 when they become available.
 global.jQuery = require('jquery')
@@ -27,7 +29,8 @@ export default {
   },
   name: 'VueApp',
   components: {
-    Menu
+    Menu,
+    Error
   },
   watch: {
     $route (to, from) {
@@ -55,9 +58,11 @@ export default {
                 console.log('redirect to login from ' + this.currentPath)
                 this.$router.push('/login')
               }
-            }).catch(error => {
-            }
-          )
+            })
+            .catch(err => {
+              this.$refs.app_error.showAxios(err)
+              this.$router.push('/error')
+            })
         })
     }
   },
