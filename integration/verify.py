@@ -90,8 +90,7 @@ def test_https_port_validation_url(device_host):
 
 def test_non_activated_device_login_redirect_to_activation(device_host):
     response = requests.post('https://{0}/rest/login'.format(device_host), allow_redirects=False, verify=False)
-    assert response.status_code == 302
-    assert response.headers['Location'] == 'https://{0}/activate'.format(device_host)
+    assert response.status_code == 501
 
 
 def test_activation_status_false(device_host):
