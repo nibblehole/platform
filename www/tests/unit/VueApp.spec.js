@@ -1,13 +1,54 @@
 import { shallowMount } from '@vue/test-utils'
 import VueApp from '@/VueApp'
 
-test('VueApp.vue', () => {
-    const wrapper = shallowMount(VueApp)
+test('non activated', () => {
 
-    // wrapper.vm.onActivationStatus({ activated: false })
+  const mockRoute = {
+    params: {
+      id: 1
+    }
+  }
+  const mockRouter = {
+    push: jest.fn()
+  }
 
-    // expect(wrapper.vm.$route.path).toBe('/login')
+  const wrapper = shallowMount(VueApp,  {
+    global: {
+      mocks: {
+        $route: mockRoute,
+        $router: mockRouter
+      }
+    }
+  })
 
-    // expect(wrapper.vm.timestamp('Sun, 02 Nov 2020 22:07:36 GMT', new Date(2020, 10, 2))).toMatch('Today 22:07')
+  wrapper.vm.onActivationStatus({ activated: false })
+
+  expect(mockRouter.push).toHaveBeenCalledWith('/activate')
+
+})
+
+test('activated', () => {
+
+  const mockRoute = {
+    params: {
+      id: 1
+    }
+  }
+  const mockRouter = {
+    push: jest.fn()
+  }
+
+  const wrapper = shallowMount(VueApp,  {
+    global: {
+      mocks: {
+        $route: mockRoute,
+        $router: mockRouter
+      }
+    }
+  })
+
+  wrapper.vm.onActivationStatus({ activated: true })
+
+  expect(mockRouter.push).toHaveBeenCalledWith('/login')
 
 })
