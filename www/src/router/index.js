@@ -4,7 +4,9 @@ const routes = [
   { path: '/', name: 'Apps', component: () => import('../views/Apps.vue') },
   { path: '/login', name: 'Login', component: () => import('../views/Login.vue') },
   { path: '/app', name: 'App', component: () => import('../views/App.vue') },
-  { path: '/appcenter', name: 'AppCenter', component: () => import('../views/AppCenter.vue') }
+  { path: '/appcenter', name: 'AppCenter', component: () => import('../views/AppCenter.vue') },
+  { path: '/settings', name: 'Settings', component: () => import('../views/Settings.vue') },
+  { path: '/activation', name: 'Activation', component: () => import('../views/Activation.vue') }
 ]
 
 const router = createRouter({

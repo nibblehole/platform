@@ -5,7 +5,8 @@ let state = {
     password: '2'
   },
   jobStatusRunning: false,
-  availableAppsSuccess: true
+  availableAppsSuccess: true,
+  activated: true
 }
 
 const apps = {
@@ -68,6 +69,11 @@ const appcenterDataError = {
   success: false
 }
 
+const deviceUrl = {
+  'device_url': 'http://test.syncloud.it',
+  'success': true
+}
+
 const express = require('express')
 const bodyparser = require('body-parser')
 const mock = function (app, server, compiler) {
@@ -82,10 +88,14 @@ const mock = function (app, server, compiler) {
     }
   })
   app.get('/rest/user', function (req, res) {
-    if (state.loggedIn) {
-      res.json({ message: 'OK' })
+    if (!state.activated) {
+      res.status(501).json({ message: 'Not activated' })
     } else {
-      res.status(401).json({ message: 'Authentication failed' })
+      if (state.loggedIn) {
+        res.json({ message: 'OK' })
+      } else {
+        res.status(401).json({ message: 'Authentication failed' })
+      }
     }
   })
   app.post('/rest/logout', function (req, res) {
@@ -93,7 +103,7 @@ const mock = function (app, server, compiler) {
     res.json({ message: 'OK' })
   })
   app.get('/rest/activation_status', function (req, res) {
-    res.json({ activated: true })
+    res.json({ activated: state.activated })
     // res.status(500).json({ message: "unknown activation status" })
   })
   app.get('/rest/installed_apps', function (req, res) {
@@ -142,6 +152,16 @@ const mock = function (app, server, compiler) {
       response = appcenterDataError
     }
     res.json(response)
+  })
+
+  app.get('/rest/settings/device_url', function (req, res) {
+    // res.status(500).json(deviceUrl)
+    res.json(deviceUrl)
+  })
+
+  app.post('/rest/settings/deactivate', function (req, res) {
+    state.activated = false
+    res.json({})
   })
 
 }
