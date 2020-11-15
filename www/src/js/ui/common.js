@@ -1,9 +1,4 @@
 import toastr from 'toastr'
-import $ from 'jquery'
-
-export function hideFieldsErrors (form) {
-  $('#' + form + ' .alert').remove()
-}
 
 export function uiDisplayErrorToast (xhr, textStatus, errorThrown) {
   var status = xhr.status

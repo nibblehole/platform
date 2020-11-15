@@ -6,7 +6,8 @@ const routes = [
   { path: '/app', name: 'App', component: () => import('../views/App.vue') },
   { path: '/appcenter', name: 'AppCenter', component: () => import('../views/AppCenter.vue') },
   { path: '/settings', name: 'Settings', component: () => import('../views/Settings.vue') },
-  { path: '/activation', name: 'Activation', component: () => import('../views/Activation.vue') }
+  { path: '/activation', name: 'Activation', component: () => import('../views/Activation.vue') },
+  { path: '/activate', name: 'Activate', component: () => import('../views/Activate.vue') }
 ]
 
 const router = createRouter({

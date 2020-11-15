@@ -39,31 +39,41 @@ export default {
     }
   },
   methods: {
+    onActivationStatusError: function (err) {
+      this.$refs.app_error.showAxios(err)
+      this.$router.push('/error')
+    },
+    onUserGet: function () {
+      this.loggedIn = true
+      if (this.currentPath === '/login') {
+        this.$router.push('/')
+      }
+    },
     checkUserSession: function () {
       axios.get('/rest/user')
-        .then(response => {
-          this.loggedIn = true
-          if (this.currentPath === '/login') {
-            this.$router.push('/')
-          }
+        .then(_ => {
+          this.onUserGet()
         })
         .catch(_ => {
           axios.get('/rest/activation_status')
             .then(response => {
-              if (!response.activated) {
-                this.$router.push('/activate')
-              }
-              this.loggedIn = false
-              if (!publicRoutes.includes(this.currentPath)) {
-                console.log('redirect to login from ' + this.currentPath)
-                this.$router.push('/login')
-              }
+              this.onActivationStatus(response.data)
             })
             .catch(err => {
-              this.$refs.app_error.showAxios(err)
-              this.$router.push('/error')
+              this.onActivationStatusError(err)
             })
         })
+    },
+    onActivationStatus: function (data) {
+      if (!data.activated) {
+        this.$router.push('/activate')
+      } else {
+        this.loggedIn = false
+        if (!publicRoutes.includes(this.currentPath)) {
+          console.log('redirect to login from ' + this.currentPath)
+          this.$router.push('/login')
+        }
+      }
     }
   },
   mounted () {

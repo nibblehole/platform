@@ -44,7 +44,6 @@
 </template>
 
 <script>
-import * as UiCommon from '../js/ui/common.js'
 import $ from 'jquery'
 import querystring from 'querystring'
 import Error from '@/components/Error'
@@ -72,7 +71,7 @@ export default {
       const btn = $('#btn_login')
       btn.button('loading')
       $('#form-login input').prop('disabled', true)
-      UiCommon.hideFieldsErrors('form-login')
+      $('#form-login .alert').remove()
       $.post('/rest/login', querystring.stringify({ name: this.username, password: this.password }))
         .done((data) => {
           this.onLogin()
