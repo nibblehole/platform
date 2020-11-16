@@ -1,18 +1,25 @@
 import { shallowMount } from '@vue/test-utils'
 import VueApp from '@/VueApp'
+import axios from 'axios'
+import flushPromises from 'flush-promises'
 
-test('non activated', () => {
+test('activated and logged in', async () => {
 
-  const mockRoute = {
-    params: {
-      id: 1
-    }
-  }
-  const mockRouter = {
-    push: jest.fn()
-  }
+  jest.mock('axios', () => ({
+    get: jest.fn((url) => {
+      switch (url) {
+        case '/rest/user':
+          return { message: 'OK' }
+        case '/rest/activation_status':
+          return { activated: true }
+      }
+    })
+  }))
 
-  const wrapper = shallowMount(VueApp,  {
+  const mockRoute = { params: { id: 1 } }
+  const mockRouter = { push: jest.fn() }
+
+  const wrapper = shallowMount(VueApp, {
     global: {
       mocks: {
         $route: mockRoute,
@@ -21,9 +28,44 @@ test('non activated', () => {
     }
   })
 
-  wrapper.vm.onActivationStatus({ activated: false })
+  await wrapper.vm.checkUserSession()
 
-  expect(mockRouter.push).toHaveBeenCalledWith('/activate')
+  await flushPromises()
+
+  expect(mockRouter.push).toHaveBeenCalledTimes(0)
+
+})
+
+test('activated and not logged in', async () => {
+
+  jest.mock('axios', () => ({
+    get: jest.fn((url) => {
+      switch (url) {
+        case '/rest/user':
+          return Promise.reject(new Error("Not logged in"))
+        case '/rest/activation_status':
+          return {data: { activated: true }}
+      }
+    })
+  }))
+
+  const mockRoute = { params: { id: 1 } }
+  const mockRouter = { push: jest.fn() }
+
+  const wrapper = shallowMount(VueApp, {
+    global: {
+      mocks: {
+        $route: mockRoute,
+        $router: mockRouter
+      }
+    }
+  })
+
+  await wrapper.vm.checkUserSession()
+
+  await flushPromises()
+
+  expect(mockRouter.push).toHaveBeenCalledWith('/login')
 
 })
 
@@ -38,7 +80,7 @@ test('activated', () => {
     push: jest.fn()
   }
 
-  const wrapper = shallowMount(VueApp,  {
+  const wrapper = shallowMount(VueApp, {
     global: {
       mocks: {
         $route: mockRoute,

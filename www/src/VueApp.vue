@@ -20,7 +20,7 @@ const publicRoutes = [
 ]
 
 export default {
-  data: function () {
+  data () {
     return {
       currentPath: '',
       loggedIn: undefined,
