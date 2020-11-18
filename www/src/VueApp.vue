@@ -47,7 +47,7 @@ export default {
             this.$router.push('/')
           }
         })
-        .catch(err => {
+        .catch(_ => {
           axios.get('/rest/activation_status')
             .then(response => {
               if (!response.data.activated) {

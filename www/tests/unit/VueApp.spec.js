@@ -4,9 +4,7 @@ import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 import flushPromises from 'flush-promises'
 
-
 test('activated and logged in', async () => {
-
   const mockRoute = { params: { id: 1 } }
   const mockRouter = { push: jest.fn() }
 
@@ -18,7 +16,7 @@ test('activated and logged in', async () => {
     { message: 'OK' }
   )
 
-  const wrapper = shallowMount(VueApp, {
+  shallowMount(VueApp, {
     global: {
       mocks: {
         $route: mockRoute,
@@ -29,11 +27,9 @@ test('activated and logged in', async () => {
 
   await flushPromises()
   expect(mockRouter.push).toHaveBeenCalledTimes(0)
-
 })
 
 test('activated and not logged in', async () => {
-
   const mockRoute = { params: { id: 1 } }
   const mockRouter = { push: jest.fn() }
 
@@ -45,7 +41,7 @@ test('activated and not logged in', async () => {
     { message: 'not OK' }
   )
 
-  const wrapper = shallowMount(VueApp, {
+  shallowMount(VueApp, {
     global: {
       mocks: {
         $route: mockRoute,
@@ -56,11 +52,9 @@ test('activated and not logged in', async () => {
 
   await flushPromises()
   expect(mockRouter.push).toHaveBeenCalledWith('/login')
-
 })
 
 test('not activated and not logged in', async () => {
-
   const mockRoute = { params: { id: 1 } }
   const mockRouter = { push: jest.fn() }
 
@@ -72,7 +66,7 @@ test('not activated and not logged in', async () => {
     { message: 'not OK' }
   )
 
-  const wrapper = shallowMount(VueApp, {
+  shallowMount(VueApp, {
     global: {
       mocks: {
         $route: mockRoute,
@@ -83,5 +77,4 @@ test('not activated and not logged in', async () => {
 
   await flushPromises()
   expect(mockRouter.push).toHaveBeenCalledWith('/activate')
-
 })

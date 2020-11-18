@@ -1,4 +1,4 @@
-let state = {
+const state = {
   loggedIn: false,
   credentials: {
     user: '11',
@@ -70,8 +70,8 @@ const appcenterDataError = {
 }
 
 const deviceUrl = {
-  'device_url': 'http://test.syncloud.it',
-  'success': true
+  device_url: 'http://test.syncloud.it',
+  success: true
 }
 
 const express = require('express')
@@ -163,7 +163,6 @@ const mock = function (app, server, compiler) {
     state.activated = false
     res.json({})
   })
-
 }
 
 exports.mock = mock
