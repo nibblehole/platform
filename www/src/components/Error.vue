@@ -82,25 +82,16 @@ export default {
     },
     showToast (error) {
       const status = error.response.status
-      let message = null
-      if ('data' in error.response && error.response.data !== undefined) {
-        message = error.response.data
-      }
-
       if (status === 401) {
         this.$router.push('/login')
       } else if (status === 0) {
         console.log('user navigated away from the page')
       } else {
-        if (message) {
-          let message = 'Server Error'
-          if ('message' in message && message.message) {
-            message = message.message
-          }
-          toastr.error(message)
-        } else {
-          this.$router.push('/error')
+        let message = 'Server Error'
+        if ('data' in error.response && 'message' in error.response.data) {
+          message = error.response.data.message
         }
+        toastr.error(message)
       }
     }
   }

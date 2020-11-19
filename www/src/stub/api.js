@@ -74,6 +74,15 @@ const deviceUrl = {
   success: true
 }
 
+let backups = [
+  { 'path': '/data/platform/backup', 'file': 'files-2019-0515-123506.tar.gz' },
+  { 'path': '/data/platform/backup', 'file': 'nextcloud-2019-0515-123506.tar.gz' },
+  { 'path': '/data/platform/backup', 'file': 'diaspora-2019-0512-103501.tar.gz' },
+  { 'path': '/data/platform/backup', 'file': 'nextcloud-2019-0521-113502.tar.gz' },
+  { 'path': '/data/platform/backup', 'file': 'nextcloud-2019-0201-122500.tar.gz' },
+  { 'path': '/data/platform/backup', 'file': 'files-2019-0415-123506.tar.gz' }
+]
+
 const express = require('express')
 const bodyparser = require('body-parser')
 const mock = function (app, server, compiler) {
@@ -162,6 +171,30 @@ const mock = function (app, server, compiler) {
   app.post('/rest/settings/deactivate', function (req, res) {
     state.activated = false
     res.json({})
+  })
+
+  app.get('/rest/backup/list', function (req, res) {
+    res.json({
+      'success': true,
+      'data': backups
+    })
+  })
+
+  app.post('/rest/backup/remove', function (req, res) {
+    backups = backups.filter(v => v.file !== req.query.file)
+    res.json({})
+  })
+
+  app.post('/rest/backup/restore', function (req, res) {
+    res.json({})
+  })
+
+  app.post('/rest/backup/create', function (req, res) {
+    res.json({})
+  })
+
+  app.post('/rest/installer/upgrade', function (req, res) {
+    res.json({ success: true })
   })
 }
 

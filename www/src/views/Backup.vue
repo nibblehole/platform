@@ -62,72 +62,82 @@ import { Grid } from 'ag-grid-community'
 import axios from 'axios'
 import * as Common from '../js/common.js'
 
-const gridOptions = {
-  defaultColDef: {
-    cellStyle: { 'text-align': 'left' }
-  },
-  columnDefs: [
-    {
-      headerName: 'File',
-      field: 'file',
-      resizable: true,
-      sortable: true,
-      // filter: true,
-      filter: 'agTextColumnFilter'
-    },
-    {
-      headerName: 'Actions',
-      width: 100,
-      resizable: false,
-      cellRenderer: (params) => {
-        const div = document.createElement('div')
-        div.innerHTML = `
-                <i class='fa fa-undo' style='padding-left: 20px;  cursor:pointer;'></i>
-                <i class='fa fa-trash' style='padding-left: 20px;  cursor:pointer;'></i>
-             `
-        const buttons = div.querySelectorAll('i')
-        buttons[0].addEventListener('click', () => {
-          $('#backup_file').val(params.data.file)
-          $('#backup_action').val('restore')
-          $('#confirm_caption').html('Restore')
-          $('#confirm_question').html('Do you want to restore: ' + params.data.file + '?')
-          $('#backup_action_confirmation').modal('show')
-        })
-        buttons[1].addEventListener('click', () => {
-          $('#backup_file').val(params.data.file)
-          $('#backup_action').val('remove')
-          $('#confirm_caption').html('Remove')
-          $('#confirm_question').html('Do you want to remove: ' + params.data.file + '?')
-          $('#backup_action_confirmation').modal('show')
-        })
-        return div
-      }
-    }
-  ],
-  suppressDragLeaveHidesColumns: true,
-  floatingFilter: true,
-  domLayout: 'autoHeight'
-}
-
 export default {
   name: 'Backup',
+  props: {
+    onLogout: Function,
+    onLogin: Function
+  },
   data () {
     return {
       file: '',
       action: '',
-      grid: undefined
+      grid: undefined,
+      gridOptions: undefined
     }
   },
   components: {
     Error
   },
   mounted () {
+    this.gridOptions = {
+      defaultColDef: {
+        cellStyle: { 'text-align': 'left' }
+      },
+      columnDefs: [
+        {
+          headerName: 'File',
+          field: 'file',
+          resizable: true,
+          sortable: true,
+          // filter: true,
+          filter: 'agTextColumnFilter'
+        },
+        {
+          headerName: 'Actions',
+          width: 100,
+          resizable: false,
+          cellRenderer: (params) => {
+            const div = document.createElement('div')
+            div.innerHTML = `
+                <i class='fa fa-undo' style='padding-left: 20px;  cursor:pointer;'></i>
+                <i class='fa fa-trash' style='padding-left: 20px;  cursor:pointer;'></i>
+             `
+            const buttons = div.querySelectorAll('i')
+            buttons[0].addEventListener('click', () => {
+              this.file = params.data.file
+              this.action = 'restore'
+              // $('#backup_file').val(params.data.file)
+              // $('#backup_action').val('restore')
+              $('#confirm_caption').html('Restore')
+              $('#confirm_question').html('Do you want to restore: ' + params.data.file + '?')
+              $('#backup_action_confirmation').modal('show')
+            })
+            buttons[1].addEventListener('click', () => {
+              this.file = params.data.file
+              this.action = 'remove'
+              // $('#backup_file').val(params.data.file)
+              // $('#backup_action').val('remove')
+              $('#confirm_caption').html('Remove')
+              $('#confirm_question').html('Do you want to remove: ' + params.data.file + '?')
+              $('#backup_action_confirmation').modal('show')
+            })
+            return div
+          }
+        }
+      ],
+      suppressDragLeaveHidesColumns: true,
+      floatingFilter: true,
+      domLayout: 'autoHeight'
+    }
+
     const eGridDiv = document.querySelector('#backupGrid')
-    this.grid = new Grid(eGridDiv, gridOptions)
+    this.grid = new Grid(eGridDiv, this.gridOptions)
     this.reload()
   },
   methods: {
     submit () {
+      console.log('remove')
       switch (this.action) {
         case 'restore':
           this.restore()
@@ -138,16 +148,18 @@ export default {
       }
     },
     remove () {
-      axios.post('/rest/backup/remove', { params: { file: this.file } })
+      console.log('remove')
+      axios.post('/rest/backup/remove', null, { params: { file: this.file } })
         .then(_ => {
           this.reload()
         })
         .catch(err => this.$refs.error.showToast(err))
     },
     restore () {
+      console.log('restore')
       const that = this
       axios
-        .post('/rest/backup/restore', { params: { file: this.file } })
+        .post('/rest/backup/restore', null, { params: { file: this.file } })
         .then(_ => {
           toastr.info('Restoring an app from a backup')
 
@@ -168,8 +180,8 @@ export default {
     reload () {
       axios.get('/rest/backup/list')
         .then((response) => {
-          gridOptions.api.setRowData(response.data)
-          gridOptions.api.sizeColumnsToFit()
+          this.gridOptions.api.setRowData(response.data.data)
+          this.gridOptions.api.sizeColumnsToFit()
         })
     }
   }
