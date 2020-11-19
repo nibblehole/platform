@@ -22,6 +22,7 @@
 </template>
 <script>
 import $ from 'jquery'
+import toastr from 'toastr'
 
 function showFieldError (field, error) {
   var txtFieldSelector = '#' + field
@@ -41,13 +42,13 @@ function getErrorBlockId (field) {
 export default {
   name: 'Error',
   methods: {
-    showAxios: function (error) {
+    showAxios (error) {
       this.show({
         status: error.response.status,
         responseJSON: error.response.data
       })
     },
-    show: function (xhr) {
+    show (xhr) {
       console.log('error')
       const status = xhr.status
       let error = null
@@ -74,6 +75,29 @@ export default {
             $('#txt_error').text(error.message)
             $('#block_error').modal()
           }
+        } else {
+          this.$router.push('/error')
+        }
+      }
+    },
+    showToast (error) {
+      const status = error.response.status
+      let message = null
+      if ('data' in error.response && error.response.data !== undefined) {
+        message = error.response.data
+      }
+
+      if (status === 401) {
+        this.$router.push('/login')
+      } else if (status === 0) {
+        console.log('user navigated away from the page')
+      } else {
+        if (message) {
+          let message = 'Server Error'
+          if ('message' in message && message.message) {
+            message = message.message
+          }
+          toastr.error(message)
         } else {
           this.$router.push('/error')
         }

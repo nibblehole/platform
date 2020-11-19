@@ -1,12 +1,14 @@
-import $ from 'jquery'
+import axios from 'axios'
 
 export function checkForServiceError (data, onComplete, onError) {
   if ('success' in data && !data.success) {
-    var xhr = {
-      status: 200,
-      responseJSON: data
+    const err = {
+      response: {
+        status: 200,
+        data: data
+      }
     }
-    onError(xhr, {}, {})
+    onError(err)
   } else {
     onComplete()
   }
@@ -28,18 +30,18 @@ export function runAfterJobIsComplete (timeoutFunc, onComplete, onError, statusU
   }
 
   const recheckTimeout = 2000
-  $.getJSON(statusUrl)
-    .done(function (resp) {
-      if (statusPredicate(resp)) {
+  axios.get(statusUrl)
+    .then(response => {
+      if (statusPredicate(response)) {
         timeoutFunc(recheckFunc, recheckTimeout)
       } else {
         onComplete()
       }
     })
-    .fail(function (xhr, textStatus, errorThrown) {
+    .catch(err => {
       // Auth error means job is finished
-      if (xhr.status === 401) {
-        onError(xhr, textStatus, errorThrown)
+      if (err.response.status === 401) {
+        onError(err)
       } else {
         timeoutFunc(recheckFunc, recheckTimeout)
       }
@@ -47,7 +49,7 @@ export function runAfterJobIsComplete (timeoutFunc, onComplete, onError, statusU
 }
 
 export function findApp (appsData, appId) {
-  for (var appData of appsData) {
+  for (const appData of appsData) {
     if (appData.app.id === appId) {
       return appData
     }
@@ -56,7 +58,7 @@ export function findApp (appsData, appId) {
 }
 
 export function getValue (values, name) {
-  for (var value of values) {
+  for (const value of values) {
     if (value.name === name) {
       return value.value
     }
@@ -65,11 +67,10 @@ export function getValue (values, name) {
 }
 
 export function sendLogs (includeSupport, onAlways, onError) {
-  $.get('/rest/send_log',
-    { include_support: includeSupport }
-  ).always(onAlways).fail(onError)
+  axios.get('/rest/send_log', { params: { include_support: includeSupport } })
+    .then(onAlways).fail(onError)
 }
 
 export function sendLog (onAlways, onError) {
-  $.get('/rest/send_log').always(onAlways).fail(onError)
+  axios.get('/rest/send_log').then(onAlways).catch(onError)
 }

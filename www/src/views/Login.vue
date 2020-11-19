@@ -7,7 +7,8 @@
         <div class="formblock">
           <form id="form-login" @submit="login">
             <input placeholder="Login" class="nameinput" id="name" type="text" required="" v-model="username">
-            <input placeholder="Password" class="passinput" id="password" type="password" required="" v-model="password">
+            <input placeholder="Password" class="passinput" id="password" type="password" required=""
+                   v-model="password">
             <button class="submit buttongreen control" id="btn_login" type="submit"
                     data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Logging in...">Log in
             </button>
@@ -51,7 +52,8 @@ import Error from '@/components/Error'
 export default {
   name: 'Login',
   props: {
-    onLogin: Function
+    onLogin: Function,
+    onLogout: Function
   },
   data () {
     return {
@@ -89,7 +91,8 @@ export default {
 <style>
 @import '../style/site.css';
 @import '../style/material-icons.css';
+
 input:required {
-  box-shadow:none;
+  box-shadow: none;
 }
 </style>

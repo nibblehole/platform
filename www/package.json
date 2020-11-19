@@ -9,6 +9,7 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
+    "ag-grid-community": "^24.1.0",
     "axios": "^0.20.0",
     "bootstrap": "^3.3.5",
     "bootstrap-switch": "^3.3.4",
