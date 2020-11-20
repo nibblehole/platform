@@ -1,4 +1,4 @@
-import { mount, shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import VueApp from '@/VueApp'
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
