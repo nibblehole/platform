@@ -1,4 +1,4 @@
-import { shallowMount } from '@vue/test-utils'
+import { mount, shallowMount } from '@vue/test-utils'
 import VueApp from '@/VueApp'
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
@@ -18,6 +18,12 @@ test('activated and logged in', async () => {
 
   shallowMount(VueApp, {
     global: {
+      components: {
+        RouterView: { render() { return h('div') } }
+      },
+      stubs: {
+        Menu: true
+      },
       mocks: {
         $route: mockRoute,
         $router: mockRouter
@@ -43,6 +49,12 @@ test('activated and not logged in', async () => {
 
   shallowMount(VueApp, {
     global: {
+      components: {
+        RouterView: { render() { return h('div') } }
+      },
+      stubs: {
+        Menu: true
+      },
       mocks: {
         $route: mockRoute,
         $router: mockRouter
@@ -68,6 +80,12 @@ test('not activated and not logged in', async () => {
 
   shallowMount(VueApp, {
     global: {
+      components: {
+        RouterView: { render() { return h('div') } }
+      },
+      stubs: {
+        Menu: true
+      },
       mocks: {
         $route: mockRoute,
         $router: mockRouter
