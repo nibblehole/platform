@@ -90,13 +90,15 @@ export default {
           field: 'file',
           resizable: true,
           sortable: true,
-          // filter: true,
-          filter: 'agTextColumnFilter'
+          suppressMovable: true,
+          filter: 'agTextColumnFilter',
+          floatingFilter: true
         },
         {
           headerName: 'Actions',
           width: 100,
           resizable: false,
+          suppressMovable: true,
           cellRenderer: (params) => {
             const div = document.createElement('div')
             div.innerHTML = `
@@ -107,8 +109,6 @@ export default {
             buttons[0].addEventListener('click', () => {
               this.file = params.data.file
               this.action = 'restore'
-              // $('#backup_file').val(params.data.file)
-              // $('#backup_action').val('restore')
               $('#confirm_caption').html('Restore')
               $('#confirm_question').html('Do you want to restore: ' + params.data.file + '?')
               $('#backup_action_confirmation').modal('show')
@@ -116,8 +116,6 @@ export default {
             buttons[1].addEventListener('click', () => {
               this.file = params.data.file
               this.action = 'remove'
-              // $('#backup_file').val(params.data.file)
-              // $('#backup_action').val('remove')
               $('#confirm_caption').html('Remove')
               $('#confirm_question').html('Do you want to remove: ' + params.data.file + '?')
               $('#backup_action_confirmation').modal('show')
@@ -127,7 +125,6 @@ export default {
         }
       ],
       suppressDragLeaveHidesColumns: true,
-      floatingFilter: true,
       domLayout: 'autoHeight'
     }
 
