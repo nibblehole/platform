@@ -3,6 +3,7 @@ import VueApp from '@/VueApp'
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 import flushPromises from 'flush-promises'
+import { h } from 'vue'
 
 test('activated and logged in', async () => {
   const mockRoute = { params: { id: 1 } }
@@ -16,7 +17,7 @@ test('activated and logged in', async () => {
     { message: 'OK' }
   )
 
-  shallowMount(VueApp, {
+  mount(VueApp, {
     global: {
       components: {
         RouterView: { render() { return h('div') } }
@@ -47,7 +48,7 @@ test('activated and not logged in', async () => {
     { message: 'not OK' }
   )
 
-  shallowMount(VueApp, {
+  mount(VueApp, {
     global: {
       components: {
         RouterView: { render() { return h('div') } }
@@ -78,7 +79,7 @@ test('not activated and not logged in', async () => {
     { message: 'not OK' }
   )
 
-  shallowMount(VueApp, {
+  mount(VueApp, {
     global: {
       components: {
         RouterView: { render() { return h('div') } }
