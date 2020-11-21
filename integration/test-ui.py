@@ -31,23 +31,23 @@ def test_index(driver, ui_mode, device_user, device_password, screenshot_dir):
     password = driver.find_element_by_id("password")
     password.send_keys(device_password)
     password.submit()
-    time.sleep(5)
     screenshots(driver, screenshot_dir, 'index-progress-' + ui_mode)
     wait_driver = WebDriverWait(driver, 20)
     wait_driver.until(EC.presence_of_element_located((By.CLASS_NAME, 'menubutton')))
-    time.sleep(5)
     screenshots(driver, screenshot_dir, 'index-' + ui_mode)
 
 
 def test_settings(driver, device_host, ui_mode, screenshot_dir):
-    driver.get("http://{0}/settings.html".format(device_host))
-    time.sleep(5)
+    driver.get("http://{0}/settings".format(device_host))
+    header = "//h[text()='Settings']"
+    wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, header)))
     screenshots(driver, screenshot_dir, 'settings-' + ui_mode)
 
 
 def test_settings_activation(driver, device_host, ui_mode, screenshot_dir):
-    driver.get("http://{0}/activation.html".format(device_host))
-    time.sleep(10)
+    driver.get("http://{0}/activation".format(device_host))
+    header = "//h[text()='Activation']"
+    wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, header)))
     screenshots(driver, screenshot_dir, 'settings_activation-' + ui_mode)
 
 
@@ -116,3 +116,12 @@ def test_not_installed_app(driver, device_host, ui_mode, screenshot_dir):
     driver.get("http://{0}/app.html?app_id=nextcloud".format(device_host))
     time.sleep(10)
     screenshots(driver, screenshot_dir, 'app_not_installed-' + ui_mode)
+
+
+def wait_or_screenshot(driver, ui_mode, screenshot_dir, method):
+    wait_driver = WebDriverWait(driver, 30)
+    try:
+        wait_driver.until(method)
+    except Exception as e:
+        screenshots(driver, screenshot_dir, 'exception-' + ui_mode)
+        raise e
