@@ -1,5 +1,4 @@
 import { mount } from '@vue/test-utils'
-import Backup from '@/views/Access'
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 import flushPromises from 'flush-promises'
@@ -36,9 +35,13 @@ test('Disable external access', async () => {
     { success: true }
   )
 
+  const elem = document.createElement('div')
+  if (document.body) {
+    document.body.appendChild(elem)
+  }
   const wrapper = mount(Access,
     {
-      attachTo: document.body,
+      attachTo: elem,
       global: {
         stubs: {
           Error: true,
@@ -52,11 +55,10 @@ test('Disable external access', async () => {
 
   await flushPromises()
 
-  wrapper.find('#tgl_external').trigger('click')
-  wrapper.find('#btn_save').trigger('click')
+  await wrapper.find('#tgl_external').trigger('click')
+  await wrapper.find('#btn_save').trigger('click')
   await flushPromises()
 
   expect(showErrorOld).toHaveBeenCalledTimes(0)
   expect(showError).toHaveBeenCalledTimes(0)
-
 })

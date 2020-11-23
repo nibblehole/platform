@@ -17,10 +17,13 @@ test('show list of backups', async () => {
       ]
     }
   )
-
+  const elem = document.createElement('div')
+  if (document.body) {
+    document.body.appendChild(elem)
+  }
   const view = mount(Backup,
     {
-      attachTo: document.body,
+      attachTo: elem,
       global: {
         stubs: {
           Error: true
@@ -32,4 +35,5 @@ test('show list of backups', async () => {
   await flushPromises()
 
   expect(view.text()).toContain('files-2019-0515-123506.tar.gz')
+
 })

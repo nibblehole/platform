@@ -152,7 +152,7 @@ import * as Common from '../js/common.js'
 import axios from 'axios'
 
 function uiDisplayPortMappings (data) {
-  console.log('show ports: ')
+  // console.log('show ports: ')
 
   var certificatePortMapping = data.port_mappings.find(function (mapping) {
     return mapping.local_port === 80
@@ -185,7 +185,7 @@ function uiDisplayPortMappings (data) {
 
 function uiDisplayAccess (data) {
   var accessData = data.data
-  console.log('show external access: ' + accessData.external_access)
+  // console.log('show external access: ' + accessData.external_access)
   $('#tgl_external').bootstrapSwitch('disabled', false)
   $('#tgl_external').bootstrapSwitch('state', accessData.external_access, true)
   $('#tgl_external_loading').removeClass('opacity-visible')
@@ -296,7 +296,7 @@ export default {
     })
 
     $('#tgl_external').on('switchChange.bootstrapSwitch', function (event, state) {
-      console.log('change external access: ' + state)
+      // console.log('change external access: ' + state)
       event.preventDefault()
       uiPrepareExternalAccess()
     })
@@ -358,7 +358,7 @@ export default {
         access_port: 0
       }
       const accessEnabled = $('#tgl_external').bootstrapSwitch('state')
-      console.log('save external access: ' + accessEnabled)
+      // console.log('save external access: ' + accessEnabled)
       if (accessEnabled) {
         const upnpEnabled = $('#tgl_upnp').bootstrapSwitch('state')
         if (!upnpEnabled) {
@@ -367,7 +367,7 @@ export default {
           const accessPortString = $('#access_port').val()
           const accessPort = parseInt(accessPortString)
           if (isValidPort(certificatePort)) {
-            console.log('show cert port error')
+            // console.log('show cert port error')
             this.$refs.error.show(error('certificate port (' + certificatePortString + ') has to be between 1 and 65535'))
             return
           }
