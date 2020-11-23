@@ -212,7 +212,7 @@ def access():
     return jsonify(success=True, data=public.access()), 200
 
 
-@app.route("/rest/access/set_access", methods=["GET"])
+@app.route("/rest/access/set_access", methods=["POST"])
 @fail_if_not_activated
 @login_required
 def set_access():

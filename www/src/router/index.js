@@ -8,7 +8,9 @@ const routes = [
   { path: '/settings', name: 'Settings', component: () => import('../views/Settings.vue') },
   { path: '/activation', name: 'Activation', component: () => import('../views/Activation.vue') },
   { path: '/activate', name: 'Activate', component: () => import('../views/Activate.vue') },
-  { path: '/backup', name: 'Backup', component: () => import('../views/Backup.vue') }
+  { path: '/backup', name: 'Backup', component: () => import('../views/Backup.vue') },
+  { path: '/network', name: 'Network', component: () => import('../views/Network.vue') },
+  { path: '/access', name: 'Access', component: () => import('../views/Access.vue') }
 ]
 
 const router = createRouter({

@@ -69,9 +69,8 @@ export default {
     close: function () {
       this.menuOpen = false
     },
-    toggle: function (event) {
+    toggle: function () {
       this.menuOpen = !this.menuOpen
-      event.preventDefault()
     },
     logout: function (_) {
       axios.post('/rest/logout')

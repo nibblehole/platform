@@ -1,5 +1,5 @@
 const state = {
-  loggedIn: false,
+  loggedIn: true,
   credentials: {
     user: '11',
     password: '2'
@@ -82,6 +82,81 @@ let backups = [
   { 'path': '/data/platform/backup', 'file': 'nextcloud-2019-0201-122500.tar.gz' },
   { 'path': '/data/platform/backup', 'file': 'files-2019-0415-123506.tar.gz' }
 ]
+
+const networkInterfaces = {
+  'data': {
+    'interfaces': [
+      {
+        'ipv4': [
+          {
+            'addr': '172.17.0.2',
+            'broadcast': '172.17.0.2',
+            'netmask': '255.255.0.0'
+          },
+          {
+            'addr': '172.17.0.3',
+            'broadcast': '172.17.0.2',
+            'netmask': '255.255.0.0'
+          }
+        ],
+        'name': 'eth0'
+      },
+      {
+        'ipv4': [
+          {
+            'addr': '172.17.0.2',
+            'broadcast': '172.17.0.2',
+            'netmask': '255.255.0.0'
+          },
+          {
+            'addr': '172.17.0.3',
+            'broadcast': '172.17.0.2',
+            'netmask': '255.255.0.0'
+          }
+        ],
+        'ipv6': [
+          {
+            'addr': 'fe80::42:acff:fe11:2%eth0',
+            'netmask': 'ffff:ffff:ffff:ffff::'
+          },
+          {
+            'addr': 'fe80::42:acff:fe11:11',
+            'netmask': 'ffff:ffff:ffff:ffff::'
+          }
+        ],
+        'name': 'wifi0'
+      }
+    ]
+  },
+  'success': true
+}
+
+const portMappingsData = {
+  port_mappings: [
+    {
+      local_port: 80,
+      external_port: 80
+    },
+    {
+      local_port: 443,
+      external_port: 10001
+    }
+
+  ],
+  success: true
+}
+
+const accessData = {
+  error_toggle: false,
+  data: {
+    external_access: true,
+    upnp_available: false,
+    upnp_enabled: true,
+    upnp_message: 'not used',
+    public_ip: '111.111.111.111'
+  },
+  success: true
+}
 
 const express = require('express')
 const bodyparser = require('body-parser')
@@ -195,6 +270,43 @@ const mock = function (app, server, compiler) {
 
   app.post('/rest/installer/upgrade', function (req, res) {
     res.json({ success: true })
+  })
+
+  app.get('/rest/access/network_interfaces', function (req, res) {
+    res.json(networkInterfaces)
+  })
+
+  app.get('/rest/access/access', function (req, res) {
+    res.json(accessData)
+  })
+
+  app.get('/rest/access/port_mappings', function (req, res) {
+    res.json(portMappingsData)
+  })
+
+  app.post('/rest/access/set_access', function (req, res) {
+    if (!accessData.error_toggle) {
+      accessData.data.external_access = req.query.external_access
+      accessData.data.upnp_enabled = req.query.upnp_enabled
+      if (req.query.ip_autodetect) {
+        if ('public_ip' in accessData.data) {
+          delete accessData.data.public_ip
+        }
+      } else {
+        accessData.data.public_ip = req.query.public_ip
+      }
+      if (req.query.upnp_enabled) {
+        portMappingsData.port_mappings[0].external_port = 81
+        portMappingsData.port_mappings[1].external_port = 444
+      } else {
+        portMappingsData.port_mappings[0].external_port = req.query.certificate_port
+        portMappingsData.port_mappings[1].external_port = req.query.access_port
+      }
+      res.json({ success: true })
+    } else {
+      res.status(500).json({ success: false, message: "error" })
+    }
+    accessData.error_toggle = !accessData.error_toggle
   })
 }
 
