@@ -281,7 +281,7 @@ def test_openssl_cli(app_dir, device_host):
 
 def test_set_access_mode_with_certbot(device, device_host):
 
-    response = device.login().get('https://{0}/rest/access/set_access'.format(device_host), verify=False,
+    response = device.login().post('https://{0}/rest/access/set_access'.format(device_host), verify=False,
                                   params={'upnp_enabled': 'false',
                                           'external_access': 'false', 'public_ip': 0,
                                           'certificate_port': 0, 'access_port': 0})
