@@ -4,9 +4,10 @@ import MockAdapter from 'axios-mock-adapter'
 import flushPromises from 'flush-promises'
 import Access from '@/views/Access'
 
+jest.setTimeout(30000)
 
 test('Disable external access', async () => {
-  var savedExternalAccess = undefined
+  var savedExternalAccess
   const mock = new MockAdapter(axios)
   mock.onGet('/rest/access/access').reply(200,
     {
@@ -30,12 +31,12 @@ test('Disable external access', async () => {
     }
   )
   mock.onPost('/rest/access/set_access').reply(function (config) {
-      savedExternalAccess = JSON.parse(config.data).external_access
-      return [
-        200,
-        { success: true }
-      ]
-    }
+    savedExternalAccess = JSON.parse(config.data).external_access
+    return [
+      200,
+      { success: true }
+    ]
+  }
   )
 
   const elem = document.createElement('div')

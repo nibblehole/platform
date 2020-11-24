@@ -3,5 +3,5 @@ module.exports = {
   transform: {
     '^.+\\.vue$': 'vue-jest'
   },
-  setupFiles: ["./tests/setup.js"]
+  setupFiles: ['./tests/setup.js']
 }

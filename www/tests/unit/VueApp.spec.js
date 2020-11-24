@@ -20,7 +20,7 @@ test('activated and logged in', async () => {
   mount(VueApp, {
     global: {
       components: {
-        RouterView: { render() { return h('div') } }
+        RouterView: { render () { return h('div') } }
       },
       stubs: {
         Menu: true
@@ -51,7 +51,7 @@ test('activated and not logged in', async () => {
   mount(VueApp, {
     global: {
       components: {
-        RouterView: { render() { return h('div') } }
+        RouterView: { render () { return h('div') } }
       },
       stubs: {
         Menu: true
@@ -82,7 +82,7 @@ test('not activated and not logged in', async () => {
   mount(VueApp, {
     global: {
       components: {
-        RouterView: { render() { return h('div') } }
+        RouterView: { render () { return h('div') } }
       },
       stubs: {
         Menu: true

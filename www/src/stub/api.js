@@ -76,75 +76,75 @@ const deviceUrl = {
 }
 
 let backups = [
-  { 'path': '/data/platform/backup', 'file': 'files-2019-0515-123506.tar.gz' },
-  { 'path': '/data/platform/backup', 'file': 'nextcloud-2019-0515-123506.tar.gz' },
-  { 'path': '/data/platform/backup', 'file': 'diaspora-2019-0512-103501.tar.gz' },
-  { 'path': '/data/platform/backup', 'file': 'nextcloud-2019-0521-113502.tar.gz' },
-  { 'path': '/data/platform/backup', 'file': 'nextcloud-2019-0201-122500.tar.gz' },
-  { 'path': '/data/platform/backup', 'file': 'files-2019-0415-123506.tar.gz' }
+  { path: '/data/platform/backup', file: 'files-2019-0515-123506.tar.gz' },
+  { path: '/data/platform/backup', file: 'nextcloud-2019-0515-123506.tar.gz' },
+  { path: '/data/platform/backup', file: 'diaspora-2019-0512-103501.tar.gz' },
+  { path: '/data/platform/backup', file: 'nextcloud-2019-0521-113502.tar.gz' },
+  { path: '/data/platform/backup', file: 'nextcloud-2019-0201-122500.tar.gz' },
+  { path: '/data/platform/backup', file: 'files-2019-0415-123506.tar.gz' }
 ]
 
 const networkInterfaces = {
-  'data': {
-    'interfaces': [
+  data: {
+    interfaces: [
       {
-        'ipv4': [
+        ipv4: [
           {
-            'addr': '172.17.0.2',
-            'broadcast': '172.17.0.2',
-            'netmask': '255.255.0.0'
+            addr: '172.17.0.2',
+            broadcast: '172.17.0.2',
+            netmask: '255.255.0.0'
           },
           {
-            'addr': '172.17.0.3',
-            'broadcast': '172.17.0.2',
-            'netmask': '255.255.0.0'
+            addr: '172.17.0.3',
+            broadcast: '172.17.0.2',
+            netmask: '255.255.0.0'
           }
         ],
-        'name': 'eth0'
+        name: 'eth0'
       },
       {
-        'ipv4': [
+        ipv4: [
           {
-            'addr': '172.17.0.2',
-            'broadcast': '172.17.0.2',
-            'netmask': '255.255.0.0'
+            addr: '172.17.0.2',
+            broadcast: '172.17.0.2',
+            netmask: '255.255.0.0'
           },
           {
-            'addr': '172.17.0.3',
-            'broadcast': '172.17.0.2',
-            'netmask': '255.255.0.0'
+            addr: '172.17.0.3',
+            broadcast: '172.17.0.2',
+            netmask: '255.255.0.0'
           }
         ],
-        'ipv6': [
+        ipv6: [
           {
-            'addr': 'fe80::42:acff:fe11:2%eth0',
-            'netmask': 'ffff:ffff:ffff:ffff::'
+            addr: 'fe80::42:acff:fe11:2%eth0',
+            netmask: 'ffff:ffff:ffff:ffff::'
           },
           {
-            'addr': 'fe80::42:acff:fe11:11',
-            'netmask': 'ffff:ffff:ffff:ffff::'
+            addr: 'fe80::42:acff:fe11:11',
+            netmask: 'ffff:ffff:ffff:ffff::'
           }
         ],
-        'name': 'wifi0'
+        name: 'wifi0'
       }
     ]
   },
-  'success': true
+  success: true
 }
 
 const portMappingsData = {
   port_mappings: [
     {
-      'local_port': 80,
-      'external_port': 80
+      local_port: 80,
+      external_port: 80
     },
     {
-      'local_port': 443,
-      'external_port': 10001
+      local_port: 443,
+      external_port: 10001
     }
 
   ],
-  'success': true
+  success: true
 }
 
 const accessData = {
@@ -250,8 +250,8 @@ const mock = function (app, server, compiler) {
 
   app.get('/rest/backup/list', function (req, res) {
     res.json({
-      'success': true,
-      'data': backups
+      success: true,
+      data: backups
     })
   })
 
@@ -303,7 +303,7 @@ const mock = function (app, server, compiler) {
       }
       res.json({ success: true })
     } else {
-      res.status(500).json({ success: false, message: "error" })
+      res.status(500).json({ success: false, message: 'error' })
     }
     // state.accessSuccess = !state.accessSuccess
   })
