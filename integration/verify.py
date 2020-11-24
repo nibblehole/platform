@@ -347,7 +347,7 @@ def test_api_url_443(device, device_host, app_domain):
     response = device.login().get('https://{0}/rest/access/access'.format(device_host), verify=False)
     assert response.status_code == 200
 
-    response = device.login().get('https://{0}/rest/access/set_access'.format(device_host), verify=False,
+    response = device.login().post('https://{0}/rest/access/set_access'.format(device_host), verify=False,
                                   params={'upnp_enabled': 'false',
                                           'external_access': 'false', 'public_ip': 0,
                                           'certificate_port': 443, 'access_port': 443})
@@ -364,7 +364,7 @@ def test_api_url_443(device, device_host, app_domain):
 
 def test_api_url_10000(device, device_host, app_domain):
 
-    response = device.login().get('https://{0}/rest/access/set_access'.format(device_host), verify=False,
+    response = device.login().post('https://{0}/rest/access/set_access'.format(device_host), verify=False,
                                   params={'upnp_enabled': 'false',
                                           'external_access': 'false', 'public_ip': 0,
                                           'certificate_port': 80, 'access_port': 10000})
@@ -382,7 +382,7 @@ def test_api_url_10000(device, device_host, app_domain):
 
 def test_set_access_error(device, device_host):
 
-    response = device.login().get('https://{0}/rest/access/set_access'.format(device_host), verify=False,
+    response = device.login().post('https://{0}/rest/access/set_access'.format(device_host), verify=False,
                                   params={'upnp_enabled': 'false',
                                           'external_access': 'true', 'public_ip': 0,
                                           'certificate_port': 0, 'access_port': 0})
