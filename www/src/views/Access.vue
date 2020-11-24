@@ -361,6 +361,7 @@ export default {
       // console.log('save external access: ' + accessEnabled)
       if (accessEnabled) {
         const upnpEnabled = $('#tgl_upnp').bootstrapSwitch('state')
+        requestData.upnp_enabled = upnpEnabled
         if (!upnpEnabled) {
           const certificatePortString = $('#certificate_port').val()
           const certificatePort = parseInt(certificatePortString)
