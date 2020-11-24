@@ -351,13 +351,13 @@ export default {
     save (event) {
       event.preventDefault()
       const that = this
+      const accessEnabled = $('#tgl_external').bootstrapSwitch('state')
       const requestData = {
-        external_access: false,
+        external_access: accessEnabled,
         upnp_enabled: false,
         certificate_port: 0,
         access_port: 0
       }
-      const accessEnabled = $('#tgl_external').bootstrapSwitch('state')
       // console.log('save external access: ' + accessEnabled)
       if (accessEnabled) {
         const upnpEnabled = $('#tgl_upnp').bootstrapSwitch('state')

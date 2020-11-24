@@ -6,7 +6,8 @@ const state = {
   },
   jobStatusRunning: false,
   availableAppsSuccess: true,
-  activated: true
+  activated: true,
+  accessSuccess: true
 }
 
 const apps = {
@@ -134,20 +135,19 @@ const networkInterfaces = {
 const portMappingsData = {
   port_mappings: [
     {
-      local_port: 80,
-      external_port: 80
+      'local_port': 80,
+      'external_port': 80
     },
     {
-      local_port: 443,
-      external_port: 10001
+      'local_port': 443,
+      'external_port': 10001
     }
 
   ],
-  success: true
+  'success': true
 }
 
 const accessData = {
-  error_toggle: false,
   data: {
     external_access: true,
     upnp_available: false,
@@ -277,6 +277,7 @@ const mock = function (app, server, compiler) {
   })
 
   app.get('/rest/access/access', function (req, res) {
+    console.log('external access: ' + accessData.data.external_access)
     res.json(accessData)
   })
 
@@ -285,28 +286,26 @@ const mock = function (app, server, compiler) {
   })
 
   app.post('/rest/access/set_access', function (req, res) {
-    if (!accessData.error_toggle) {
-      accessData.data.external_access = req.query.external_access
-      accessData.data.upnp_enabled = req.query.upnp_enabled
-      if (req.query.ip_autodetect) {
-        if ('public_ip' in accessData.data) {
-          delete accessData.data.public_ip
-        }
+    if (state.accessSuccess) {
+      accessData.data.external_access = req.body.external_access
+      accessData.data.upnp_enabled = req.body.upnp_enabled
+      if (req.body.public_ip === undefined) {
+        delete accessData.data.public_ip
       } else {
-        accessData.data.public_ip = req.query.public_ip
+        accessData.data.public_ip = req.body.public_ip
       }
       if (req.query.upnp_enabled) {
         portMappingsData.port_mappings[0].external_port = 81
         portMappingsData.port_mappings[1].external_port = 444
       } else {
-        portMappingsData.port_mappings[0].external_port = req.query.certificate_port
-        portMappingsData.port_mappings[1].external_port = req.query.access_port
+        portMappingsData.port_mappings[0].external_port = req.body.certificate_port
+        portMappingsData.port_mappings[1].external_port = req.body.access_port
       }
       res.json({ success: true })
     } else {
       res.status(500).json({ success: false, message: "error" })
     }
-    accessData.error_toggle = !accessData.error_toggle
+    // state.accessSuccess = !state.accessSuccess
   })
 }
 

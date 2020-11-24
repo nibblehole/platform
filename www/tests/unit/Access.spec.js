@@ -6,9 +6,7 @@ import Access from '@/views/Access'
 
 
 test('Disable external access', async () => {
-  const showError = jest.fn()
-  const showErrorOld = jest.fn()
-
+  var savedExternalAccess = undefined
   const mock = new MockAdapter(axios)
   mock.onGet('/rest/access/access').reply(200,
     {
@@ -31,8 +29,13 @@ test('Disable external access', async () => {
       success: true
     }
   )
-  mock.onPost('/rest/access/set_access').reply(200,
-    { success: true }
+  mock.onPost('/rest/access/set_access').reply(function (config) {
+      savedExternalAccess = JSON.parse(config.data).external_access
+      return [
+        200,
+        { success: true }
+      ]
+    }
   )
 
   const elem = document.createElement('div')
@@ -50,8 +53,6 @@ test('Disable external access', async () => {
       }
     }
   )
-  wrapper.vm.$refs.error.show = showErrorOld
-  wrapper.vm.$refs.error.showAxios = showError
 
   await flushPromises()
 
@@ -59,6 +60,5 @@ test('Disable external access', async () => {
   await wrapper.find('#btn_save').trigger('click')
   await flushPromises()
 
-  expect(showErrorOld).toHaveBeenCalledTimes(0)
-  expect(showError).toHaveBeenCalledTimes(0)
+  expect(savedExternalAccess).toBe(false)
 })
