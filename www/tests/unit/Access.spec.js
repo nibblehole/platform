@@ -6,8 +6,16 @@ import Access from '@/views/Access'
 
 jest.setTimeout(30000)
 
+let defaultPortMappings = {
+  port_mappings: [
+    { local_port: 80, external_port: 80 },
+    { local_port: 443, external_port: 10001 }
+  ],
+  success: true
+}
+
 test('Disable external access', async () => {
-  var savedExternalAccess
+  let savedExternalAccess = undefined
   const showError = jest.fn()
   const showErrorOld = jest.fn()
 
@@ -24,26 +32,15 @@ test('Disable external access', async () => {
     }
   )
 
-  mock.onGet('/rest/access/port_mappings').reply(200,
-    {
-      port_mappings: [
-        { local_port: 80, external_port: 80 },
-        { local_port: 443, external_port: 10001 }
-      ],
-      success: true
-    }
-  )
+  mock.onGet('/rest/access/port_mappings').reply(200, defaultPortMappings )
   mock.onPost('/rest/access/set_access').reply(function (config) {
       savedExternalAccess = JSON.parse(config.data).external_access
       return [ 200, { success: true } ]
     })
 
-  const elem = document.createElement('div')
-  elem.id = 'root'
-  document.body.appendChild(elem)
   const wrapper = mount(Access,
     {
-      attachTo: elem,
+      attachTo: document.body,
       global: {
         stubs: {
           Error: true,
@@ -67,7 +64,7 @@ test('Disable external access', async () => {
 })
 
 test('Enable external access', async () => {
-  var savedExternalAccess
+  let savedExternalAccess = undefined
   const showError = jest.fn()
   const showErrorOld = jest.fn()
 
@@ -84,25 +81,15 @@ test('Enable external access', async () => {
     }
   )
 
-  mock.onGet('/rest/access/port_mappings').reply(200,
-    {
-      port_mappings: [
-        { local_port: 80, external_port: 80 },
-        { local_port: 443, external_port: 10001 }
-      ],
-      success: true
-    }
-  )
+  mock.onGet('/rest/access/port_mappings').reply(200, defaultPortMappings )
   mock.onPost('/rest/access/set_access').reply(function (config) {
     savedExternalAccess = JSON.parse(config.data).external_access
     return [200, { success: true }]
   })
 
-  const elem = document.createElement('div')
-  document.body.appendChild(elem)
   const wrapper = mount(Access,
     {
-      attachTo: elem,
+      attachTo: document.body,
       global: {
         stubs: {
           Error: true,
@@ -126,7 +113,7 @@ test('Enable external access', async () => {
 })
 
 test('Enable auto port mapping (upnp)', async () => {
-  var savedUpnpEnabled
+  let savedUpnpEnabled = undefined
   const showError = jest.fn()
   const showErrorOld = jest.fn()
 
@@ -143,25 +130,15 @@ test('Enable auto port mapping (upnp)', async () => {
     }
   )
 
-  mock.onGet('/rest/access/port_mappings').reply(200,
-    {
-      port_mappings: [
-        { local_port: 80, external_port: 80 },
-        { local_port: 443, external_port: 10001 }
-      ],
-      success: true
-    }
-  )
+  mock.onGet('/rest/access/port_mappings').reply(200, defaultPortMappings )
   mock.onPost('/rest/access/set_access').reply(function (config) {
     savedUpnpEnabled = JSON.parse(config.data).upnp_enabled
     return [200, { success: true }]
   })
 
-  const elem = document.createElement('div')
-  document.body.appendChild(elem)
   const wrapper = mount(Access,
     {
-      attachTo: elem,
+      attachTo: document.body,
       global: {
         stubs: {
           Error: true,
@@ -185,8 +162,8 @@ test('Enable auto port mapping (upnp)', async () => {
 })
 
 test('Set access and certificate ports', async () => {
-  var savedCertificatePort
-  var savedAccessPort
+  let savedCertificatePort = undefined
+  let savedAccessPort = undefined
   const showError = jest.fn()
   const showErrorOld = jest.fn()
 
@@ -203,15 +180,7 @@ test('Set access and certificate ports', async () => {
     }
   )
 
-  mock.onGet('/rest/access/port_mappings').reply(200,
-    {
-      port_mappings: [
-        { local_port: 80, external_port: 80 },
-        { local_port: 443, external_port: 10001 }
-      ],
-      success: true
-    }
-  )
+  mock.onGet('/rest/access/port_mappings').reply(200, defaultPortMappings )
   mock.onPost('/rest/access/set_access').reply(function (config) {
     let request = JSON.parse(config.data)
     savedCertificatePort = request.certificate_port
@@ -219,11 +188,9 @@ test('Set access and certificate ports', async () => {
     return [200, { success: true }]
   })
 
-  const elem = document.createElement('div')
-  document.body.appendChild(elem)
   const wrapper = mount(Access,
     {
-      attachTo: elem,
+      attachTo: document.body,
       global: {
         stubs: {
           Error: true,
