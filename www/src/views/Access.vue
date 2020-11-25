@@ -56,7 +56,7 @@
               <div class="setline">
                   <span class="span">External certificate
                       <span style='white-space: nowrap;'> HTTP port 80:
-                          <input name="certificate_port" id="certificate_port" type="text"
+                          <input id="certificate_port" type="text"
                                  style="width: 80px; height: 30px; padding: 0 10px 0 10px">
                           <button id="certificate_port_warning" type=button @click="showCertificatePortWarning"
                                   class="control" style="background:transparent;">
@@ -70,7 +70,7 @@
               <div class="setline">
                   <span class="span">External access
                       <span style='white-space: nowrap;'> HTTPS port 443:
-                          <input name="access_port" id="access_port" type="text"
+                          <input id="access_port" type="text"
                                  style="width: 80px; height: 30px; padding: 0 10px 0 10px"/>
                           <button id="access_port_warning" type=button @click="showAccessPortWarning"
                                   class="control" style="background:transparent;">
@@ -368,7 +368,6 @@ export default {
           const accessPortString = $('#access_port').val()
           const accessPort = parseInt(accessPortString)
           if (isValidPort(certificatePort)) {
-            // console.log('show cert port error')
             this.$refs.error.show(error('certificate port (' + certificatePortString + ') has to be between 1 and 65535'))
             return
           }
