@@ -6,7 +6,7 @@ import Access from '@/views/Access'
 
 jest.setTimeout(30000)
 
-let defaultPortMappings = {
+const defaultPortMappings = {
   port_mappings: [
     { local_port: 80, external_port: 80 },
     { local_port: 443, external_port: 10001 }
@@ -15,7 +15,7 @@ let defaultPortMappings = {
 }
 
 test('Disable external access', async () => {
-  let savedExternalAccess = undefined
+  let savedExternalAccess
   const showError = jest.fn()
   const showErrorOld = jest.fn()
 
@@ -32,11 +32,11 @@ test('Disable external access', async () => {
     }
   )
 
-  mock.onGet('/rest/access/port_mappings').reply(200, defaultPortMappings )
+  mock.onGet('/rest/access/port_mappings').reply(200, defaultPortMappings)
   mock.onPost('/rest/access/set_access').reply(function (config) {
-      savedExternalAccess = JSON.parse(config.data).external_access
-      return [ 200, { success: true } ]
-    })
+    savedExternalAccess = JSON.parse(config.data).external_access
+    return [200, { success: true }]
+  })
 
   const wrapper = mount(Access,
     {
@@ -64,7 +64,7 @@ test('Disable external access', async () => {
 })
 
 test('Enable external access', async () => {
-  let savedExternalAccess = undefined
+  let savedExternalAccess
   const showError = jest.fn()
   const showErrorOld = jest.fn()
 
@@ -81,7 +81,7 @@ test('Enable external access', async () => {
     }
   )
 
-  mock.onGet('/rest/access/port_mappings').reply(200, defaultPortMappings )
+  mock.onGet('/rest/access/port_mappings').reply(200, defaultPortMappings)
   mock.onPost('/rest/access/set_access').reply(function (config) {
     savedExternalAccess = JSON.parse(config.data).external_access
     return [200, { success: true }]
@@ -113,7 +113,7 @@ test('Enable external access', async () => {
 })
 
 test('Enable auto port mapping (upnp)', async () => {
-  let savedUpnpEnabled = undefined
+  let savedUpnpEnabled
   const showError = jest.fn()
   const showErrorOld = jest.fn()
 
@@ -130,7 +130,7 @@ test('Enable auto port mapping (upnp)', async () => {
     }
   )
 
-  mock.onGet('/rest/access/port_mappings').reply(200, defaultPortMappings )
+  mock.onGet('/rest/access/port_mappings').reply(200, defaultPortMappings)
   mock.onPost('/rest/access/set_access').reply(function (config) {
     savedUpnpEnabled = JSON.parse(config.data).upnp_enabled
     return [200, { success: true }]
@@ -162,8 +162,8 @@ test('Enable auto port mapping (upnp)', async () => {
 })
 
 test('Set access and certificate ports', async () => {
-  let savedCertificatePort = undefined
-  let savedAccessPort = undefined
+  let savedCertificatePort
+  let savedAccessPort
   const showError = jest.fn()
   const showErrorOld = jest.fn()
 
@@ -180,9 +180,9 @@ test('Set access and certificate ports', async () => {
     }
   )
 
-  mock.onGet('/rest/access/port_mappings').reply(200, defaultPortMappings )
+  mock.onGet('/rest/access/port_mappings').reply(200, defaultPortMappings)
   mock.onPost('/rest/access/set_access').reply(function (config) {
-    let request = JSON.parse(config.data)
+    const request = JSON.parse(config.data)
     savedCertificatePort = request.certificate_port
     savedAccessPort = request.access_port
     return [200, { success: true }]

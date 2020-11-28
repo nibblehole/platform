@@ -19,6 +19,20 @@
           </div>
 
           <div class="colapp app">
+            <router-link to="/access" class="app-link">
+              <i class="material-icons settings-icon">cloud_queue</i>
+              <div class="setting-name"><span class="withline">Access</span></div>
+            </router-link>
+          </div>
+
+          <div class="colapp app">
+            <router-link to="/internalmemory" class="app-link">
+              <i class="material-icons settings-icon">memory</i>
+              <div class="setting-name"><span class="withline">Internal Memory</span></div>
+            </router-link>
+          </div>
+
+          <div class="colapp app">
             <router-link to="/storage" class="app-link">
               <i class="material-icons settings-icon">storage</i>
               <div class="setting-name"><span class="withline">Storage</span></div>
@@ -44,13 +58,6 @@
             <router-link to="/backup" class="app-link">
               <i class="material-icons settings-icon">archive</i>
               <div class="setting-name"><span class="withline">Backup</span></div>
-            </router-link>
-          </div>
-
-          <div class="colapp app">
-            <router-link to="/access" class="app-link">
-              <i class="material-icons settings-icon">cloud_queue</i>
-              <div class="setting-name"><span class="withline">Access</span></div>
             </router-link>
           </div>
 

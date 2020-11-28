@@ -160,63 +160,62 @@ const accessData = {
 }
 
 const disksData = {
-  'disks': [
+  disks: [
     {
-      'name': 'My Passport 0837',
-      'device': '/dev/sdb',
-      'active': true,
-      'size': '931.5G',
-      'partitions': [
+      name: 'My Passport 0837',
+      device: '/dev/sdb',
+      active: true,
+      size: '931.5G',
+      partitions: [
         {
-          'active': true,
-          'device': '/dev/sdb1',
-          'fs_type': 'ntfs',
-          'mount_point': '/opt/disk/external',
-          'mountable': true,
-          'size': '931.5G'
+          active: true,
+          device: '/dev/sdb1',
+          fs_type: 'ntfs',
+          mount_point: '/opt/disk/external',
+          mountable: true,
+          size: '931.5G'
         }
       ]
     },
     {
-      'name': 'My Passport 0990',
-      'device': '/dev/sdc',
-      'active': false,
-      'size': '931.5G',
-      'partitions': [
+      name: 'My Passport 0990',
+      device: '/dev/sdc',
+      active: false,
+      size: '931.5G',
+      partitions: [
         {
-          'active': false,
-          'device': '/dev/sdc1',
-          'fs_type': 'ntfs',
-          'mount_point': '',
-          'mountable': true,
-          'size': '931.5G'
+          active: false,
+          device: '/dev/sdc1',
+          fs_type: 'ntfs',
+          mount_point: '',
+          mountable: true,
+          size: '931.5G'
         }
       ]
     },
     {
-      'name': 'Blank Disk',
-      'device': '/dev/sdb',
-      'size': '100 TB',
-      'partitions': []
+      name: 'Blank Disk',
+      device: '/dev/sdb',
+      size: '100 TB',
+      partitions: []
     }
   ],
-  'success': true
+  success: true
 }
 
 const disksDataError = {
-  'message': 'error',
-  'success': false
+  message: 'error',
+  success: false
 }
 
 const bootDiskData = {
-  'data': {
-    'device': '/dev/mmcblk0p2',
-    'size': '2G',
-    'extendable': true
+  data: {
+    device: '/dev/mmcblk0p2',
+    size: '2G',
+    extendable: true
   },
-  'success': true
+  success: true
 }
-
 
 const express = require('express')
 const bodyparser = require('body-parser')
@@ -381,13 +380,13 @@ const mock = function (app, server, compiler) {
     }
   })
   app.post('/rest/settings/disk_deactivate', function (req, res) {
-      if (state.diskActionSuccess) {
-        res.json(disksData)
-      } else {
-        res.json(disksDataError)
-      }
+    if (state.diskActionSuccess) {
+      res.json(disksData)
+    } else {
+      res.json(disksDataError)
+    }
   })
-  app.post('/rest/settings/boot_extend', function (req, res) {
+  app.post('/rest/storage/boot_extend', function (req, res) {
     res.json({ success: true })
   })
 

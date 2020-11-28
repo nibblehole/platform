@@ -8,21 +8,6 @@
 
           <div class="col2">
             <div class="setline">
-              <div class="setline" style="margin-top: 20px;">
-                <span class="span" style="font-weight: bold;">Boot disk</span>
-              </div>
-
-              <div class="setline">
-                <div id="block_boot_disk" v-if="boot !== undefined">
-                  <span class="span">Partition - {{ boot.size }}</span>
-                  <div class="spandiv" v-if="boot.extendable">
-                    <button class="buttongreen bwidth smbutton btn-lg"
-                            id="btn_boot_extend"
-                            data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Extending...">Extend
-                    </button>
-                  </div>
-                </div>
-              </div>
 
               <div class="setline" style="margin-top: 20px;">
                 <span class="span" style="font-weight: bold;">External disks</span>
@@ -165,7 +150,6 @@ export default {
   },
   data () {
     return {
-      boot: undefined,
       disks: undefined,
       deviceToFormat: undefined,
       deviceToFormatIndex: undefined,
@@ -178,27 +162,21 @@ export default {
   },
   mounted () {
     this.uiCheckDisks()
-    this.updateBootDisk(this.uiDisplayBootDisk, (e, a, b) => this.$refs.error.show(e))
   },
   methods: {
     diskFormatConfirm (index, device, name) {
       this.deviceToFormatIndex = index
       this.deviceToFormat = device
       this.deviceToFormatName = name
-      // console.log(this.deviceToFormatName)
-      var btn = $('#btn_format_' + this.deviceToFormatIndex)
+      const btn = $('#btn_format_' + this.deviceToFormatIndex)
       btn.button('reset')
       $('#disk_format_confirmation').modal('show')
     },
     diskFormat () {
       const that = this
-      // var index = $('#disk_index').val()
-      var btn = $('#btn_format_' + this.deviceToFormatIndex)
+      const btn = $('#btn_format_' + this.deviceToFormatIndex)
       btn.button('loading')
       this.uiEnableControls(false)
-
-      // var device = btn.data('device')
-
       const onError = (err, b, c) => {
         that.$refs.error.show(err)
         btn.button('reset')
@@ -217,51 +195,6 @@ export default {
         })
         .fail(onError)
     },
-    uiBootExtend () {
-      const that = this
-      var btn = $('#btn_boot_extend')
-      btn.button('loading')
-      $.post('/rest/storage/boot_extend')
-        .done(function (data) {
-          Common.checkForServiceError(data, function () {
-            Common.runAfterJobIsComplete(
-              setTimeout,
-              () => {
-                that.updateBootDisk(
-                  that.uiDisplayBootDisk,
-                  function (err, b, c) {
-                    that.$refs.error.show(err)
-                    btn.button('reset')
-                  })
-              },
-              function (err, b, c) {
-                that.$refs.error.show(err)
-                btn.button('reset')
-              },
-              Common.JOB_STATUS_URL,
-              Common.JOB_STATUS_PREDICATE)
-          }, function (err, b, c) {
-            that.$refs.error.show(err)
-            btn.button('reset')
-          })
-        })
-        .fail(function (err, b, c) {
-          that.$refs.error.show(err)
-          btn.button('reset')
-        })
-    },
-    uiDisplayBootDisk (data) {
-      const that = this
-      this.boot = data.data
-      var btn = $('#btn_boot_extend')
-      btn.button('reset')
-      btn.off('click').on('click', function () {
-        that.uiBootExtend()
-      })
-    },
-    updateBootDisk (onComplete, onError) {
-      $.get('/rest/settings/boot_disk').done(onComplete).fail(onError)
-    },
     uiEnableControls (enabled) {
       $('[type=\'checkbox\']').each(function () {
         $(this).bootstrapSwitch('disabled', !enabled)
@@ -276,17 +209,11 @@ export default {
       $.get('/rest/settings/disks')
         .done(resp => {
           this.disks = resp.disks
-          // console.log(this.disks)
           this.uiDisplayDisks()
         })
         .fail(err => this.$refs.error.show(err))
     },
     uiDisplayDisks () {
-      // console.log(this)
-      // $('[type=\'checkbox\']').each(function () {
-      //   console.log(this)
-      //   $(this).bootstrapSwitch()
-      // })
       this.uiEnableControls(true)
       this.setupControls()
     },
@@ -304,10 +231,10 @@ export default {
       this.uiEnableControls(false)
       const mode = this.partitionAction ? 'disk_activate' : 'disk_deactivate'
       $.post('/rest/settings/' + mode, { device: this.partitionActionDevice })
-        .done(function (data) {
+        .done(data => {
           Common.checkForServiceError(
             data,
-            function () {
+            () => {
             },
             (err) => that.$refs.error.show(err))
         })
@@ -315,14 +242,8 @@ export default {
         .fail((err) => that.$refs.error.show(err))
     },
     setupControls () {
-      $('#partition_action_confirmation').on('hidden.bs.modal', function () {
-        var state = $('#partition_state').val() === 'true'
-        var tgl = $('#tgl_partition_' + $('#partition_id').val())
-        tgl.bootstrapSwitch('state', !state, true)
-      })
-
       $('#block_disks').find('[data-type=\'format\']').each(function () {
-        var btn = $(this)
+        const btn = $(this)
         btn.button('reset')
       })
     }
