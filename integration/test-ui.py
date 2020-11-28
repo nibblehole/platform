@@ -53,30 +53,26 @@ def test_settings_activation(driver, device_host, ui_mode, screenshot_dir):
 
 def test_settings_access(driver, device_host, ui_mode, screenshot_dir):
     driver.get("http://{0}/access".format(device_host))
-    time.sleep(10)
     header = "//h1[text()='Access']"
     wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, header)))
     screenshots(driver, screenshot_dir, 'settings_access-' + ui_mode)
 
-    driver.find_element_by_css_selector(".bootstrap-switch-id-tgl_external").click()
-    time.sleep(2)
+    driver.find_element_by_id("external_mode").click()
+    wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.ID, "ip_autodetect")))
     screenshots(driver, screenshot_dir, 'settings_access_external_access-' + ui_mode)
 
 
 def test_settings_network(driver, device_host, ui_mode, screenshot_dir):
     driver.get("http://{0}/network".format(device_host))
-    time.sleep(10)
     header = "//h1[text()='Network']"
     wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, header)))
     screenshots(driver, screenshot_dir, 'settings_network-' + ui_mode)
 
 
 def test_settings_storage(driver, device_host, ui_mode, screenshot_dir):
-    url = "http://{0}/storage.html".format(device_host)
-    resp = requests.get(url, verify=False)
-    assert resp.status_code == 200
-    driver.get(url)
-    time.sleep(10)
+    driver.get("http://{0}/storage".format(device_host))
+    header = "//h1[text()='Storage']"
+    wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, header)))
     screenshots(driver, screenshot_dir, 'settings_storage-' + ui_mode)
 
 

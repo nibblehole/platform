@@ -8,7 +8,7 @@
             <h3>Domain name</h3>
             <div class="setline">
               <span class="span">External Access:
-                <div class="spandiv">
+                <div class="spandiv" id="external_mode">
                   <input type="checkbox" id="tgl_external" data-on-text="ON" data-off-text="OFF" data-label-width="8"/>
                   <i class="fa fa-circle-o-notch fa-spin switchloading opacity-invisible" id="tgl_external_loading"></i>
                 </div>
@@ -21,7 +21,7 @@
             <div id="external_block" style="display: none">
               <div class="setline">
                 <span class="span">Auto detect IP:
-                  <div class="spandiv">
+                  <div class="spandiv" id="ip_autodetect">
                     <input type="checkbox" id="tgl_ip_autodetect" data-on-text="ON" data-off-text="OFF"
                            data-label-width="8"/>
                     <i class="fa fa-circle-o-notch fa-spin switchloading opacity-invisible"
