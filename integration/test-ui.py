@@ -39,26 +39,36 @@ def test_index(driver, ui_mode, device_user, device_password, screenshot_dir):
 
 def test_settings(driver, device_host, ui_mode, screenshot_dir):
     driver.get("http://{0}/settings".format(device_host))
-    header = "//h[text()='Settings']"
+    header = "//h1[text()='Settings']"
     wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, header)))
     screenshots(driver, screenshot_dir, 'settings-' + ui_mode)
 
 
 def test_settings_activation(driver, device_host, ui_mode, screenshot_dir):
     driver.get("http://{0}/activation".format(device_host))
-    header = "//h[text()='Activation']"
+    header = "//h1[text()='Activation']"
     wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, header)))
     screenshots(driver, screenshot_dir, 'settings_activation-' + ui_mode)
 
 
-def test_settings_network(driver, device_host, ui_mode, screenshot_dir):
-    driver.get("http://{0}/network.html".format(device_host))
+def test_settings_access(driver, device_host, ui_mode, screenshot_dir):
+    driver.get("http://{0}/access".format(device_host))
     time.sleep(10)
-    screenshots(driver, screenshot_dir, 'settings_network-' + ui_mode)
+    header = "//h1[text()='Access']"
+    wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, header)))
+    screenshots(driver, screenshot_dir, 'settings_access-' + ui_mode)
 
     driver.find_element_by_css_selector(".bootstrap-switch-id-tgl_external").click()
     time.sleep(2)
-    screenshots(driver, screenshot_dir, 'settings_network_external_access-' + ui_mode)
+    screenshots(driver, screenshot_dir, 'settings_access_external_access-' + ui_mode)
+
+
+def test_settings_network(driver, device_host, ui_mode, screenshot_dir):
+    driver.get("http://{0}/network".format(device_host))
+    time.sleep(10)
+    header = "//h1[text()='Network']"
+    wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, header)))
+    screenshots(driver, screenshot_dir, 'settings_network-' + ui_mode)
 
 
 def test_settings_storage(driver, device_host, ui_mode, screenshot_dir):

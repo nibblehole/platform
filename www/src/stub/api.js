@@ -7,7 +7,8 @@ const state = {
   jobStatusRunning: false,
   availableAppsSuccess: true,
   activated: true,
-  accessSuccess: true
+  accessSuccess: true,
+  diskActionSuccess: true
 }
 
 const apps = {
@@ -158,6 +159,65 @@ const accessData = {
   success: true
 }
 
+const disksData = {
+  'disks': [
+    {
+      'name': 'My Passport 0837',
+      'device': '/dev/sdb',
+      'active': true,
+      'size': '931.5G',
+      'partitions': [
+        {
+          'active': true,
+          'device': '/dev/sdb1',
+          'fs_type': 'ntfs',
+          'mount_point': '/opt/disk/external',
+          'mountable': true,
+          'size': '931.5G'
+        }
+      ]
+    },
+    {
+      'name': 'My Passport 0990',
+      'device': '/dev/sdc',
+      'active': false,
+      'size': '931.5G',
+      'partitions': [
+        {
+          'active': false,
+          'device': '/dev/sdc1',
+          'fs_type': 'ntfs',
+          'mount_point': '',
+          'mountable': true,
+          'size': '931.5G'
+        }
+      ]
+    },
+    {
+      'name': 'Blank Disk',
+      'device': '/dev/sdb',
+      'size': '100 TB',
+      'partitions': []
+    }
+  ],
+  'success': true
+}
+
+const disksDataError = {
+  'message': 'error',
+  'success': false
+}
+
+const bootDiskData = {
+  'data': {
+    'device': '/dev/mmcblk0p2',
+    'size': '2G',
+    'extendable': true
+  },
+  'success': true
+}
+
+
 const express = require('express')
 const bodyparser = require('body-parser')
 const mock = function (app, server, compiler) {
@@ -306,6 +366,41 @@ const mock = function (app, server, compiler) {
       res.status(500).json({ success: false, message: 'error' })
     }
     // state.accessSuccess = !state.accessSuccess
+  })
+  app.get('/rest/settings/disks', function (req, res) {
+    res.json(disksData)
+  })
+  app.get('/rest/settings/boot_disk', function (req, res) {
+    res.json(bootDiskData)
+  })
+  app.post('/rest/settings/disk_activate', function (req, res) {
+    if (state.diskActionSuccess) {
+      res.json(disksData)
+    } else {
+      res.json(disksDataError)
+    }
+  })
+  app.post('/rest/settings/disk_deactivate', function (req, res) {
+      if (state.diskActionSuccess) {
+        res.json(disksData)
+      } else {
+        res.json(disksDataError)
+      }
+  })
+  app.post('/rest/settings/boot_extend', function (req, res) {
+    res.json({ success: true })
+  })
+
+  app.post('/rest/storage/disk_format', function (req, res) {
+    res.json({ success: true })
+  })
+
+  app.get('/rest/settings/boot_extend_status', function (req, res) {
+    res.json({ success: true, is_running: false })
+  })
+
+  app.get('/rest/settings/disk_format_status', function (req, res) {
+    res.json({ success: true, is_running: false })
   })
 }
 

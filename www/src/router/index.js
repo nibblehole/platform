@@ -10,7 +10,8 @@ const routes = [
   { path: '/activate', name: 'Activate', component: () => import('../views/Activate.vue') },
   { path: '/backup', name: 'Backup', component: () => import('../views/Backup.vue') },
   { path: '/network', name: 'Network', component: () => import('../views/Network.vue') },
-  { path: '/access', name: 'Access', component: () => import('../views/Access.vue') }
+  { path: '/access', name: 'Access', component: () => import('../views/Access.vue') },
+  { path: '/storage', name: 'Storage', component: () => import('../views/Storage.vue') }
 ]
 
 const router = createRouter({
