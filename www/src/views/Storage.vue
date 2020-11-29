@@ -26,6 +26,7 @@
                     </span>
                     <div class="spandiv" v-if="!disk.active">
                       <button class="buttonred bwidth smbutton btn-lg"
+                              :id="'format_' + index"
                               data-type="format"
                               data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> "
                               @click="diskFormatConfirm(index, disk.device, disk.name)">Format
@@ -90,7 +91,7 @@
           <div class="modal-footer">
             <button type="button" class="btn buttonlight bwidth smbutton" data-dismiss="modal">Close
             </button>
-            <button type="button" id="btn_disk_format" class="btn buttonlight bwidth smbutton" @click="diskFormat"
+            <button type="button" id="format_confirm" class="btn buttonlight bwidth smbutton" @click="diskFormat"
                     data-dismiss="modal">Format
             </button>
           </div>
@@ -130,6 +131,7 @@
 
 <script>
 import $ from 'jquery'
+import axios from 'axios'
 import 'bootstrap'
 import 'bootstrap-switch'
 import Error from '@/components/Error'
@@ -182,9 +184,9 @@ export default {
         btn.button('reset')
       }
 
-      $.post('/rest/storage/disk_format', { device: this.deviceToFormat })
-        .done(function (data) {
-          Common.checkForServiceError(data, function () {
+      axios.post('/rest/storage/disk_format', { device: this.deviceToFormat })
+        .then(function (resp) {
+          Common.checkForServiceError(resp.data, function () {
             Common.runAfterJobIsComplete(
               setTimeout,
               that.uiCheckDisks,
@@ -193,7 +195,7 @@ export default {
               Common.JOB_STATUS_PREDICATE)
           }, onError)
         })
-        .fail(onError)
+        .catch(onError)
     },
     uiEnableControls (enabled) {
       $('[type=\'checkbox\']').each(function () {
@@ -205,13 +207,14 @@ export default {
       })
     },
     uiCheckDisks () {
-      console.log('reload')
-      $.get('/rest/settings/disks')
-        .done(resp => {
-          this.disks = resp.disks
+      axios.get('/rest/settings/disks')
+        .then(resp => {
+          this.disks = resp.data.disks
           this.uiDisplayDisks()
         })
-        .fail(err => this.$refs.error.show(err))
+        .catch(err => {
+          this.$refs.error.showAxios(err)
+        })
     },
     uiDisplayDisks () {
       this.uiEnableControls(true)
@@ -230,16 +233,17 @@ export default {
       const that = this
       this.uiEnableControls(false)
       const mode = this.partitionAction ? 'disk_activate' : 'disk_deactivate'
-      $.post('/rest/settings/' + mode, { device: this.partitionActionDevice })
-        .done(data => {
+      axios.post('/rest/settings/' + mode, { device: this.partitionActionDevice })
+        .then(resp => {
           Common.checkForServiceError(
-            data,
-            () => {
-            },
+            resp.data,
+            that.uiCheckDisks,
             (err) => that.$refs.error.show(err))
         })
-        .always(this.uiCheckDisks)
-        .fail((err) => that.$refs.error.show(err))
+        .catch((err) => {
+          this.uiCheckDisks()
+          this.$refs.error.show(err)
+        })
     },
     setupControls () {
       $('#block_disks').find('[data-type=\'format\']').each(function () {
