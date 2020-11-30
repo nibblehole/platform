@@ -5,6 +5,7 @@ const state = {
     password: '2'
   },
   jobStatusRunning: false,
+  installerIsRunning: false,
   availableAppsSuccess: true,
   activated: true,
   accessSuccess: true,
@@ -217,6 +218,34 @@ const bootDiskData = {
   success: true
 }
 
+const versionsData = {
+  data: [
+    {
+      app: {
+        id: 'platform',
+        name: 'Platform',
+        required: true,
+        ui: false,
+        url: 'http://platform.odroid-c2.syncloud.it'
+      },
+      current_version: '880',
+      installed_version: '876'
+    },
+    {
+      app: {
+        id: 'installer',
+        name: 'Installer',
+        required: true,
+        ui: false,
+        url: 'http://installer.odroid-c2.syncloud.it'
+      },
+      current_version: '78',
+      installed_version: '75'
+    }
+  ],
+  success: true
+}
+
 const express = require('express')
 const bodyparser = require('body-parser')
 const mock = function (app, server, compiler) {
@@ -271,20 +300,15 @@ const mock = function (app, server, compiler) {
     res.json({ success: true })
   })
   app.get('/rest/settings/installer_status', function (req, res) {
-    res.json({ success: true, is_running: false })
+    res.json({ success: true, is_running: state.installerIsRunning })
+    state.installerIsRunning = !state.installerIsRunning
   })
   app.post('/rest/backup/create', function (req, res) {
     res.json({})
   })
   app.get('/rest/job/status', function (req, res) {
-    let response = {}
-    if (state.jobStatusRunning) {
-      response = { success: true, data: 'JobStatusBusy' }
-    } else {
-      response = { success: true, data: 'JobStatusIdle' }
-    }
+    res.json({ success: true, data: state.jobStatusRunning ? 'JobStatusBusy': 'JobStatusIdle' })
     state.jobStatusRunning = !state.jobStatusRunning
-    res.json(response)
   })
 
   app.get('/rest/available_apps', function (req, res) {
@@ -400,6 +424,10 @@ const mock = function (app, server, compiler) {
 
   app.get('/rest/settings/disk_format_status', function (req, res) {
     res.json({ success: true, is_running: false })
+  })
+
+  app.get('/rest/settings/versions', function (req, res) {
+    res.json(versionsData)
   })
 }
 

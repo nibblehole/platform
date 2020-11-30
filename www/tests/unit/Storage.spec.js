@@ -16,7 +16,7 @@ test('Format external disk', async () => {
     {
       disks: [
         { name: 'Name1', device: '/dev/sdb', active: false, size: '2G', partitions: [] },
-        { name: 'Name2', device: '/dev/sdc', active: false, size: '2G', partitions: [] },
+        { name: 'Name2', device: '/dev/sdc', active: false, size: '2G', partitions: [] }
       ],
       success: true
     }
@@ -61,12 +61,16 @@ test('Activate partition', async () => {
   mock.onGet('/rest/settings/disks').reply(200,
     {
       disks: [
-        { name: 'Name1', device: '/dev/sdb', active: true, size: '2G', partitions: [
+        {
+          name: 'Name1', device: '/dev/sdb', active: true, size: '2G', partitions: [
             { active: false, device: '/dev/sdb1', fs_type: 'ext4', mount_point: '', mountable: true, size: '931.5G' }
-          ] },
-        { name: 'Name2', device: '/dev/sdc', active: false, size: '2G', partitions: [
+          ]
+        },
+        {
+          name: 'Name2', device: '/dev/sdc', active: false, size: '2G', partitions: [
             { active: false, device: '/dev/sdc1', fs_type: 'ext4', mount_point: '', mountable: true, size: '931.5G' }
-          ] },
+          ]
+        },
       ],
       success: true
     }
@@ -88,7 +92,8 @@ test('Activate partition', async () => {
           Confirmation: {
             template: '<button id="confirm" />',
             methods: {
-              show () {}
+              show () {
+              }
             }
           }
         }
