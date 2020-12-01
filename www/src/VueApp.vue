@@ -43,7 +43,7 @@ export default {
       axios.get('/rest/user')
         .then(_ => {
           this.loggedIn = true
-          if (this.currentPath === '/login') {
+          if (this.currentPath === '/login' || this.currentPath === '/activate') {
             this.$router.push('/')
           }
         })

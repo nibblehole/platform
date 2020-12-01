@@ -7,7 +7,7 @@ import Support from '@/views/Support'
 jest.setTimeout(30000)
 
 test('Send logs to the owner', async () => {
-  let sentToSupport = undefined
+  let sentToSupport
   const showError = jest.fn()
 
   const mock = new MockAdapter(axios)
@@ -30,7 +30,7 @@ test('Send logs to the owner', async () => {
           },
           Switch: {
             template: '<button id="switch" />'
-          },
+          }
         }
       }
     }
@@ -47,7 +47,7 @@ test('Send logs to the owner', async () => {
 })
 
 test('Send logs to support', async () => {
-  let sentToSupport = undefined
+  let sentToSupport
   const showError = jest.fn()
 
   const mock = new MockAdapter(axios)
@@ -70,7 +70,7 @@ test('Send logs to support', async () => {
           },
           Switch: {
             template: '<button id="switch" />'
-          },
+          }
         }
       }
     }

@@ -14,6 +14,13 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn buttonlight bwidth smbutton" data-dismiss="modal">Close</button>
+            <button
+              v-if="disableLogs !== true"
+              id="btn_error_send_logs"
+              type="button"
+              @click="sendLogs"
+              class="btn buttonblue bwidth smbutton">Send logs
+            </button>
           </div>
         </div>
       </div>
@@ -23,6 +30,7 @@
 <script>
 import $ from 'jquery'
 import toastr from 'toastr'
+import axios from 'axios'
 
 function showFieldError (field, error) {
   var txtFieldSelector = '#' + field
@@ -41,7 +49,17 @@ function getErrorBlockId (field) {
 
 export default {
   name: 'Error',
+  props: {
+    disableLogs: Boolean
+  },
   methods: {
+    sendLogs () {
+      axios
+        .post('/rest/send_log', null, { params: { include_support: true } })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     showAxios (error) {
       this.show({
         status: error.response.status,
@@ -76,7 +94,8 @@ export default {
             $('#block_error').modal()
           }
         } else {
-          this.$router.push('/error')
+          $('#txt_error').text('Server Error')
+          $('#block_error').modal()
         }
       }
     },

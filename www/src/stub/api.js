@@ -360,7 +360,6 @@ const mock = function (app, server, compiler) {
   })
 
   app.get('/rest/access/access', function (req, res) {
-    console.log('external access: ' + accessData.data.external_access)
     res.json(accessData)
   })
 
@@ -388,7 +387,7 @@ const mock = function (app, server, compiler) {
     } else {
       res.status(500).json({ success: false, message: 'error' })
     }
-    // state.accessSuccess = !state.accessSuccess
+    state.accessSuccess = !state.accessSuccess
   })
   app.get('/rest/settings/disks', function (req, res) {
     res.json(disksData)
@@ -430,6 +429,21 @@ const mock = function (app, server, compiler) {
     res.json(versionsData)
   })
   app.post('/rest/send_log', function (req, res) {
+    res.json({ success: true })
+  })
+  app.post('/rest/activate', function (req, res) {
+    state.activated = true
+    // res.json({ success: true })
+    res.status(500).json({
+      success: false,
+      parameters_messages: [
+        { parameter: 'device_username', messages: ['login is empty'] },
+        { parameter: 'device_password', messages: ['is too short', 'has no special symbol'] }
+      ]
+    })
+  })
+  app.post('/rest/activate_custom_domain', function (req, res) {
+    state.activated = true
     res.json({ success: true })
   })
 }

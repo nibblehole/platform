@@ -8,14 +8,18 @@
             <div class="centered-pills">
 
               <ul class="nav nav-pills">
-                <li class="active"><a id="domain_type_syncloud" data-toggle="tab" href="#domain_syncloud"
-                                      @click="domainType = 'syncloud'">[name].syncloud.it</a></li>
-                <li><a id="domain_type_custom" data-toggle="tab" href="#domain_custom" @click="domainType = 'custom'">My
-                  own domain</a></li>
+                <li class="active">
+                  <a id="domain_type_syncloud" data-toggle="tab" href="#domain_syncloud"
+                     @click="domainType = 'syncloud'">[name].syncloud.it</a>
+                </li>
+                <li>
+                  <a id="domain_type_custom" data-toggle="tab" href="#domain_custom" @click="domainType = 'custom'">
+                    My own domain
+                  </a>
+                </li>
               </ul>
 
             </div>
-            <input name="domain_type" id="domain_type" type="hidden" value="syncloud" :disabled="{ true: loading }">
 
             <div class="tab-content">
               <div id="domain_syncloud" class="tab-pane fade in active">
@@ -27,13 +31,13 @@
                   </button>
                 </div>
                 <input placeholder="syncloud.it email" class="emailinput" id="redirect_email"
-                       type="text" :disabled="{ true: loading }" v-model="redirectEmail">
+                       type="text" :disabled="loading" v-model="redirectEmail">
                 <div class="alert alert-danger alert90" id="redirect_email_alert" style="display: none;"></div>
                 <input placeholder="syncloud.it password" class="passinput"
-                       id="redirect_password" type="password" :disabled="{ true: loading }" v-model="redirectPassword">
+                       id="redirect_password" type="password" :disabled="loading" v-model="redirectPassword">
                 <div class="alert alert-danger alert90" id="redirect_password_alert" style="display: none;"></div>
-                <input placeholder="Name" class="domain" name="user_domain" id="user_domain" type="text"
-                       :disabled="{ true: loading }"><span>.syncloud.it</span>
+                <input placeholder="Name" class="domain" id="user_domain" type="text" v-model="domain"
+                       :disabled="loading"><span>.syncloud.it</span>
                 <div class="alert alert-danger alert90" id="user_domain_alert" style="display: none;"></div>
 
               </div>
@@ -44,8 +48,8 @@
                   <i class='fa fa-question-circle fa-lg'></i>
                 </button>
                 <input placeholder="Top level domain like example.com"
-                       class="domain" name="full_domain" id="full_domain" type="text" style="width:100% !important;"
-                       :disabled="{ true: loading }">
+                       class="domain" id="full_domain" type="text" style="width:100% !important;" v-model="domain"
+                       :disabled="loading">
                 <div class="alert alert-danger alert90" id="full_domain_alert" style="display: none;"></div>
               </div>
             </div>
@@ -58,40 +62,17 @@
               </button>
             </div>
 
-            <input placeholder="Login" class="nameinput" name="device_username" id="device_username" type="text"
-                   :disabled="{ true: loading }">
+            <input placeholder="Login" class="nameinput" id="device_username" type="text" v-model="deviceUsername"
+                   :disabled="loading">
             <div class="alert alert-danger alert90" id="device_username_alert" style="display: none;"></div>
-            <input placeholder="Password" class="passinput" name="device_password" id="device_password" type="password"
-                   :disabled="{ true: loading }">
+            <input placeholder="Password" class="passinput" id="device_password" type="password"
+                   v-model="devicePassword"
+                   :disabled="loading">
             <div class="alert alert-danger alert90" id="device_password_alert" style="display: none;"></div>
             <button id="btn_activate" class="submit buttonblue" type="submit"
                     data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Activating...">Activate
             </button>
           </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="block_error" class="modal fade bs-are-use-sure" tabindex="-1" role="dialog"
-       aria-labelledby="mySmallModalLabel">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-            aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">Error</h4>
-        </div>
-        <div class="modal-body">
-          <div class="bodymod">
-            <div id="txt_error" class="btext">Some error happened!</div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn buttonlight bwidth smbutton" data-dismiss="modal">Close</button>
-            <button id="btn_error_send_logs" type="button" class="btn buttonblue bwidth smbutton" @click="sendLogs">Send
-              logs
-            </button>
-          </div>
         </div>
       </div>
     </div>
@@ -149,7 +130,7 @@
               <br>
               Syncloud account is also used for notifications about new releases.
               <br>
-              It is used only to assing a dns name to IP of your device and update IP when it changes.
+              It is used only to assigning a dns name to IP of your device and update IP when it changes.
               Data transfer happens directly between your apps and device.
             </div>
 
@@ -188,37 +169,43 @@
     </div>
   </div>
 
+  <Error ref="error" :disable-logs="true"/>
+
 </template>
 
 <script>
+import axios from 'axios'
 import $ from 'jquery'
 import 'bootstrap'
 import 'bootstrap-switch'
+import Error from '@/components/Error'
 
 export default {
   name: 'Activate',
+  props: {
+    onLogin: Function,
+    onLogout: Function
+  },
+  components: {
+    Error
+  },
   data () {
     return {
-      domainType: '',
+      domainType: 'syncloud',
       loading: false,
       redirectEmail: '',
-      redirectPassword: ''
+      redirectPassword: '',
+      domain: '',
+      deviceUsername: '',
+      devicePassword: ''
     }
   },
-  components: {},
-  mounted () {
-
-  },
   methods: {
-    sendLogs: function () {
-
-    },
     activate: function (event) {
       event.preventDefault()
       $('#btn_activate').button('loading')
       this.loading = true
       $('#form_activate .alert').remove()
-
       if (this.domainType === 'syncloud') {
         this.activateFreeDomain()
       } else {
@@ -226,35 +213,37 @@ export default {
       }
     },
     activateFreeDomain: function () {
-      $.post('/rest/activate', {
-        redirect_email: this.redirectEmail,
-        redirect_password: this.redirectPassword
-      })
-        .done(() => {
-          this.$router.push('/login')
+      axios
+        .post('/rest/activate', {
+          redirect_email: this.redirectEmail,
+          redirect_password: this.redirectPassword,
+          user_domain: this.domain,
+          device_username: this.deviceUsername,
+          device_password: this.devicePassword
         })
-        .fail((xhr) => {
-          this.$refs.error.show(xhr)
+        .then(_ => {
+          this.$router.push('/')
         })
-        .always(() => {
+        .catch(err => {
           $('#btn_activate').button('reset')
           this.loading = false
+          this.$refs.error.showAxios(err)
         })
     },
     activateCustomDomain: function () {
-      $.post('/rest/activate_custom_domain', {
-        redirect_email: this.redirectEmail,
-        redirect_password: this.redirectPassword
-      })
-        .done(() => {
-          this.$router.push('/login')
+      axios
+        .post('/rest/activate_custom_domain', {
+          full_domain: this.domain,
+          device_username: this.deviceUsername,
+          device_password: this.devicePassword
         })
-        .fail((xhr) => {
-          this.$refs.error.show(xhr)
+        .then(() => {
+          this.$router.push('/')
         })
-        .always(() => {
+        .catch((err) => {
           $('#btn_activate').button('reset')
           this.loading = false
+          this.$refs.error.showAxios(err)
         })
     }
   }
