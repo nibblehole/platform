@@ -13,7 +13,8 @@ const routes = [
   { path: '/access', name: 'Access', component: () => import('../views/Access.vue') },
   { path: '/storage', name: 'Storage', component: () => import('../views/Storage.vue') },
   { path: '/internalmemory', name: 'InternalMemory', component: () => import('../views/InternalMemory.vue') },
-  { path: '/updates', name: 'Updates', component: () => import('../views/Updates.vue') }
+  { path: '/updates', name: 'Updates', component: () => import('../views/Updates.vue') },
+  { path: '/support', name: 'Support', component: () => import('../views/Support.vue') }
 ]
 
 const router = createRouter({

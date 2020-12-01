@@ -42,6 +42,8 @@
                         <Switch :checked="partition.active"
                                 @toggle="diskActionConfirm(disk.name, partition)"
                                 :progress="partition.progress"
+                                on-label="Active"
+                                off-label="Not active"
                         />
                       </div>
                     </div>

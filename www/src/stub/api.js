@@ -429,6 +429,9 @@ const mock = function (app, server, compiler) {
   app.get('/rest/settings/versions', function (req, res) {
     res.json(versionsData)
   })
+  app.post('/rest/send_log', function (req, res) {
+    res.json({ success: true })
+  })
 }
 
 exports.mock = mock

@@ -1,13 +1,15 @@
 <template>
-  <input ref="switch"
-         type="checkbox"
-         data-on-text="Active"
-         data-off-text="Not active"
-         data-label-width="8"
-         @click="$emit('toggle')"
-  />
+  <label>
+    <input ref="switch"
+           type="checkbox"
+           :data-on-text="onLabel"
+           :data-off-text="offLabel"
+           data-label-width="8"
+           @click="$emit('toggle')"
+    />
+  </label>
   <i style="margin-left: 10px" class="fa fa-circle-o-notch fa-spin switchloading"
-     :class="{ 'opacity-visible': showProgress, 'opacity-invisible': !showProgress }"></i>
+     :class="{ 'opacity-visible': !!progress, 'opacity-invisible': !!!progress }"></i>
 </template>
 <script>
 import 'bootstrap'
@@ -19,21 +21,13 @@ export default {
   emits: ['toggle'],
   props: {
     checked: Boolean,
-    progress: Boolean
+    progress: Boolean,
+    onLabel: String,
+    offLabel: String
   },
   watch: {
     checked (val) {
       this.init()
-    },
-    progress (val) {
-      console.log('cahnge: ' + val)
-      this.showProgress = !!val
-      console.log(this.showProgress)
-    }
-  },
-  data () {
-    return {
-      showProgress: false
     }
   },
   methods: {
@@ -44,8 +38,6 @@ export default {
       const that = this
       input.on('switchChange.bootstrapSwitch', function (e, s) {
         that.$emit('toggle')
-        that.showProgress = true
-        console.log(that.showProgress)
       })
     }
   },
