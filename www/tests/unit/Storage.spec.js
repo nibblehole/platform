@@ -7,7 +7,7 @@ import Storage from '@/views/Storage'
 jest.setTimeout(30000)
 
 test('Format external disk', async () => {
-  let deviceToFormat
+  let deviceToFormat = ''
   const showError = jest.fn()
   const showErrorOld = jest.fn()
 
@@ -53,7 +53,7 @@ test('Format external disk', async () => {
 })
 
 test('Activate partition', async () => {
-  let deviceAction
+  let deviceAction = ''
   const showError = jest.fn()
   const showErrorOld = jest.fn()
 
@@ -62,15 +62,23 @@ test('Activate partition', async () => {
     {
       disks: [
         {
-          name: 'Name1', device: '/dev/sdb', active: true, size: '2G', partitions: [
+          name: 'Name1',
+          device: '/dev/sdb',
+          active: true,
+          size: '2G',
+          partitions: [
             { active: false, device: '/dev/sdb1', fs_type: 'ext4', mount_point: '', mountable: true, size: '931.5G' }
           ]
         },
         {
-          name: 'Name2', device: '/dev/sdc', active: false, size: '2G', partitions: [
+          name: 'Name2',
+          device: '/dev/sdc',
+          active: false,
+          size: '2G',
+          partitions: [
             { active: false, device: '/dev/sdc1', fs_type: 'ext4', mount_point: '', mountable: true, size: '931.5G' }
           ]
-        },
+        }
       ],
       success: true
     }

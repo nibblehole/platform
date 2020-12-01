@@ -307,7 +307,7 @@ const mock = function (app, server, compiler) {
     res.json({})
   })
   app.get('/rest/job/status', function (req, res) {
-    res.json({ success: true, data: state.jobStatusRunning ? 'JobStatusBusy': 'JobStatusIdle' })
+    res.json({ success: true, data: state.jobStatusRunning ? 'JobStatusBusy' : 'JobStatusIdle' })
     state.jobStatusRunning = !state.jobStatusRunning
   })
 

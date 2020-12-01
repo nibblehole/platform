@@ -7,7 +7,7 @@ import Updates from '@/views/Updates'
 jest.setTimeout(30000)
 
 test('Update platform', async () => {
-  let upgraded = undefined
+  let upgraded = false
   const showError = jest.fn()
   const showErrorOld = jest.fn()
 
@@ -16,12 +16,12 @@ test('Update platform', async () => {
     {
       data: [
         {
-          app: { id: 'platform', name: 'Platform', required: true, ui: false, url: 'http://platform.odroid-c2.syncloud.it' },
+          app: { id: 'platform', name: 'Platform' },
           current_version: '1',
           installed_version: '2'
         },
         {
-          app: { id: 'installer', name: 'Installer', required: true, ui: false, url: 'http://installer.odroid-c2.syncloud.it' },
+          app: { id: 'installer', name: 'Installer' },
           current_version: '3',
           installed_version: '3'
         }
@@ -29,7 +29,7 @@ test('Update platform', async () => {
       success: true
     }
   )
-  mock.onPost('/rest/upgrade').reply(function (config) {
+  mock.onPost('/rest/upgrade').reply(function (_) {
     upgraded = true
     return [200, { success: true }]
   })
@@ -63,7 +63,7 @@ test('Update platform', async () => {
 })
 
 test('Update installer', async () => {
-  let upgraded = undefined
+  let upgraded = false
   const showError = jest.fn()
   const showErrorOld = jest.fn()
 
@@ -72,12 +72,12 @@ test('Update installer', async () => {
     {
       data: [
         {
-          app: { id: 'platform', name: 'Platform', required: true, ui: false, url: 'http://platform.odroid-c2.syncloud.it' },
+          app: { id: 'platform', name: 'Platform' },
           current_version: '1',
           installed_version: '1'
         },
         {
-          app: { id: 'installer', name: 'Installer', required: true, ui: false, url: 'http://installer.odroid-c2.syncloud.it' },
+          app: { id: 'installer', name: 'Installer' },
           current_version: '2',
           installed_version: '3'
         }
@@ -85,7 +85,7 @@ test('Update installer', async () => {
       success: true
     }
   )
-  mock.onPost('/rest/installer/upgrade').reply(function (config) {
+  mock.onPost('/rest/installer/upgrade').reply(function (_) {
     upgraded = true
     return [200, { success: true }]
   })
@@ -127,12 +127,12 @@ test('Update installer error', async () => {
     {
       data: [
         {
-          app: { id: 'platform', name: 'Platform', required: true, ui: false, url: 'http://platform.odroid-c2.syncloud.it' },
+          app: { id: 'platform', name: 'Platform' },
           current_version: '1',
           installed_version: '1'
         },
         {
-          app: { id: 'installer', name: 'Installer', required: true, ui: false, url: 'http://installer.odroid-c2.syncloud.it' },
+          app: { id: 'installer', name: 'Installer' },
           current_version: '2',
           installed_version: '3'
         }
@@ -140,11 +140,9 @@ test('Update installer error', async () => {
       success: true
     }
   )
-  mock.onPost('/rest/installer/upgrade').reply(function (config) {
+  mock.onPost('/rest/installer/upgrade').reply(function (_) {
     return [500, { success: false }]
   })
-
-  // mock.onGet('/rest/settings/installer_status').reply(200, { success: true, is_running: false })
 
   const wrapper = mount(Updates,
     {
@@ -154,9 +152,7 @@ test('Update installer error', async () => {
           Error: {
             template: '<span/>',
             methods: {
-              showAxios (err) {
-                showError()
-              }
+              showAxios: showError
             }
           },
           Switch: true,
