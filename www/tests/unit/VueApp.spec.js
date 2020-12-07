@@ -37,7 +37,6 @@ test('activated and logged in', async () => {
 })
 
 test('activated and not logged in', async () => {
-  const mockRoute = { params: { id: 1 } }
   const mockRouter = { push: jest.fn() }
 
   const mock = new MockAdapter(axios)
@@ -57,7 +56,7 @@ test('activated and not logged in', async () => {
         Menu: true
       },
       mocks: {
-        $route: mockRoute,
+        $route: { path: '/activate' },
         $router: mockRouter
       }
     }

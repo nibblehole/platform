@@ -14,7 +14,6 @@ var $ = global.jQuery
 window.jQuery = window.$ = $
 
 const publicRoutes = [
-  '/activate',
   '/error',
   '/login'
 ]
@@ -67,6 +66,7 @@ export default {
     }
   },
   mounted () {
+    this.currentPath = this.$route.path
     this.checkUserSession()
   }
 }
