@@ -5,9 +5,9 @@
         <header class="wd12" v-click-outside="close">
           <div class="logo" :class="{ onelogo: !loggedIn }">Syncloud</div>
           <div class="menulinks" v-if="loggedIn">
-            <router-link to="/" class="apps hlink" :class="{ active: activeTab === '/' }">Apps</router-link>
-            <router-link to="/appcenter" class="appcenter hlink" :class="{ active: activeTab === '/appcenter' }">App Center</router-link>
-            <router-link to="/settings" class="settings hlink" :class="{ active: activeTab === '/settings' }">Settings</router-link>
+            <router-link to="/" id="apps" class="apps hlink" :class="{ active: activeTab === '/' }">Apps</router-link>
+            <router-link to="/appcenter" id="appcenter" class="appcenter hlink" :class="{ active: activeTab === '/appcenter' }">App Center</router-link>
+            <router-link to="/settings" id="settings" class="settings hlink" :class="{ active: activeTab === '/settings' }">Settings</router-link>
           </div>
           <div class="menuoff" v-if="loggedIn">
             <a href="#" id="btn_logout_large" class="hlink" @click="logout">
