@@ -107,7 +107,7 @@ def test_settings_backup(driver, ui_mode, screenshot_dir):
 
 
 def test_app_center(driver, ui_mode, screenshot_dir):
-    menu(driver, ui_mode, screenshot_dir, 'settings')
+    menu(driver, ui_mode, screenshot_dir, 'appcenter')
     header = "//h1[text()='App Center']"
     wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, header)))
     screenshots(driver, screenshot_dir, 'appcenter-' + ui_mode)
