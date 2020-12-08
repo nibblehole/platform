@@ -30,7 +30,7 @@
             <span></span>
           </div>
         </header>
-        <div class="navi" v-if="loggedIn" :class="{ naviopen: menuOpen }" >
+        <div id="navbar" class="navi" v-if="loggedIn" :class="{ naviopen: menuOpen }" >
           <router-link to="/" id="apps_mobile"><span style="display: block" @click="toggle">Apps</span></router-link>
           <router-link to="/appcenter" id="appcenter_mobile"><span style="display: block" @click="toggle">App Center</span></router-link>
           <router-link to="/settings" id="settings_mobile" ><span style="display: block" @click="toggle">Settings</span></router-link>
