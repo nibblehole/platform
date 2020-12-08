@@ -1,10 +1,6 @@
-import os
-import shutil
 import time
-from os.path import dirname, join, exists
+from os.path import dirname
 
-import pytest
-import requests
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -141,12 +137,14 @@ def menu(driver, ui_mode, screenshot_dir, element_id):
     retry = 0
     while retry < retries:
         try:
+            find_id = element_id
             if ui_mode == "mobile":
+                find_id = element_id + '_mobile'
                 navbar = driver.find_element_by_id('navbar')
                 navbar.click()
             wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.element_to_be_clickable((By.ID, element_id)))
             screenshots(driver, screenshot_dir, element_id + '-' + ui_mode)
-            element = driver.find_element_by_id(element_id)
+            element = driver.find_element_by_id(find_id)
             element.click()
             if ui_mode == "mobile":
                 navbar = driver.find_element_by_id('navbar')

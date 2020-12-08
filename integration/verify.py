@@ -10,7 +10,7 @@ from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from syncloudlib.http import wait_for_response
 from syncloudlib.integration.hosts import add_host_alias_by_ip
-from syncloudlib.integration.installer import local_install, wait_for_installer, get_data_dir
+from syncloudlib.integration.installer import local_install, wait_for_installer
 from syncloudlib.integration.loop import loop_device_cleanup
 from syncloudlib.integration.ssh import run_ssh
 
@@ -30,7 +30,7 @@ LOGS_SSH_PASSWORD = DEFAULT_LOGS_SSH_PASSWORD
 
 @pytest.fixture(scope="session")
 def app_data_dir():
-    return get_data_dir('app')
+    return '/var/snap/{0}/common'.format('app')
 
 
 @pytest.fixture(scope="session")

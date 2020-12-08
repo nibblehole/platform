@@ -31,9 +31,9 @@
           </div>
         </header>
         <div class="navi" v-if="loggedIn" :class="{ naviopen: menuOpen }" >
-          <router-link to="/" id="apps"><span style="display: block" @click="toggle">Apps</span></router-link>
-          <router-link to="/appcenter" id="appcenter"><span style="display: block" @click="toggle">App Center</span></router-link>
-          <router-link to="/settings" id="settings" ><span style="display: block" @click="toggle">Settings</span></router-link>
+          <router-link to="/" id="apps_mobile"><span style="display: block" @click="toggle">Apps</span></router-link>
+          <router-link to="/appcenter" id="appcenter_mobile"><span style="display: block" @click="toggle">App Center</span></router-link>
+          <router-link to="/settings" id="settings_mobile" ><span style="display: block" @click="toggle">Settings</span></router-link>
           <div class="menucolor2">
             <a href="#" id="btn_logout_small" @click="logout">Log out</a>
             <a href="#" id="btn_restart_small" @click="restart">Restart</a>
