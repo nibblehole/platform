@@ -159,7 +159,7 @@ def menu(driver, ui_mode, screenshot_dir, element_id):
 
 
 def settings(driver, screenshot_dir, ui_mode, setting):
-    menu(driver, ui_mode, screenshot_dir, setting)
+    menu(driver, ui_mode, screenshot_dir, 'settings')
     wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.element_to_be_clickable((By.ID, setting)))
     setting = driver.find_element_by_id(setting)
     setting.click()
