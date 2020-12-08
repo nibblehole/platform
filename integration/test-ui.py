@@ -122,7 +122,7 @@ def test_installed_app(driver, device_host, ui_mode, screenshot_dir):
 
 def test_not_installed_app(driver, device_host, ui_mode, screenshot_dir):
     driver.get("http://{0}/app?id=nextcloud".format(device_host))
-    header = "//h1[text()='Nextcloud']"
+    header = "//h1[text()='Nextcloud file sharing']"
     wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, header)))
     screenshots(driver, screenshot_dir, 'app_not_installed-' + ui_mode)
 
