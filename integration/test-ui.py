@@ -133,6 +133,7 @@ def wait_or_screenshot(driver, ui_mode, screenshot_dir, method):
 
 
 def menu(driver, ui_mode, screenshot_dir, element_id):
+    wait_driver = WebDriverWait(driver, 30)
     retries = 5
     retry = 0
     while retry < retries:
@@ -140,15 +141,17 @@ def menu(driver, ui_mode, screenshot_dir, element_id):
             find_id = element_id
             if ui_mode == "mobile":
                 find_id = element_id + '_mobile'
-                navbar = driver.find_element_by_id('navbar')
-                navbar.click()
+                menubutton = driver.presence_of_element_located('menubutton')
+                menubutton.click()
+                wait_driver.until(EC.visibility_of_element_located((By.ID, find_id)))
             wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.element_to_be_clickable((By.ID, find_id)))
             screenshots(driver, screenshot_dir, element_id + '-' + ui_mode)
             element = driver.find_element_by_id(find_id)
             element.click()
             if ui_mode == "mobile":
-                navbar = driver.find_element_by_id('navbar')
-                navbar.click()
+                menubutton = driver.find_element_by_id('menubutton')
+                menubutton.click()
+                wait_driver.until(EC.invisibility_of_element_located((By.ID, find_id)))
             return
         except Exception as e:
             print('error (attempt {0}/{1}): {2}'.format(retry + 1, retries, e.message))
