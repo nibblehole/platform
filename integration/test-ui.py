@@ -142,7 +142,7 @@ def menu(driver, ui_mode, screenshot_dir, element_id):
                 find_id = element_id + '_mobile'
                 navbar = driver.find_element_by_id('navbar')
                 navbar.click()
-            wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.element_to_be_clickable((By.ID, element_id)))
+            wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.element_to_be_clickable((By.ID, find_id)))
             screenshots(driver, screenshot_dir, element_id + '-' + ui_mode)
             element = driver.find_element_by_id(find_id)
             element.click()
