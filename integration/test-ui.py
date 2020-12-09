@@ -141,7 +141,7 @@ def menu(driver, ui_mode, screenshot_dir, element_id):
             find_id = element_id
             if ui_mode == "mobile":
                 find_id = element_id + '_mobile'
-                menubutton = driver.presence_of_element_located('menubutton')
+                menubutton = driver.find_element_by_id('menubutton')
                 menubutton.click()
                 wait_driver.until(EC.visibility_of_element_located((By.ID, find_id)))
             wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.element_to_be_clickable((By.ID, find_id)))
