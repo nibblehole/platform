@@ -136,6 +136,7 @@ def menu(driver, ui_mode, screenshot_dir, element_id):
     wait_driver = WebDriverWait(driver, 30)
     retries = 5
     retry = 0
+    exception = None
     while retry < retries:
         try:
             find_id = element_id
@@ -144,6 +145,7 @@ def menu(driver, ui_mode, screenshot_dir, element_id):
                 menubutton = driver.find_element_by_id('menubutton')
                 menubutton.click()
                 wait_driver.until(EC.visibility_of_element_located((By.ID, find_id)))
+                time.sleep(2)
             wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.element_to_be_clickable((By.ID, find_id)))
             screenshots(driver, screenshot_dir, element_id + '-' + ui_mode)
             element = driver.find_element_by_id(find_id)
@@ -152,11 +154,14 @@ def menu(driver, ui_mode, screenshot_dir, element_id):
                 menubutton = driver.find_element_by_id('menubutton')
                 menubutton.click()
                 wait_driver.until(EC.invisibility_of_element_located((By.ID, 'menu')))
+                time.sleep(2)
             return
         except Exception as e:
+            exception = e
             print('error (attempt {0}/{1}): {2}'.format(retry + 1, retries, e.message))
             time.sleep(1)
         retry += 1
+    raise exception
 
 
 def settings(driver, screenshot_dir, ui_mode, setting):
