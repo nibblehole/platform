@@ -151,7 +151,7 @@ def menu(driver, ui_mode, screenshot_dir, element_id):
             if ui_mode == "mobile":
                 menubutton = driver.find_element_by_id('menubutton')
                 menubutton.click()
-                wait_driver.until(EC.invisibility_of_element_located((By.ID, find_id)))
+                wait_driver.until(EC.invisibility_of_element_located((By.ID, 'menu')))
             return
         except Exception as e:
             print('error (attempt {0}/{1}): {2}'.format(retry + 1, retries, e.message))
