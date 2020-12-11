@@ -145,16 +145,12 @@ def menu(driver, ui_mode, screenshot_dir, element_id):
                 menubutton = driver.find_element_by_id('menubutton')
                 menubutton.click()
                 wait_driver.until(EC.visibility_of_element_located((By.ID, find_id)))
-                time.sleep(2)
             wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.element_to_be_clickable((By.ID, find_id)))
             screenshots(driver, screenshot_dir, element_id + '-' + ui_mode)
             element = driver.find_element_by_id(find_id)
             element.click()
             if ui_mode == "mobile":
-                menubutton = driver.find_element_by_id('menubutton')
-                menubutton.click()
-                wait_driver.until(EC.invisibility_of_element_located((By.ID, 'menu')))
-                time.sleep(2)
+                wait_driver.until(EC.invisibility_of_element_located((By.ID, find_id)))
             return
         except Exception as e:
             exception = e
