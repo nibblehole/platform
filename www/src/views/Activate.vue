@@ -130,7 +130,7 @@
               <br>
               Syncloud account is also used for notifications about new releases.
               <br>
-              It is used only to assigning a dns name to IP of your device and update IP when it changes.
+              It is only used to assign a dns name to IP of your device and update IP when it changes.
               Data transfer happens directly between your apps and device.
             </div>
 
