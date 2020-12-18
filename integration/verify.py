@@ -121,9 +121,9 @@ def test_activate_device(device_host, domain, main_domain, redirect_user, redire
                                    'device_password': DEFAULT_LOGS_SSH_PASSWORD}, verify=False)
     assert response.status_code == 200, response.text
 
-   
+
 def test_reactivate_activated_device(device_host, domain, main_domain, device_user, device_password,
-                        redirect_user, redirect_password):
+                                     redirect_user, redirect_password):
 
     response = requests.post('https://{0}/rest/activate'.format(device_host),
                              data={'main_domain': main_domain,
@@ -588,3 +588,9 @@ def test_nginx_performance(device_host):
 
 def test_nginx_plus_flask_performance(device_host):
     print(check_output('ab -c 1 -n 1000 https://{0}/rest/id'.format(device_host), shell=True).decode())
+
+
+def test_deactivate_again(device, device_host, artifact_dir):
+    response = device.login().post('https://{0}/rest/settings/deactivate'.format(device_host), verify=False)
+    assert '"success": true' in response.text
+    assert response.status_code == 200

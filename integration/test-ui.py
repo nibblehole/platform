@@ -9,7 +9,24 @@ from syncloudlib.integration.screenshots import screenshots
 DIR = dirname(__file__)
 
 
-def test_activate(driver, ui_mode, device_host, screenshot_dir):
+def test_activate(driver, ui_mode, device_host, screenshot_dir,
+                  domain, device_user, device_password, redirect_user, redirect_password):
+    driver.get("http://{0}/activate".format(device_host))
+    header = "//h1[text()='Activate']"
+    wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, header)))
+    screenshots(driver, screenshot_dir, 'activate-empty')
+    driver.find_element_by_id('redirect_email').send_keys(redirect_user)
+    driver.find_element_by_id('redirect_password').send_keys(redirect_password)
+    driver.find_element_by_id('user_domain').send_keys(domain)
+    driver.find_element_by_id('device_username').send_keys(device_user)
+    driver.find_element_by_id('device_password').send_keys(device_password)
+    screenshots(driver, screenshot_dir, 'activate-ready')
+    driver.find_element_by_id('btn_activate').click()
+    header = "//h1[text()='Log in']"
+    wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, header)))
+
+
+def test_activate_again(driver, ui_mode, device_host, screenshot_dir):
     driver.get("http://{0}/activate".format(device_host))
     header = "//h1[text()='Log in']"
     wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, header)))
@@ -154,7 +171,7 @@ def menu(driver, ui_mode, screenshot_dir, element_id):
             return
         except Exception as e:
             exception = e
-            print('error (attempt {0}/{1}): {2}'.format(retry + 1, retries, e.message))
+            print('error (attempt {0}/{1}): {2}'.format(retry + 1, retries, str(e)))
             time.sleep(1)
         retry += 1
     raise exception
