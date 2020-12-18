@@ -113,7 +113,7 @@ def test_id_before_activation(device_host):
 
 def test_activate_device(device_host, domain, main_domain, redirect_user, redirect_password):
     response = requests.post('https://{0}/rest/activate'.format(device_host),
-                             data={'main_domain': main_domain,
+                             json={'main_domain': main_domain,
                                    'redirect_email': redirect_user,
                                    'redirect_password': redirect_password,
                                    'user_domain': domain,
@@ -126,7 +126,7 @@ def test_reactivate_activated_device(device_host, domain, main_domain, device_us
                                      redirect_user, redirect_password):
 
     response = requests.post('https://{0}/rest/activate'.format(device_host),
-                             data={'main_domain': main_domain,
+                             json={'main_domain': main_domain,
                                    'redirect_email': redirect_user,
                                    'redirect_password': redirect_password,
                                    'user_domain': domain,
@@ -143,7 +143,7 @@ def test_reactivate_good(device_host, domain, main_domain, device_user, device_p
                          redirect_user, redirect_password, device):
 
     response = requests.post('https://{0}/rest/activate'.format(device_host),
-                             data={'main_domain': main_domain,
+                             json={'main_domain': main_domain,
                                    'redirect_email': redirect_user,
                                    'redirect_password': redirect_password,
                                    'user_domain': domain,
@@ -171,7 +171,7 @@ def test_reactivate_after_deactivate(device_host, domain, main_domain, device_us
                          redirect_user, redirect_password, device):
 
     response = requests.post('https://{0}/rest/activate'.format(device_host),
-                             data={'main_domain': main_domain,
+                             json={'main_domain': main_domain,
                                    'redirect_email': redirect_user,
                                    'redirect_password': redirect_password,
                                    'user_domain': domain,

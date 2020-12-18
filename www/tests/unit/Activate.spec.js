@@ -70,9 +70,9 @@ test('Activate free domain error', async () => {
 
   const mock = new MockAdapter(axios)
   mock.onPost('/rest/activate').reply(500, {
-      success: false,
-      data: {}
-    }
+    success: false,
+    data: {}
+  }
   )
 
   const wrapper = mount(Activate,

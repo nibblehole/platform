@@ -5,12 +5,14 @@
       <div class="block1 wd12" id="block1">
         <h1>Log in</h1>
         <div class="formblock">
-          <form id="form-login" @submit="login">
-            <input placeholder="Login" class="nameinput" id="name" type="text" required="" v-model="username">
+          <form id="form-login">
+            <input placeholder="Login" class="nameinput" id="username" type="text" required="" v-model="username">
             <input placeholder="Password" class="passinput" id="password" type="password" required=""
                    v-model="password">
             <button class="submit buttongreen control" id="btn_login" type="submit"
-                    data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Logging in...">Log in
+                    data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Logging in..."
+                    @click="login"
+            >Log in
             </button>
           </form>
         </div>
@@ -46,8 +48,9 @@
 
 <script>
 import $ from 'jquery'
-import querystring from 'querystring'
 import Error from '@/components/Error'
+import axios from 'axios'
+import 'bootstrap'
 
 export default {
   name: 'Login',
@@ -68,21 +71,22 @@ export default {
   methods: {
     login: function (event) {
       const error = this.$refs.error
-
       event.preventDefault()
       const btn = $('#btn_login')
       btn.button('loading')
       $('#form-login input').prop('disabled', true)
       $('#form-login .alert').remove()
-      $.post('/rest/login', querystring.stringify({ name: this.username, password: this.password }))
-        .done((data) => {
+      axios.post('/rest/login', { username: this.username, password: this.password })
+        .then(_ => {
+          btn.button('reset')
+          $('#form-login input').prop('disabled', false)
           this.onLogin()
           this.$router.push('/')
         })
-        .fail((xhr, textStatus, errorThrown) => error.show(xhr))
-        .always(() => {
+        .catch(err => {
           btn.button('reset')
           $('#form-login input').prop('disabled', false)
+          error.showAxios(err)
         })
     }
   }

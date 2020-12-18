@@ -51,20 +51,21 @@ def activation_status():
 @fail_if_activated
 def activate():
 
-    device_username = request.form['device_username'].lower()
-    device_password = request.form['device_password']
+    request_json = request.json
+    device_username = request_json['device_username'].lower()
+    device_password = request_json['device_password']
         
     validator = InternalValidator()
     validator.validate(device_username, device_password)
     
     main_domain = 'syncloud.it'
-    if 'main_domain' in request.form:
-        main_domain = request.form['main_domain']
+    if 'main_domain' in request_json:
+        main_domain = request_json['main_domain']
 
     internal.activate(
-        request.form['redirect_email'],
-        request.form['redirect_password'],
-        request.form['user_domain'],
+        request_json['redirect_email'],
+        request_json['redirect_password'],
+        request_json['user_domain'],
         device_username,
         device_password,
         main_domain
@@ -76,14 +77,15 @@ def activate():
 @fail_if_activated
 def activate_custom_domain():
 
-    device_username = request.form['device_username'].lower()
-    device_password = request.form['device_password']
+    request_json = request.json
+    device_username = request_json['device_username'].lower()
+    device_password = request_json['device_password']
         
     validator = InternalValidator()
     validator.validate(device_username, device_password)
 
     internal.activate_custom_domain(
-        request.form['full_domain'],
+        request_json['full_domain'],
         device_username,
         device_password,
     )
