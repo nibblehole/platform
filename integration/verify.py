@@ -135,8 +135,9 @@ def test_reactivate_activated_device(device_host, domain, main_domain, device_us
     assert response.status_code == 501
 
 
-def test_drop_activation(device_host):
-    run_ssh(device_host, 'rm /var/snap/platform/common/platform.db', password=LOGS_SSH_PASSWORD)
+def test_drop_activation(device):
+    device.run_ssh('rm /var/snap/platform/common/platform.db')
+    device.run_ssh('ls -la /var/snap/platform/common')
 
 
 def test_reactivate_good(device_host, domain, main_domain, device_user, device_password,
