@@ -100,11 +100,11 @@ def load_user(email):
 @app.route("/rest/login", methods=["POST"])
 @fail_if_not_activated
 def login():
-
-    if 'name' in request.form and 'password' in request.form:
+    request_json = request.json
+    if 'username' in request_json and 'password' in request_json:
         try:
-            authenticate(request.form['name'], request.form['password'])
-            user_flask = FlaskUser(User(request.form['name']))
+            authenticate(request_json['username'], request_json['password'])
+            user_flask = FlaskUser(User(request_jsom['username']))
             login_user(user_flask, remember=False)
             # next_url = request.get('next_url', '/')
             return redirect("/")
