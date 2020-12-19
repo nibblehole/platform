@@ -104,7 +104,7 @@ def login():
     if 'username' in request_json and 'password' in request_json:
         try:
             authenticate(request_json['username'], request_json['password'])
-            user_flask = FlaskUser(User(request_jsom['username']))
+            user_flask = FlaskUser(User(request_json['username']))
             login_user(user_flask, remember=False)
             # next_url = request.get('next_url', '/')
             return redirect("/")
