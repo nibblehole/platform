@@ -9,6 +9,12 @@ from syncloudlib.integration.screenshots import screenshots
 DIR = dirname(__file__)
 
 
+def test_deactivate(device, device_host, artifact_dir):
+    response = device.login().post('https://{0}/rest/settings/deactivate'.format(device_host), verify=False)
+    assert '"success": true' in response.text
+    assert response.status_code == 200
+
+
 def test_activate(driver, ui_mode, device_host, screenshot_dir,
                   domain, device_user, device_password, redirect_user, redirect_password):
     driver.get("http://{0}".format(device_host))

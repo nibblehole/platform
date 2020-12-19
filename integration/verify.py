@@ -590,8 +590,3 @@ def test_nginx_performance(device_host):
 def test_nginx_plus_flask_performance(device_host):
     print(check_output('ab -c 1 -n 1000 https://{0}/rest/id'.format(device_host), shell=True).decode())
 
-
-def test_deactivate_again(device, device_host, artifact_dir):
-    response = device.login().post('https://{0}/rest/settings/deactivate'.format(device_host), verify=False)
-    assert '"success": true' in response.text
-    assert response.status_code == 200
