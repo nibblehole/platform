@@ -45,7 +45,8 @@ def test_index(driver, ui_mode, device_user, device_password, screenshot_dir):
     user.send_keys(device_user)
     password = driver.find_element_by_id("password")
     password.send_keys(device_password)
-    password.submit()
+    login = driver.find_element_by_id("btn_login")
+    login.click()
     screenshots(driver, screenshot_dir, 'index-progress-' + ui_mode)
     header = "//h1[text()='Applications']"
     wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, header)))
