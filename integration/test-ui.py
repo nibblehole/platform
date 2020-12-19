@@ -41,7 +41,7 @@ def test_login(driver, ui_mode, device_host, screenshot_dir):
 
 
 def test_index(driver, ui_mode, device_user, device_password, screenshot_dir):
-    user = driver.find_element_by_id("name")
+    user = driver.find_element_by_id("username")
     user.send_keys(device_user)
     password = driver.find_element_by_id("password")
     password.send_keys(device_password)
