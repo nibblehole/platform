@@ -11,7 +11,7 @@ DIR = dirname(__file__)
 
 def test_activate(driver, ui_mode, device_host, screenshot_dir,
                   domain, device_user, device_password, redirect_user, redirect_password):
-    driver.get("http://{0}/activate".format(device_host))
+    driver.get("http://{0}".format(device_host))
     header = "//h1[text()='Activate']"
     wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, header)))
     screenshots(driver, screenshot_dir, 'activate-empty')
