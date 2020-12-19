@@ -55,12 +55,16 @@ test('Activate free domain', async () => {
   await wrapper.find('#device_password').setValue('password')
   await wrapper.find('#btn_activate').trigger('click')
 
+  await flushPromises()
+
   expect(showError).toHaveBeenCalledTimes(0)
   expect(redirectEmail).toBe('r email')
   expect(redirectPassword).toBe('r password')
   expect(domain).toBe('domain')
   expect(deviceUsername).toBe('user')
   expect(devicePassword).toBe('password')
+  expect(mockRouter.push).toHaveBeenCalledWith('/login')
+
   wrapper.unmount()
 })
 
@@ -106,8 +110,6 @@ test('Activate free domain error', async () => {
   await flushPromises()
 
   expect(showError).toHaveBeenCalledTimes(1)
-
-  // expect(wrapper.find('#device_username_alert').text()).toBe('login is empty')
 
   wrapper.unmount()
 })
@@ -156,9 +158,13 @@ test('Activate custom domain', async () => {
   await wrapper.find('#device_password').setValue('password')
   await wrapper.find('#btn_activate').trigger('click')
 
+  await flushPromises()
+
   expect(showError).toHaveBeenCalledTimes(0)
   expect(domain).toBe('domain')
   expect(deviceUsername).toBe('user')
   expect(devicePassword).toBe('password')
+  expect(mockRouter.push).toHaveBeenCalledWith('/login')
+
   wrapper.unmount()
 })

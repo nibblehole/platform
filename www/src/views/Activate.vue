@@ -221,8 +221,8 @@ export default {
           device_username: this.deviceUsername,
           device_password: this.devicePassword
         })
-        .then(_ => {
-          this.$router.push('/')
+        .then(() => {
+          this.$router.push('/login')
         })
         .catch(err => {
           $('#btn_activate').button('reset')
@@ -238,7 +238,7 @@ export default {
           device_password: this.devicePassword
         })
         .then(() => {
-          this.$router.push('/')
+          this.$router.push('/login')
         })
         .catch((err) => {
           $('#btn_activate').button('reset')

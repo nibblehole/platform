@@ -1,7 +1,7 @@
 const state = {
   loggedIn: true,
   credentials: {
-    user: '11',
+    username: '11',
     password: '2'
   },
   jobStatusRunning: false,
@@ -252,7 +252,7 @@ const mock = function (app, server, compiler) {
   app.use(express.urlencoded())
   app.use(bodyparser.json())
   app.post('/rest/login', function (req, res) {
-    if (state.credentials.user === req.body.name && state.credentials.password === req.body.password) {
+    if (state.credentials.username === req.body.username && state.credentials.password === req.body.password) {
       state.loggedIn = true
       res.json({ message: 'OK' })
     } else {
@@ -433,14 +433,14 @@ const mock = function (app, server, compiler) {
   })
   app.post('/rest/activate', function (req, res) {
     state.activated = true
-    // res.json({ success: true })
-    res.status(500).json({
-      success: false,
-      parameters_messages: [
-        { parameter: 'device_username', messages: ['login is empty'] },
-        { parameter: 'device_password', messages: ['is too short', 'has no special symbol'] }
-      ]
-    })
+    res.json({ success: true })
+    // res.status(500).json({
+    //   success: false,
+    //   parameters_messages: [
+    //     { parameter: 'device_username', messages: ['login is empty'] },
+    //     { parameter: 'device_password', messages: ['is too short', 'has no special symbol'] }
+    //   ]
+    // })
   })
   app.post('/rest/activate_custom_domain', function (req, res) {
     state.activated = true
