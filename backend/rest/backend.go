@@ -117,12 +117,18 @@ func (backend *Backend) BackupRemove(_ http.ResponseWriter, req *http.Request) (
 	return "removed", nil
 }
 
+type BackupCreateRequest struct {
+  App string `json:"app"`
+}
+
 func (backend *Backend) BackupCreate(_ http.ResponseWriter, req *http.Request) (interface{}, error) {
-	apps, ok := req.URL.Query()["app"]
-	if !ok || len(apps) < 1 {
-		return nil, errors.New("app is missing")
-	}
-	_ = backend.Master.Offer(job.JobBackupCreate{App: apps[0]})
+  var request BackupCreateRequest
+  err := json.NewDecoder(req.Body).Decode(&request)
+  if err != nil {
+    log.Printf("parse error: %v", err.Error())
+    return nil, errors.New("app is missing")
+  }
+	_ = backend.Master.Offer(job.JobBackupCreate{App: request.App})
 	return "submitted", nil
 }
 

@@ -122,6 +122,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import $ from 'jquery'
 import Error from '@/components/Error'
 import 'bootstrap'
@@ -180,8 +181,8 @@ export default {
       const btn = $('#btn_backup')
       btn.button('loading')
 
-      $.post('/rest/backup/create', { app: this.appId })
-        .always((data) => {
+      axios.post('/rest/backup/create', { app: this.appId })
+        .then((data) => {
           Common.checkForServiceError(data, () => {
             Common.runAfterJobIsComplete(
               setTimeout,
@@ -194,7 +195,7 @@ export default {
               Common.JOB_STATUS_PREDICATE)
           }, (xhr, textStatus, errorThrown) => error.show(xhr))
         })
-        .fail((xhr, textStatus, errorThrown) => error.show(xhr))
+        .catch(err => error.showAxios(err))
     },
     confirm: function () {
       const error = this.$refs.error
@@ -202,8 +203,8 @@ export default {
       const btn = $('#btn_' + this.action.toLowerCase())
       btn.button('loading')
 
-      $.post(this.actionUrl, { app_id: this.appId })
-        .always((data) => {
+      axios.post(this.actionUrl, { app_id: this.appId })
+        .then((data) => {
           Common.checkForServiceError(data, () => {
             Common.runAfterJobIsComplete(
               setTimeout,
@@ -216,7 +217,7 @@ export default {
               Common.DEFAULT_STATUS_PREDICATE)
           }, (xhr, textStatus, errorThrown) => error.show(xhr))
         })
-        .fail((xhr, textStatus, errorThrown) => error.show(xhr))
+        .catch(err => error.showAxios(err))
     }
   }
 }

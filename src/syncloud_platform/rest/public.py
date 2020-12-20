@@ -148,7 +148,7 @@ def app_status():
 @fail_if_not_activated
 @login_required
 def install():
-    public.install(request.args['app_id'])
+    public.install(request.json['app_id'])
     return 'OK', 200
 
 
@@ -156,7 +156,7 @@ def install():
 @fail_if_not_activated
 @login_required
 def remove():
-    return jsonify(message=public.remove(request.args['app_id'])), 200
+    return jsonify(message=public.remove(request.json['app_id'])), 200
 
 
 @app.route("/rest/restart", methods=["POST"])
@@ -181,14 +181,14 @@ def shutdown():
 def upgrade():
 
     force = False
-    if 'force' in request.args:
-        force = request.args['force'] == 'true'
+    if 'force' in request.json:
+        force = request.json['force'] == 'true'
 
     channel = public.platform_config.get_channel()
-    if 'channel' in request.args:
-        channel = request.args['channel']
+    if 'channel' in request.json:
+        channel = request.json['channel']
 
-    public.upgrade(request.args['app_id'], channel, force)
+    public.upgrade(request.json['app_id'], channel, force)
 
     return 'OK', 200
 
