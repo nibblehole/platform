@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/syncloud/platform/event"
+	"github.com/syncloud/platform/rest/model"
 	"log"
 	"net"
 	"net/http"
@@ -52,15 +53,9 @@ func (backend *Backend) Start(socket string) {
 
 }
 
-type Response struct {
-	Success bool         `json:"success"`
-	Message *string      `json:"message,omitempty"`
-	Data    *interface{} `json:"data,omitempty"`
-}
-
 func fail(w http.ResponseWriter, err error) {
 	appError := err.Error()
-	response := Response{
+	response := model.Response{
 		Success: false,
 		Message: &appError,
 	}
@@ -73,7 +68,7 @@ func fail(w http.ResponseWriter, err error) {
 }
 
 func success(w http.ResponseWriter, data interface{}) {
-	response := Response{
+	response := model.Response{
 		Success: true,
 		Data:    &data,
 	}
@@ -106,38 +101,38 @@ func (backend *Backend) BackupList(_ http.ResponseWriter, _ *http.Request) (inte
 }
 
 func (backend *Backend) BackupRemove(_ http.ResponseWriter, req *http.Request) (interface{}, error) {
-	file, ok := req.URL.Query()["file"]
-	if !ok || len(file) < 1 {
+	var request model.BackupRemoveRequest
+	err := json.NewDecoder(req.Body).Decode(&request)
+	if err != nil {
+		log.Printf("parse error: %v", err.Error())
 		return nil, errors.New("file is missing")
 	}
-	err := backend.backup.Remove(file[0])
+	err = backend.backup.Remove(request.File)
 	if err != nil {
 		return nil, err
 	}
 	return "removed", nil
 }
 
-type BackupCreateRequest struct {
-  App string `json:"app"`
-}
-
 func (backend *Backend) BackupCreate(_ http.ResponseWriter, req *http.Request) (interface{}, error) {
-  var request BackupCreateRequest
-  err := json.NewDecoder(req.Body).Decode(&request)
-  if err != nil {
-    log.Printf("parse error: %v", err.Error())
-    return nil, errors.New("app is missing")
-  }
+	var request model.BackupCreateRequest
+	err := json.NewDecoder(req.Body).Decode(&request)
+	if err != nil {
+		log.Printf("parse error: %v", err.Error())
+		return nil, errors.New("app is missing")
+	}
 	_ = backend.Master.Offer(job.JobBackupCreate{App: request.App})
 	return "submitted", nil
 }
 
 func (backend *Backend) BackupRestore(_ http.ResponseWriter, req *http.Request) (interface{}, error) {
-	files, ok := req.URL.Query()["file"]
-	if !ok || len(files) < 1 {
+	var request model.BackupRestoreRequest
+	err := json.NewDecoder(req.Body).Decode(&request)
+	if err != nil {
+		log.Printf("parse error: %v", err.Error())
 		return nil, errors.New("file is missing")
 	}
-	_ = backend.Master.Offer(job.JobBackupRestore{File: files[0]})
+	_ = backend.Master.Offer(job.JobBackupRestore{File: request.File})
 	return "submitted", nil
 }
 
@@ -151,20 +146,24 @@ func (backend *Backend) JobStatus(_ http.ResponseWriter, _ *http.Request) (inter
 }
 
 func (backend *Backend) StorageFormat(_ http.ResponseWriter, req *http.Request) (interface{}, error) {
-	if err := req.ParseForm(); err != nil {
-		return nil, errors.New("cannot parse post form")
+	var request model.StorageFormatRequest
+	err := json.NewDecoder(req.Body).Decode(&request)
+	if err != nil {
+		log.Printf("parse error: %v", err.Error())
+		return nil, errors.New("device is missing")
 	}
-	device := req.FormValue("device")
-	_ = backend.Master.Offer(job.JobStorageFormat{Device: device})
+	_ = backend.Master.Offer(job.JobStorageFormat{Device: request.Device})
 	return "submitted", nil
 }
 
 func (backend *Backend) EventTrigger(_ http.ResponseWriter, req *http.Request) (interface{}, error) {
-	if err := req.ParseForm(); err != nil {
-		return nil, errors.New("cannot parse post form")
+	var request model.EventTriggerRequest
+	err := json.NewDecoder(req.Body).Decode(&request)
+	if err != nil {
+		log.Printf("parse error: %v", err.Error())
+		return nil, errors.New("event is missing")
 	}
-	eventName := req.FormValue("event")
-	return "ok", backend.eventTrigger.RunEventOnAllAps(eventName)
+	return "ok", backend.eventTrigger.RunEventOnAllAps(request.Event)
 }
 
 func (backend *Backend) StorageBootExtend(_ http.ResponseWriter, _ *http.Request) (interface{}, error) {

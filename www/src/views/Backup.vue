@@ -134,7 +134,6 @@ export default {
   },
   methods: {
     submit () {
-      console.log('remove')
       switch (this.action) {
         case 'restore':
           this.restore()
@@ -145,18 +144,16 @@ export default {
       }
     },
     remove () {
-      console.log('remove')
-      axios.post('/rest/backup/remove', null, { params: { file: this.file } })
+      axios.post('/rest/backup/remove', { file: this.file })
         .then(_ => {
           this.reload()
         })
         .catch(err => this.$refs.error.showToast(err))
     },
     restore () {
-      console.log('restore')
       const that = this
       axios
-        .post('/rest/backup/restore', null, { params: { file: this.file } })
+        .post('/rest/backup/restore', { file: this.file })
         .then(_ => {
           toastr.info('Restoring an app from a backup')
 

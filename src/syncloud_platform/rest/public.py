@@ -342,7 +342,7 @@ def app_image():
 @fail_if_not_activated
 @login_required
 def backend_proxy():
-    response = backend_request(request.method, request.full_path.replace("/rest", "", 1), request.form)
+    response = backend_request(request.method, request.full_path.replace("/rest", "", 1), request.json)
     return response.text, response.status_code
 
 

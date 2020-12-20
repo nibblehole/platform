@@ -17,7 +17,7 @@
                   <span class="span">Partition - {{ boot.size }}</span>
                   <div class="spandiv" v-if="boot.extendable">
                     <button class="buttongreen bwidth smbutton btn-lg"
-                            @click="uiBootExtend"
+                            @click="extend"
                             id="btn_boot_extend"
                             data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Extending...">Extend
                     </button>
@@ -40,6 +40,7 @@ import 'bootstrap'
 import 'bootstrap-switch'
 import Error from '@/components/Error'
 import * as Common from '../js/common.js'
+import axios from 'axios'
 
 export default {
   name: 'InternalMemory',
@@ -56,46 +57,43 @@ export default {
     }
   },
   mounted () {
-    this.uiDisplayBootDisk()
+    this.reload()
   },
   methods: {
-    uiBootExtend () {
+    extend () {
       const btn = $('#btn_boot_extend')
       btn.button('loading')
       const that = this
-      const onError = (err, a, b) => {
-        that.$refs.error.show(err)
+      const onError = err => {
+        that.$refs.error.showAxios(err)
         btn.button('reset')
       }
-      $.post('/rest/storage/boot_extend')
-        .done(data => {
+      axios.post('/rest/storage/boot_extend')
+        .then(resp => {
           Common.checkForServiceError(
-            data,
+            resp.data,
             () => {
               Common.runAfterJobIsComplete(
                 setTimeout,
-                that.uiDisplayBootDisk,
+                that.reload,
                 onError,
                 Common.JOB_STATUS_URL,
                 Common.JOB_STATUS_PREDICATE)
             },
             onError)
         })
-        .fail(onError)
+        .catch(onError)
     },
-    uiDisplayBootDisk () {
+    reload () {
       const that = this
       const btn = $('#btn_boot_extend')
-      $.get('/rest/settings/boot_disk')
-        .done(resp => {
-          this.boot = resp.data
+      axios.get('/rest/settings/boot_disk')
+        .then(resp => {
+          this.boot = resp.data.data
           btn.button('reset')
-          // btn.off('click').on('click', function () {
-          //   that.uiBootExtend()
-          // })
         })
-        .fail((err, a, b) => {
-          that.$refs.error.show(err)
+        .catch(err => {
+          that.$refs.error.showAxios(err)
           btn.button('reset')
         })
     }

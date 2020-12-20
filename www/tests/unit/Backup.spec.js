@@ -15,13 +15,10 @@ test('show list of backups', async () => {
       ]
     }
   )
-  const elem = document.createElement('div')
-  if (document.body) {
-    document.body.appendChild(elem)
-  }
-  const view = mount(Backup,
+
+  const wrapper = mount(Backup,
     {
-      attachTo: elem,
+      attachTo: document.body,
       global: {
         stubs: {
           Error: true
@@ -32,5 +29,10 @@ test('show list of backups', async () => {
 
   await flushPromises()
 
-  expect(view.text()).toContain('files-2019-0515-123506.tar.gz')
+  expect(wrapper.text()).toContain('files-2019-0515-123506.tar.gz')
+
+  // await wrapper.findAll('i')[0].trigger('click')
+
+  wrapper.unmount()
+
 })
