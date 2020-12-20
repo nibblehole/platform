@@ -130,14 +130,14 @@ def test_app_center(driver, ui_mode, screenshot_dir):
     menu(driver, ui_mode, screenshot_dir, 'appcenter')
     header = "//h1[text()='App Center']"
     wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, header)))
-    files = "//span[text()='Files']"
+    files = "//span[text()='File browser']"
     wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, files)))
     screenshots(driver, screenshot_dir, 'appcenter-' + ui_mode)
 
 
 def test_installed_app(driver, ui_mode, screenshot_dir):
     menu(driver, ui_mode, screenshot_dir, 'appcenter')
-    files = "//span[text()='Files']"
+    files = "//span[text()='File browser']"
     wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, files)))
     driver.find_element_by_xpath(files).click()
     header = "//h1[text()='File browser']"
@@ -163,7 +163,7 @@ def test_install_app(driver, ui_mode, screenshot_dir):
 
 def test_not_installed_app(driver, ui_mode, screenshot_dir):
     menu(driver, ui_mode, screenshot_dir, 'appcenter')
-    nextcloud = "//span[text()='Nextcloud']"
+    nextcloud = "//span[text()='Nextcloud file sharing']"
     wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, nextcloud)))
     driver.find_element_by_xpath(nextcloud).click()
     header = "//h1[text()='Nextcloud file sharing']"
