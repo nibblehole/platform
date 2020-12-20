@@ -25,6 +25,10 @@ import Error from '@/components/Error'
 
 export default {
   name: 'AppCenter',
+  props: {
+    onLogin: Function,
+    onLogout: Function
+  },
   data () {
     return {
       apps: undefined

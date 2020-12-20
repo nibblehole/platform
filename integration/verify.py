@@ -404,7 +404,7 @@ def test_real_certificate(app_dir, ssh_env_vars, device_host):
 
 def test_install_app(device, device_host):
     session = device.login()
-    session.post('https://{0}/rest/install?app_id={1}'.format(device_host, 'files'), verify=False)
+    session.post('https://{0}/rest/install'.format(device_host), json={'app_id': 'files'}, verify=False)
     wait_for_installer(session, device_host)
 
 
@@ -449,7 +449,7 @@ def test_installer_upgrade(device, device_host):
 def test_backup_app(device, artifact_dir, device_host):
     
     session = device.login()
-    response = session.post('https://{0}/rest/backup/create?app=files'.format(device_host), verify=False)
+    response = session.post('https://{0}/rest/backup/create'.format(device_host), json={'app': 'files'}, verify=False)
     assert response.status_code == 200
     assert json.loads(response.text)['success']
 

@@ -12,32 +12,7 @@ const state = {
   diskActionSuccess: true
 }
 
-const apps = {
-  apps: [
-    {
-      id: 'wordpress',
-      name: 'WordPress',
-      icon: '/images/wordpress-128.png',
-      url: 'http://wordpress.odroid-c2.syncloud.it'
-    }
-  ]
-}
-
-const appInfo = {
-  info: {
-    app: {
-      id: 'wordpress',
-      name: 'Wordpress',
-      required: true,
-      ui: false,
-      url: 'http://wordpress.odroid-c2.syncloud.it',
-      icon: '/images/wordpress-128.png'
-    },
-    current_version: '190411412',
-    installed_version: '190211412'
-  }
-}
-const appcenterData = {
+const store = {
   apps: [
     {
       id: 'wordpress',
@@ -67,7 +42,9 @@ const appcenterData = {
   ]
 }
 
-const appcenterDataError = {
+const installedApps = new Set(['wordpress'])
+
+const appCenterDataError = {
   message: 'error',
   success: false
 }
@@ -246,6 +223,25 @@ const versionsData = {
   success: true
 }
 
+function appCenterToInstalledApp(app) {
+  app.url = 'http://' + app.id + '.odroid-c2.syncloud.it'
+  return app
+}
+
+function appToInfo(app, installed) {
+  let info = {
+    app: app,
+    current_version: '2',
+    installed_version: installed ? '1' : null
+  }
+
+  info.app.required = true
+  info.app.ui = false
+  info.app.url = 'http://' + app.id + '.odroid-c2.syncloud.it'
+
+  return info
+}
+
 const express = require('express')
 const bodyparser = require('body-parser')
 const mock = function (app, server, compiler) {
@@ -279,18 +275,22 @@ const mock = function (app, server, compiler) {
     // res.status(500).json({ message: "unknown activation status" })
   })
   app.get('/rest/installed_apps', function (req, res) {
-    res.json(apps)
+    let apps = store.apps.filter(app => installedApps.has(app.id)).map(appCenterToInstalledApp)
+    res.json({ apps: apps })
   })
   app.get('/rest/app', function (req, res) {
-    res.json(appInfo)
+    let app = store.apps.find(app => app.id === req.query.app_id)
+    res.json({ info: appToInfo(app, installedApps.has(app.id)) })
   })
   app.post('/rest/upgrade', function (req, res) {
     res.json({ success: true })
   })
   app.post('/rest/install', function (req, res) {
+    installedApps.add(req.body.app_id)
     res.json({ success: true })
   })
   app.post('/rest/remove', function (req, res) {
+    installedApps.delete(req.body.app_id)
     res.json({ success: true })
   })
   app.post('/rest/restart', function (req, res) {
@@ -314,9 +314,9 @@ const mock = function (app, server, compiler) {
   app.get('/rest/available_apps', function (req, res) {
     let response = {}
     if (state.availableAppsSuccess) {
-      response = appcenterData
+      response = store
     } else {
-      response = appcenterDataError
+      response = appCenterDataError
     }
     res.json(response)
   })

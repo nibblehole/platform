@@ -131,6 +131,10 @@ import * as Common from '../js/common.js'
 
 export default {
   name: 'App',
+  props: {
+    onLogin: Function,
+    onLogout: Function
+  },
   data () {
     return {
       info: undefined,
@@ -148,11 +152,12 @@ export default {
   methods: {
     loadApp: function () {
       const error = this.$refs.error
-      $.get('/rest/app', { app_id: this.appId })
-        .done(data => {
-          this.info = data.info
+      axios
+        .get('/rest/app', null, { params: { app_id: this.appId } })
+        .then(resp => {
+          this.info = resp.data.info
         })
-        .fail((xhr, textStatus, errorThrown) => error.show(xhr))
+        .catch(err => error.showAxios(err))
     },
     open: function (event) {
       window.location.href = this.info.app.url

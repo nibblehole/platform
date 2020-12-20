@@ -130,18 +130,42 @@ def test_app_center(driver, ui_mode, screenshot_dir):
     menu(driver, ui_mode, screenshot_dir, 'appcenter')
     header = "//h1[text()='App Center']"
     wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, header)))
+    files = "//span[text()='Files']"
+    wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, files)))
     screenshots(driver, screenshot_dir, 'appcenter-' + ui_mode)
 
 
-def test_installed_app(driver, device_host, ui_mode, screenshot_dir):
-    driver.get("http://{0}/app?id=files".format(device_host))
+def test_installed_app(driver, ui_mode, screenshot_dir):
+    menu(driver, ui_mode, screenshot_dir, 'appcenter')
+    files = "//span[text()='Files']"
+    wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, files)))
+    driver.find_element_by_xpath(files).click()
     header = "//h1[text()='File browser']"
     wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, header)))
     screenshots(driver, screenshot_dir, 'app_installed-' + ui_mode)
 
 
-def test_not_installed_app(driver, device_host, ui_mode, screenshot_dir):
-    driver.get("http://{0}/app?id=nextcloud".format(device_host))
+def test_remove_app(driver, ui_mode, screenshot_dir):
+    remove = 'btn_remove'
+    wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.ID, remove)))
+    driver.find_element_by_id(remove).click()
+    wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.invisibility_of_element_located((By.ID, remove)))
+    screenshots(driver, screenshot_dir, 'app_removed-' + ui_mode)
+
+
+def test_install_app(driver, ui_mode, screenshot_dir):
+    install = 'btn_install'
+    wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.ID, install)))
+    driver.find_element_by_id(install).click()
+    wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.invisibility_of_element_located((By.ID, install)))
+    screenshots(driver, screenshot_dir, 'app_installed-' + ui_mode)
+
+
+def test_not_installed_app(driver, ui_mode, screenshot_dir):
+    menu(driver, ui_mode, screenshot_dir, 'appcenter')
+    nextcloud = "//span[text()='Nextcloud']"
+    wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, nextcloud)))
+    driver.find_element_by_xpath(nextcloud).click()
     header = "//h1[text()='Nextcloud file sharing']"
     wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.XPATH, header)))
     screenshots(driver, screenshot_dir, 'app_not_installed-' + ui_mode)

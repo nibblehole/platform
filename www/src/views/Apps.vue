@@ -9,15 +9,11 @@
               <h2 class="bh2">You don't have any installed apps yet. You can install one from App Center</h2>
               <router-link to="/appcenter" class="appcenterh">App Center</router-link>
             </div>
-            <div v-for="(app, index) in apps" :key="index">
-              <div v-if="app.id !== 'store' && app.id !== 'settings'">
-                <router-link :to="'/app?id=' + app.id" class="colapp app">
-                  <img :src="app.icon" class="appimg" :alt="app.name">
-                  <div class="appname"><span class="withline">{{ app.name }}</span></div>
-                  <div class="appdesc"></div>
-                </router-link>
-              </div>
-            </div>
+            <router-link v-for="(app, index) in apps" :key="index" :to="'/app?id=' + app.id" class="colapp app">
+              <img :src="app.icon" class="appimg" :alt="app.name">
+              <div class="appname"><span class="withline">{{ app.name }}</span></div>
+              <div class="appdesc"></div>
+            </router-link>
           </div>
         </div>
       </div>
