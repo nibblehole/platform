@@ -169,7 +169,7 @@
     </div>
   </div>
 
-  <Error ref="error" :disable-logs="true"/>
+  <Error ref="error" :enable-logs="false"/>
 
 </template>
 

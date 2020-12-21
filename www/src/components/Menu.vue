@@ -43,7 +43,7 @@
       </div>
     </div>
   </div>
-  <Error ref="menu_error"/>
+  <Error ref="menu_error" name="menu_error"/>
 </template>
 
 <script>

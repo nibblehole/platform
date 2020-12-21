@@ -314,14 +314,14 @@ def test_get_access(device, device_host):
 
 
 def test_network_interfaces(device, device_host):
-    response = device.login().get('https://{0}/rest/access/network_interfaces'.format(device_host), verify=False,)
+    response = device.login().get('https://{0}/rest/access/network_interfaces'.format(device_host), verify=False)
     print(response.text)
     assert '"success": true' in response.text
     assert response.status_code == 200
 
 
 def test_send_logs(device, device_host):
-    response = device.login().get('https://{0}/rest/send_log?include_support=false'.format(device_host), verify=False,)
+    response = device.login().post('https://{0}/rest/send_log?include_support=false'.format(device_host), verify=False)
     print(response.text)
     assert '"success": true' in response.text
     assert response.status_code == 200

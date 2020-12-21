@@ -24,7 +24,7 @@
     </div>
   </div>
 
-  <Error ref="error"/>
+  <Error ref="error" />
 
 </template>
 
@@ -36,6 +36,10 @@ import 'bootstrap-switch'
 
 export default {
   name: 'Activation',
+  props: {
+    onLogin: Function,
+    onLogout: Function
+  },
   data () {
     return {
       url: 'Loading ...'

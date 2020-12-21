@@ -163,7 +163,7 @@ func (backend *Backend) EventTrigger(_ http.ResponseWriter, req *http.Request) (
 		log.Printf("parse error: %v", err.Error())
 		return nil, errors.New("event is missing")
 	}
-	return "ok", backend.eventTrigger.RunEventOnAllAps(request.Event)
+	return "ok", backend.eventTrigger.RunEventOnAllApps(request.Event)
 }
 
 func (backend *Backend) StorageBootExtend(_ http.ResponseWriter, _ *http.Request) (interface{}, error) {

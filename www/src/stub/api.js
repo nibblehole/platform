@@ -322,8 +322,8 @@ const mock = function (app, server, compiler) {
   })
 
   app.get('/rest/settings/device_url', function (req, res) {
-    // res.status(500).json(deviceUrl)
-    res.json(deviceUrl)
+    res.status(500).json(deviceUrl)
+    // res.json(deviceUrl)
   })
 
   app.post('/rest/settings/deactivate', function (req, res) {

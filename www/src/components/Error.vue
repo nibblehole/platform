@@ -1,5 +1,5 @@
 <template>
-  <div id="block_error" class="modal fade bs-are-use-sure" tabindex="-1" role="dialog"
+  <div :id="'block_' + name" class="modal fade bs-are-use-sure" tabindex="-1" role="dialog"
        aria-labelledby="mySmallModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -10,12 +10,12 @@
         </div>
         <div class="modal-body">
           <div class="bodymod">
-            <div id="txt_error" class="btext">Some error happened!</div>
+            <div :id="'txt_' + name" class="btext">Some error happened!</div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn buttonlight bwidth smbutton" data-dismiss="modal">Close</button>
             <button
-              v-if="disableLogs !== true"
+              v-if="enableLogs"
               id="btn_error_send_logs"
               type="button"
               @click="sendLogs"
@@ -26,6 +26,7 @@
       </div>
     </div>
   </div>
+  <input id="test_parameter1" v-if="testing" />
 </template>
 <script>
 import $ from 'jquery'
@@ -33,10 +34,11 @@ import toastr from 'toastr'
 import axios from 'axios'
 
 function showFieldError (field, error) {
-  var txtFieldSelector = '#' + field
-  var errorBlockId = getErrorBlockId(field)
-  var errorBlockSelector = '#' + errorBlockId
-  var errorHtml = '<div class=\'alert alert-danger alert90\' id=\'' + errorBlockId + '\'><b>' + error + '</b></div>'
+  const txtFieldSelector = '#' + field
+  const errorBlockId = getErrorBlockId(field)
+  const errorBlockSelector = '#' + errorBlockId
+  const errorHtml = '<div class=\'alert alert-danger alert90\' id=\'' + errorBlockId + '\'><b>' + error + '</b></div>'
+  console.log(txtFieldSelector)
   $(errorHtml).insertAfter(txtFieldSelector)
   $(txtFieldSelector).bind('keyup change', function () {
     $(errorBlockSelector).remove()
@@ -50,7 +52,9 @@ function getErrorBlockId (field) {
 export default {
   name: 'Error',
   props: {
-    disableLogs: Boolean
+    name: { type: String, default: 'error' },
+    enableLogs: { type: Boolean, default: true },
+    testing: { type: Boolean, default: false }
   },
   methods: {
     sendLogs () {
@@ -67,7 +71,6 @@ export default {
       })
     },
     show (xhr) {
-      console.log('error')
       const status = xhr.status
       let error = null
       if ('responseJSON' in xhr) {
@@ -79,6 +82,8 @@ export default {
       } else if (status === 0) {
         console.log('user navigated away from the page')
       } else {
+        const messageField = '#txt_' + this.name
+        const dialog = '#block_' + this.name
         if (error) {
           if ('parameters_messages' in error) {
             for (let i = 0; i < error.parameters_messages.length; i++) {
@@ -90,12 +95,12 @@ export default {
             if (!('message' in error && error.message)) {
               error.message = 'Server Error'
             }
-            $('#txt_error').text(error.message)
-            $('#block_error').modal()
+            $(messageField).text(error.message)
+            $(dialog).modal()
           }
         } else {
-          $('#txt_error').text('Server Error')
-          $('#block_error').modal()
+          $(messageField).text('Server Error')
+          $(dialog).modal()
         }
       }
     },

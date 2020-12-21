@@ -238,7 +238,7 @@ def network_interfaces():
     return jsonify(success=True, data=dict(interfaces=public.network_interfaces())), 200
 
 
-@app.route("/rest/send_log", methods=["GET"])
+@app.route("/rest/send_log", methods=["POST"])
 @fail_if_not_activated
 @login_required
 def send_log():
