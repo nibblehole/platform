@@ -153,7 +153,7 @@ export default {
     loadApp: function () {
       const error = this.$refs.error
       axios
-        .get('/rest/app', null, { params: { app_id: this.appId } })
+        .get('/rest/app', { params: { app_id: this.appId } })
         .then(resp => {
           this.info = resp.data.info
         })
