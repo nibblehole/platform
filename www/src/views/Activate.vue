@@ -222,7 +222,7 @@ export default {
           device_password: this.devicePassword
         })
         .then(() => {
-          this.$router.push('/login')
+          window.location.assign('/login')
         })
         .catch(err => {
           $('#btn_activate').button('reset')
@@ -238,7 +238,7 @@ export default {
           device_password: this.devicePassword
         })
         .then(() => {
-          this.$router.push('/login')
+          window.location.assign('/login')
         })
         .catch((err) => {
           $('#btn_activate').button('reset')

@@ -38,7 +38,6 @@ function showFieldError (field, error) {
   const errorBlockId = getErrorBlockId(field)
   const errorBlockSelector = '#' + errorBlockId
   const errorHtml = '<div class=\'alert alert-danger alert90\' id=\'' + errorBlockId + '\'><b>' + error + '</b></div>'
-  console.log(txtFieldSelector)
   $(errorHtml).insertAfter(txtFieldSelector)
   $(txtFieldSelector).bind('keyup change', function () {
     $(errorBlockSelector).remove()

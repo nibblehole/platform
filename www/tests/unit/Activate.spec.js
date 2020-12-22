@@ -63,7 +63,7 @@ test('Activate free domain', async () => {
   expect(domain).toBe('domain')
   expect(deviceUsername).toBe('user')
   expect(devicePassword).toBe('password')
-  expect(mockRouter.push).toHaveBeenCalledWith('/login')
+  expect(window.location.pathname).toBe('/login')
 
   wrapper.unmount()
 })
@@ -164,7 +164,7 @@ test('Activate custom domain', async () => {
   expect(domain).toBe('domain')
   expect(deviceUsername).toBe('user')
   expect(devicePassword).toBe('password')
-  expect(mockRouter.push).toHaveBeenCalledWith('/login')
+   expect(window.location.pathname).toBe('/')
 
   wrapper.unmount()
 })
