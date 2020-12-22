@@ -315,6 +315,7 @@ def regenerate_certificate():
 @fail_if_not_activated
 @login_required
 def deactivate():
+    logout_user()
     public.user_platform_config.set_deactivated()
     return jsonify(success=True), 200
 
