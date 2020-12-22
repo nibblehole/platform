@@ -219,14 +219,14 @@ def access():
 @login_required
 def set_access():
     public_ip = None
-    if 'public_ip' in request.args:
-        public_ip = request.args['public_ip']
+    if 'public_ip' in request.json:
+        public_ip = request.json['public_ip']
     public.set_access(
-        request.args['upnp_enabled'] == 'true',
-        request.args['external_access'] == 'true',
+        request.json['upnp_enabled'] == 'true',
+        request.json['external_access'] == 'true',
         public_ip,
-        int(request.args['certificate_port']),
-        int(request.args['access_port'])
+        int(request.json['certificate_port']),
+        int(request.json['access_port'])
     )
     return jsonify(success=True), 200
 
