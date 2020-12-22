@@ -9,8 +9,10 @@
             <div class="setline">
               <span class="span">External Access:
                 <div class="spandiv" id="external_mode">
-                  <input type="checkbox" id="tgl_external" data-on-text="ON" data-off-text="OFF" data-label-width="8"/>
-                  <i class="fa fa-circle-o-notch fa-spin switchloading opacity-invisible" id="tgl_external_loading"></i>
+                  <input type="checkbox" id="tgl_external" data-on-text="ON" data-off-text="OFF" data-label-width="8"
+                  />
+                  <i class="fa fa-circle-o-notch fa-spin switchloading opacity-invisible" id="tgl_external_loading"
+                      style="padding: 0 0 0 5px" ></i>
                 </div>
 
                 <button type=button @click="showExternalAccessInfo" class="control" style=" background:transparent;">
@@ -23,9 +25,9 @@
                 <span class="span">Auto detect IP:
                   <div class="spandiv" id="ip_autodetect">
                     <input type="checkbox" id="tgl_ip_autodetect" data-on-text="ON" data-off-text="OFF"
-                           data-label-width="8"/>
+                           data-label-width="8" />
                     <i class="fa fa-circle-o-notch fa-spin switchloading opacity-invisible"
-                       id="tgl_ip_autodetect_loading"></i>
+                        style="padding: 0 0 0 5px" id="tgl_ip_autodetect_loading"></i>
                   </div>
                 </span>
               </div>
