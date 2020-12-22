@@ -26,7 +26,7 @@
       </div>
     </div>
   </div>
-  <input id="test_parameter1" v-if="testing" />
+  <input id="test_parameter1" v-if="testing"/>
 </template>
 <script>
 import $ from 'jquery'
@@ -64,10 +64,12 @@ export default {
         })
     },
     showAxios (error) {
-      this.show({
-        status: error.response.status,
-        responseJSON: error.response.data
-      })
+      const xhr = { status: 500 }
+      if ('response' in error) {
+        xhr.status = error.response.status
+        xhr.responseJSON = error.response.data
+      }
+      this.show(xhr)
     },
     show (xhr) {
       const status = xhr.status

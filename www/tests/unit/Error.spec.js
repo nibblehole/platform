@@ -60,6 +60,18 @@ test('No data', async () => {
   wrapper.unmount()
 })
 
+test('No response', async () => {
+  const mockRouter = { push: jest.fn() }
+  const wrapper = mount(Error, { attachTo: document.body, })
+
+  await wrapper.vm.showAxios({ })
+
+  expect(mockRouter.push).toHaveBeenCalledTimes(0)
+  expect(wrapper.find('#txt_error').text()).toBe('Server Error')
+
+  wrapper.unmount()
+})
+
 test('No message', async () => {
   const mockRouter = { push: jest.fn() }
   const wrapper = mount(Error, { attachTo: document.body, })

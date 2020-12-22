@@ -14,11 +14,11 @@ test('Activate free domain', async () => {
   let devicePassword = ''
   const showError = jest.fn()
   const mockRouter = { push: jest.fn() }
-  let location = ''
+  let reloaded = false
   delete window.location
   window.location = {
-    assign (url) {
-      location = url
+    reload (resetCache) {
+      reloaded = true
     }
   }
   const mock = new MockAdapter(axios)
@@ -69,7 +69,7 @@ test('Activate free domain', async () => {
   expect(domain).toBe('domain')
   expect(deviceUsername).toBe('user')
   expect(devicePassword).toBe('password')
-  expect(location).toBe('/login')
+  expect(reloaded).toBe(true)
 
   wrapper.unmount()
 })
@@ -126,11 +126,11 @@ test('Activate custom domain', async () => {
   let devicePassword = ''
   const showError = jest.fn()
   const mockRouter = { push: jest.fn() }
-  let location = ''
+  let reloaded = false
   delete window.location
   window.location = {
-    assign (url) {
-      location = url
+    reload (resetCache) {
+      reloaded = true
     }
   }
 
@@ -177,7 +177,7 @@ test('Activate custom domain', async () => {
   expect(domain).toBe('domain')
   expect(deviceUsername).toBe('user')
   expect(devicePassword).toBe('password')
-  expect(location).toBe('/login')
+  expect(reloaded).toBe(true)
 
   wrapper.unmount()
 })

@@ -222,7 +222,7 @@ export default {
           device_password: this.devicePassword
         })
         .then(() => {
-          window.location.assign('/login')
+          window.location.reload(true)
         })
         .catch(err => {
           $('#btn_activate').button('reset')
@@ -238,7 +238,7 @@ export default {
           device_password: this.devicePassword
         })
         .then(() => {
-          window.location.assign('/login')
+          window.location.reload(true)
         })
         .catch((err) => {
           $('#btn_activate').button('reset')
