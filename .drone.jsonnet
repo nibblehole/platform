@@ -24,7 +24,7 @@ local build(arch, distro) = {
                 "mkdir -p build/platform",
                 "cd www",
                 "npm install --unsafe-perm=true",
-                "npm run test:unit",
+                "npm run test",
                 "npm run lint",
                 "npm run build",
                 "cp -r dist ../build/platform/www"

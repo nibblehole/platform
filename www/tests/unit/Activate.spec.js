@@ -7,14 +7,20 @@ import Activate from '@/views/Activate'
 jest.setTimeout(30000)
 
 test('Activate free domain', async () => {
-  let redirectEmail
-  let redirectPassword
-  let domain
-  let deviceUsername
-  let devicePassword
+  let redirectEmail = ''
+  let redirectPassword = ''
+  let domain = ''
+  let deviceUsername = ''
+  let devicePassword = ''
   const showError = jest.fn()
   const mockRouter = { push: jest.fn() }
-
+  let location = ''
+  delete window.location
+  window.location = {
+    assign (url) {
+      location = url
+    }
+  }
   const mock = new MockAdapter(axios)
   mock.onPost('/rest/activate').reply(function (config) {
     const request = JSON.parse(config.data)
@@ -63,7 +69,7 @@ test('Activate free domain', async () => {
   expect(domain).toBe('domain')
   expect(deviceUsername).toBe('user')
   expect(devicePassword).toBe('password')
-  expect(window.location.pathname).toBe('/login')
+  expect(location).toBe('/login')
 
   wrapper.unmount()
 })
@@ -74,9 +80,9 @@ test('Activate free domain error', async () => {
 
   const mock = new MockAdapter(axios)
   mock.onPost('/rest/activate').reply(500, {
-    success: false,
-    data: {}
-  }
+      success: false,
+      data: {}
+    }
   )
 
   const wrapper = mount(Activate,
@@ -115,11 +121,18 @@ test('Activate free domain error', async () => {
 })
 
 test('Activate custom domain', async () => {
-  let domain
-  let deviceUsername
-  let devicePassword
+  let domain = ''
+  let deviceUsername = ''
+  let devicePassword = ''
   const showError = jest.fn()
   const mockRouter = { push: jest.fn() }
+  let location = ''
+  delete window.location
+  window.location = {
+    assign (url) {
+      location = url
+    }
+  }
 
   const mock = new MockAdapter(axios)
   mock.onPost('/rest/activate_custom_domain').reply(function (config) {
@@ -164,7 +177,7 @@ test('Activate custom domain', async () => {
   expect(domain).toBe('domain')
   expect(deviceUsername).toBe('user')
   expect(devicePassword).toBe('password')
-   expect(window.location.pathname).toBe('/')
+  expect(location).toBe('/login')
 
   wrapper.unmount()
 })
