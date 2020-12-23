@@ -395,8 +395,8 @@ export default {
           Common.checkForServiceError(
             response.data,
             this.uiCheckAccess,
-            function (xhr, textStatus, errorThrown) {
-              that.$refs.error.show(xhr)
+            err => {
+              that.$refs.error.showAxios(err)
               that.uiCheckAccess()
             }
           )

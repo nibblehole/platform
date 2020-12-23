@@ -214,3 +214,102 @@ test('Set access and certificate ports', async () => {
   expect(savedAccessPort).toBe(2)
   wrapper.unmount()
 })
+
+test('Enable external access http error', async () => {
+  const showError = jest.fn()
+
+  const mock = new MockAdapter(axios)
+  mock.onGet('/rest/access/access').reply(200,
+    {
+      data: {
+        external_access: false,
+        upnp_available: false,
+        upnp_enabled: true,
+        public_ip: '111.111.111.111'
+      },
+      success: true
+    }
+  )
+
+  mock.onGet('/rest/access/port_mappings').reply(200, defaultPortMappings)
+  mock.onPost('/rest/access/set_access').reply(function (config) {
+    return [400, {  } ]
+  })
+
+  const wrapper = mount(Access,
+    {
+      attachTo: document.body,
+      global: {
+        stubs: {
+          Error: {
+            template: '<span/>',
+            methods: {
+              showAxios: showError
+            },
+          },
+          Dialog: true
+        }
+      }
+    }
+  )
+
+  await flushPromises()
+
+  await wrapper.find('#tgl_external').trigger('click')
+  await wrapper.find('#btn_save').trigger('click')
+
+  await flushPromises()
+
+  expect(showError).toHaveBeenCalledTimes(1)
+  wrapper.unmount()
+})
+
+test('Enable external access service error', async () => {
+  const showError = jest.fn()
+
+  const mock = new MockAdapter(axios)
+  mock.onGet('/rest/access/access').reply(200,
+    {
+      data: {
+        external_access: false,
+        upnp_available: false,
+        upnp_enabled: true,
+        public_ip: '111.111.111.111'
+      },
+      success: true
+    }
+  )
+
+  mock.onGet('/rest/access/port_mappings').reply(200, defaultPortMappings)
+  mock.onPost('/rest/access/set_access').reply(function (config) {
+    return [200, { success: false } ]
+  })
+
+  const wrapper = mount(Access,
+    {
+      attachTo: document.body,
+      global: {
+        stubs: {
+          Error: {
+            template: '<span/>',
+            methods: {
+              showAxios: showError
+            },
+          },
+          Dialog: true
+        }
+      }
+    }
+  )
+
+  await flushPromises()
+
+  await wrapper.find('#tgl_external').trigger('click')
+  await wrapper.find('#btn_save').trigger('click')
+
+  await flushPromises()
+
+  expect(showError).toHaveBeenCalledTimes(1)
+  wrapper.unmount()
+})
+
