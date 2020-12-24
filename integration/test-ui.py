@@ -190,7 +190,7 @@ def wait_or_screenshot(driver, ui_mode, screenshot_dir, method):
 
 def menu(driver, ui_mode, screenshot_dir, element_id):
     wait_driver = WebDriverWait(driver, 30)
-    retries = 5
+    retries = 10
     retry = 0
     exception = None
     while retry < retries:
