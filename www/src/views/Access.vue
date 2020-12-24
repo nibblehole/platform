@@ -48,7 +48,7 @@
 
               <div class="setline">
                 <div class="spandiv">
-                  <span class="span">Auto mode (UPnP):</span>
+                  <span class="span">Auto (UPnP):</span>
                   <Switch
                     id="tgl_upnp"
                     :checked="upnp"
@@ -81,8 +81,8 @@
                 <div class="setline">
                   <div class="spandiv">
                     <span class="span">External access</span>
-                        <span style='white-space: nowrap;'>
-                          <label for="access_port" class="span" style="font-weight: 300" >HTTPS port 443:</label>
+                    <span style='white-space: nowrap;'>
+                          <label for="access_port" class="span" style="font-weight: 300">HTTPS port 443:</label>
                           <input class="span" id="access_port" type="number"
                                  style="width: 100px; height: 30px; padding: 0 10px 0 10px"
                                  v-model.number="accessPort"

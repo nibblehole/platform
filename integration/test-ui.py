@@ -80,7 +80,7 @@ def test_settings_access(driver, ui_mode, screenshot_dir):
     screenshots(driver, screenshot_dir, 'settings_access-' + ui_mode)
 
     driver.find_element_by_id("external_mode").click()
-    wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.ID, "ip_autodetect")))
+    wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.ID, "tgl_ip_autodetect")))
     screenshots(driver, screenshot_dir, 'settings_access_external_access-' + ui_mode)
 
 
