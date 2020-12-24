@@ -15,9 +15,8 @@ const defaultPortMappings = {
 }
 
 test('Disable external access', async () => {
-  let savedExternalAccess
+  let savedExternalAccess = undefined
   const showError = jest.fn()
-  const showErrorOld = jest.fn()
 
   const mock = new MockAdapter(axios)
   mock.onGet('/rest/access/access').reply(200,
@@ -43,21 +42,29 @@ test('Disable external access', async () => {
       attachTo: document.body,
       global: {
         stubs: {
-          Error: true,
+          Error: {
+            template: '<span/>',
+            methods: {
+              showAxios: showError
+            }
+          },
+          Switch: {
+            template: '<button :id="id" />',
+            props: { id: String }
+          },
           Dialog: true
         }
       }
     }
   )
-  wrapper.vm.$refs.error.show = showErrorOld
-  wrapper.vm.$refs.error.showAxios = showError
 
   await flushPromises()
 
-  await wrapper.find('#tgl_external').trigger('click')
+  await wrapper.find('#tgl_external').trigger('toggle')
   await wrapper.find('#btn_save').trigger('click')
 
-  expect(showErrorOld).toHaveBeenCalledTimes(0)
+  await flushPromises()
+
   expect(showError).toHaveBeenCalledTimes(0)
   expect(savedExternalAccess).toBe(false)
   wrapper.unmount()
@@ -92,18 +99,25 @@ test('Enable external access', async () => {
       attachTo: document.body,
       global: {
         stubs: {
-          Error: true,
+          Error: {
+            template: '<span/>',
+            methods: {
+              showAxios: showError
+            }
+          },
+          Switch: {
+            template: '<button :id="id" />',
+            props: { id: String }
+          },
           Dialog: true
         }
       }
     }
   )
-  wrapper.vm.$refs.error.show = showErrorOld
-  wrapper.vm.$refs.error.showAxios = showError
 
   await flushPromises()
 
-  await wrapper.find('#tgl_external').trigger('click')
+  await wrapper.find('#tgl_external').trigger('toggle')
   await wrapper.find('#btn_save').trigger('click')
 
   expect(showErrorOld).toHaveBeenCalledTimes(0)
@@ -113,7 +127,7 @@ test('Enable external access', async () => {
 })
 
 test('Enable auto port mapping (upnp)', async () => {
-  let savedUpnpEnabled
+  let savedUpnpEnabled = undefined
   const showError = jest.fn()
   const showErrorOld = jest.fn()
 
@@ -141,23 +155,86 @@ test('Enable auto port mapping (upnp)', async () => {
       attachTo: document.body,
       global: {
         stubs: {
-          Error: true,
+          Error: {
+            template: '<span/>',
+            methods: {
+              showAxios: showError
+            }
+          },
+          Switch: {
+            template: '<button :id="id" />',
+            props: { id: String }
+          },
           Dialog: true
         }
       }
     }
   )
-  wrapper.vm.$refs.error.show = showErrorOld
-  wrapper.vm.$refs.error.showAxios = showError
 
   await flushPromises()
-  await wrapper.find('#tgl_external').trigger('click')
-  await wrapper.find('#tgl_upnp').trigger('click')
+  await wrapper.find('#tgl_external').trigger('toggle')
+  await wrapper.find('#tgl_upnp').trigger('toggle')
   await wrapper.find('#btn_save').trigger('click')
 
   expect(showErrorOld).toHaveBeenCalledTimes(0)
   expect(showError).toHaveBeenCalledTimes(0)
   expect(savedUpnpEnabled).toBe(true)
+  wrapper.unmount()
+})
+
+test('Ip auto detect', async () => {
+  let ipAutoDetectEnabled
+  const showError = jest.fn()
+  const showErrorOld = jest.fn()
+
+  const mock = new MockAdapter(axios)
+  mock.onGet('/rest/access/access').reply(200,
+    {
+      data: {
+        external_access: false,
+        upnp_available: false,
+        upnp_enabled: false,
+        public_ip: '111.111.111.111'
+      },
+      success: true
+    }
+  )
+
+  mock.onGet('/rest/access/port_mappings').reply(200, defaultPortMappings)
+  mock.onPost('/rest/access/set_access').reply(function (config) {
+    ipAutoDetectEnabled = JSON.parse(config.data).public_ip === undefined
+    return [200, { success: true }]
+  })
+
+  const wrapper = mount(Access,
+    {
+      attachTo: document.body,
+      global: {
+        stubs: {
+          Error: {
+            template: '<span/>',
+            methods: {
+              showAxios: showError
+            }
+          },
+          Switch: {
+            template: '<button :id="id" />',
+            props: ['id']
+          },
+          Dialog: true
+        }
+      }
+    }
+  )
+
+  await flushPromises()
+  await wrapper.find('#tgl_external').trigger('toggle')
+  await wrapper.find('#tgl_ip_autodetect').trigger('toggle')
+  await wrapper.find('#btn_save').trigger('click')
+
+  expect(showErrorOld).toHaveBeenCalledTimes(0)
+  expect(showError).toHaveBeenCalledTimes(0)
+  expect(ipAutoDetectEnabled).toBe(true)
   wrapper.unmount()
 })
 
@@ -193,17 +270,24 @@ test('Set access and certificate ports', async () => {
       attachTo: document.body,
       global: {
         stubs: {
-          Error: true,
+          Error: {
+            template: '<span/>',
+            methods: {
+              showAxios: showError
+            }
+          },
+          Switch: {
+            template: '<button :id="id" />',
+            props: ['id']
+          },
           Dialog: true
         }
       }
     }
   )
-  wrapper.vm.$refs.error.show = showErrorOld
-  wrapper.vm.$refs.error.showAxios = showError
 
   await flushPromises()
-  await wrapper.find('#tgl_external').trigger('click')
+  await wrapper.find('#tgl_external').trigger('toggle')
   await wrapper.find('#certificate_port').setValue('1')
   await wrapper.find('#access_port').setValue(2)
   await wrapper.find('#btn_save').trigger('click')
@@ -247,6 +331,10 @@ test('Enable external access http error', async () => {
               showAxios: showError
             },
           },
+          Switch: {
+            template: '<button :id="id" />',
+            props: ['id']
+          },
           Dialog: true
         }
       }
@@ -255,7 +343,7 @@ test('Enable external access http error', async () => {
 
   await flushPromises()
 
-  await wrapper.find('#tgl_external').trigger('click')
+  await wrapper.find('#tgl_external').trigger('toggle')
   await wrapper.find('#btn_save').trigger('click')
 
   await flushPromises()
@@ -296,6 +384,10 @@ test('Enable external access service error', async () => {
               showAxios: showError
             },
           },
+          Switch: {
+            template: '<button :id="id" />',
+            props: ['id']
+          },
           Dialog: true
         }
       }
@@ -304,7 +396,118 @@ test('Enable external access service error', async () => {
 
   await flushPromises()
 
-  await wrapper.find('#tgl_external').trigger('click')
+  await wrapper.find('#tgl_external').trigger('toggle')
+  await wrapper.find('#btn_save').trigger('click')
+
+  await flushPromises()
+
+  expect(showError).toHaveBeenCalledTimes(1)
+  wrapper.unmount()
+})
+
+
+test('Enable external wrong access port', async () => {
+  const showError = jest.fn()
+
+  const mock = new MockAdapter(axios)
+  mock.onGet('/rest/access/access').reply(200,
+    {
+      data: {
+        external_access: false,
+        upnp_available: false,
+        upnp_enabled: true,
+        public_ip: '111.111.111.111'
+      },
+      success: true
+    }
+  )
+
+  mock.onGet('/rest/access/port_mappings').reply(200, defaultPortMappings)
+  mock.onPost('/rest/access/set_access').reply(function (config) {
+    return [200, { success: true } ]
+  })
+
+  const wrapper = mount(Access,
+    {
+      attachTo: document.body,
+      global: {
+        stubs: {
+          Error: {
+            template: '<span/>',
+            methods: {
+              showAxios: showError
+            },
+          },
+          Switch: {
+            template: '<button :id="id" />',
+            props: ['id']
+          },
+          Dialog: true
+        }
+      }
+    }
+  )
+
+  await flushPromises()
+
+  await wrapper.find('#tgl_external').trigger('toggle')
+  await wrapper.find('#tgl_upnp').trigger('toggle')
+  await wrapper.find('#access_port').setValue(0)
+  await wrapper.find('#btn_save').trigger('click')
+
+  await flushPromises()
+
+  expect(showError).toHaveBeenCalledTimes(1)
+  wrapper.unmount()
+})
+
+test('Enable external wrong certificate port', async () => {
+  const showError = jest.fn()
+
+  const mock = new MockAdapter(axios)
+  mock.onGet('/rest/access/access').reply(200,
+    {
+      data: {
+        external_access: false,
+        upnp_available: false,
+        upnp_enabled: true,
+        public_ip: '111.111.111.111'
+      },
+      success: true
+    }
+  )
+
+  mock.onGet('/rest/access/port_mappings').reply(200, defaultPortMappings)
+  mock.onPost('/rest/access/set_access').reply(function (config) {
+    return [200, { success: true } ]
+  })
+
+  const wrapper = mount(Access,
+    {
+      attachTo: document.body,
+      global: {
+        stubs: {
+          Error: {
+            template: '<span/>',
+            methods: {
+              showAxios: showError
+            },
+          },
+          Switch: {
+            template: '<button :id="id" />',
+            props: ['id']
+          },
+          Dialog: true
+        }
+      }
+    }
+  )
+
+  await flushPromises()
+
+  await wrapper.find('#tgl_external').trigger('toggle')
+  await wrapper.find('#tgl_upnp').trigger('toggle')
+  await wrapper.find('#certificate_port').setValue(0)
   await wrapper.find('#btn_save').trigger('click')
 
   await flushPromises()

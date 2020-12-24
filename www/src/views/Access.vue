@@ -7,35 +7,39 @@
           <div class="col2">
             <h3>Domain name</h3>
             <div class="setline">
-              <span class="span">External Access:
-                <div class="spandiv" id="external_mode">
-                  <input type="checkbox" id="tgl_external" data-on-text="ON" data-off-text="OFF" data-label-width="8"
-                  />
-                  <i class="fa fa-circle-o-notch fa-spin switchloading opacity-invisible" id="tgl_external_loading"
-                      style="padding: 0 0 0 5px" ></i>
-                </div>
-
-                <button type=button @click="showExternalAccessInfo" class="control" style=" background:transparent;">
-                          <i class='fa fa-question-circle fa-lg'></i>
-                        </button>
-              </span>
+              <div class="spandiv" id="external_mode">
+                <span class="span">External Access:</span>
+                <Switch
+                  id="tgl_external"
+                  :checked="externalAccess"
+                  @toggle="toggleExternalAccess"
+                  on-label="ON"
+                  off-label="OFF"
+                />
+              </div>
+              <button type=button @click="showExternalAccessInfo" class="control" style=" background:transparent;">
+                <i class='fa fa-question-circle fa-lg'></i>
+              </button>
             </div>
             <div id="external_block" style="display: none">
               <div class="setline">
-                <span class="span">Auto detect IP:
-                  <div class="spandiv" id="ip_autodetect">
-                    <input type="checkbox" id="tgl_ip_autodetect" data-on-text="ON" data-off-text="OFF"
-                           data-label-width="8" />
-                    <i class="fa fa-circle-o-notch fa-spin switchloading opacity-invisible"
-                        style="padding: 0 0 0 5px" id="tgl_ip_autodetect_loading"></i>
-                  </div>
-                </span>
+                <div class="spandiv">
+                  <span class="span">Auto detect IP:</span>
+                  <Switch
+                    id="tgl_ip_autodetect"
+                    :checked="ipAutoDetect"
+                    @toggle="toggleIpAutoDetect"
+                    on-label="ON"
+                    off-label="OFF"
+                  />
+                </div>
               </div>
 
-              <div class="setline">
-                <span class="span">Public IP:</span>
+              <div class="setline" id="public_ip_block">
+                <label class="span" for="public_ip" style="font-weight: 300">Public IP:</label>
                 <input id="public_ip" type="text"
-                       style="width: 150px; height: 30px; padding: 0 10px 0 10px">
+                       style="width: 150px; height: 30px; padding: 0 10px 0 10px"
+                       :disabled="ipAutoDetect" v-model="publicIp">
               </div>
 
               <div class="setline">
@@ -43,52 +47,61 @@
               </div>
 
               <div class="setline">
-                <span class="span">Auto mode (UPnP):
+                <div class="spandiv">
+                  <span class="span">Auto mode (UPnP):</span>
+                  <Switch
+                    id="tgl_upnp"
+                    :checked="upnp"
+                    @toggle="toggleUpnp"
+                    on-label="ON"
+                    off-label="OFF"
+                  />
+                  <button id="upnp_warning" type=button @click="showUpnpDisabledWarning"
+                          class="control" style="background:transparent;">
+                    <i class='fa fa-exclamation-circle fa-lg' style='color: red;'></i>
+                  </button>
+                </div>
+              </div>
+              <div id="ports_block">
+                <div class="setline">
+                  <span class="span">External certificate</span>
+                  <span style='white-space: nowrap;'>
+                      <label for="certificate_port" class="span" style="font-weight: 300">HTTP port 80:</label>
+                      <input class="span" id="certificate_port" type="number"
+                             style="width: 100px; height: 30px; padding: 0 10px 0 10px"
+                             v-model.number="certificatePort"
+                      >
+                        <button id="certificate_port_warning" type=button @click="showCertificatePortWarning"
+                                class="control" style="background:transparent;">
+                          <i class='fa fa-exclamation-circle fa-lg' style='color: red;'></i>
+                        </button>
+                  </span>
+                </div>
+
+                <div class="setline">
                   <div class="spandiv">
-                    <input type="checkbox" id="tgl_upnp" data-on-text="ON" data-off-text="OFF" data-label-width="8"/>
-                    <i class="fa fa-circle-o-notch fa-spin switchloading opacity-invisible" id="tgl_upnp_loading"></i>
-                    <button id="upnp_warning" type=button @click="showUpnpDisabledWarning"
-                            class="control" style="background:transparent;">
-                      <i class='fa fa-exclamation-circle fa-lg' style='color: red;'></i>
-                    </button>
+                    <span class="span">External access</span>
+                        <span style='white-space: nowrap;'>
+                          <label for="access_port" class="span" style="font-weight: 300" >HTTPS port 443:</label>
+                          <input class="span" id="access_port" type="number"
+                                 style="width: 100px; height: 30px; padding: 0 10px 0 10px"
+                                 v-model.number="accessPort"
+                          />
+                            <button id="access_port_warning" type=button @click="showAccessPortWarning"
+                                    class="control" style="background:transparent;">
+                                <i class='fa fa-exclamation-circle fa-lg' style='color: red;'></i>
+                            </button>
+                    </span>
                   </div>
-                </span>
+                </div>
               </div>
-
-              <div class="setline">
-                  <span class="span">External certificate
-                      <span style='white-space: nowrap;'> HTTP port 80:
-                          <input id="certificate_port" type="text"
-                                 style="width: 80px; height: 30px; padding: 0 10px 0 10px">
-                          <button id="certificate_port_warning" type=button @click="showCertificatePortWarning"
-                                  class="control" style="background:transparent;">
-                              <i class='fa fa-exclamation-circle fa-lg' style='color: red;'></i>
-                          </button>
-                      </span>
-                  </span>
-
-              </div>
-
-              <div class="setline">
-                  <span class="span">External access
-                      <span style='white-space: nowrap;'> HTTPS port 443:
-                          <input id="access_port" type="text"
-                                 style="width: 80px; height: 30px; padding: 0 10px 0 10px"/>
-                          <button id="access_port_warning" type=button @click="showAccessPortWarning"
-                                  class="control" style="background:transparent;">
-                              <i class='fa fa-exclamation-circle fa-lg' style='color: red;'></i>
-                          </button>
-                      </span>
-                  </span>
-              </div>
-
             </div>
 
             <div class="setline">
               <div class="spandiv">
                 <button class="submit buttongreen control" id="btn_save" type="submit"
                         data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Working..."
-                        style="width: 150px" @click="save">Save
+                        style="width: 150px" @click="save" :disabled="progress">Save
                 </button>
               </div>
             </div>
@@ -152,117 +165,7 @@ import 'bootstrap'
 import 'bootstrap-switch'
 import * as Common from '../js/common.js'
 import axios from 'axios'
-
-function uiDisplayPortMappings (data) {
-  // console.log('show ports: ')
-
-  var certificatePortMapping = data.port_mappings.find(function (mapping) {
-    return mapping.local_port === 80
-  })
-  var certificatePort = 0
-  if (certificatePortMapping) {
-    certificatePort = certificatePortMapping.external_port
-  }
-  $('#certificate_port').val(certificatePort)
-  if (certificatePort !== 80) {
-    $('#certificate_port_warning').show('slow')
-  } else {
-    $('#certificate_port_warning').hide('slow')
-  }
-
-  var accessPortMapping = data.port_mappings.find(function (mapping) {
-    return mapping.local_port === 443
-  })
-  var accessPort = 0
-  if (accessPortMapping) {
-    accessPort = accessPortMapping.external_port
-  }
-  $('#access_port').val(accessPort)
-  if (accessPort !== 443) {
-    $('#access_port_warning').show('slow')
-  } else {
-    $('#access_port_warning').hide('slow')
-  }
-}
-
-function uiDisplayAccess (data) {
-  var accessData = data.data
-  // console.log('show external access: ' + accessData.external_access)
-  $('#tgl_external').bootstrapSwitch('disabled', false)
-  $('#tgl_external').bootstrapSwitch('state', accessData.external_access, true)
-  $('#tgl_external_loading').removeClass('opacity-visible')
-
-  $('#tgl_ip_autodetect').bootstrapSwitch('disabled', false)
-
-  $('#tgl_ip_autodetect_loading').removeClass('opacity-visible')
-  let ipAutodetectEnabled
-  if ('public_ip' in accessData) {
-    ipAutodetectEnabled = false
-    $('#public_ip').val(accessData.public_ip)
-  } else {
-    ipAutodetectEnabled = true
-    $('#public_ip').val('')
-  }
-
-  $('#tgl_ip_autodetect').bootstrapSwitch('state', ipAutodetectEnabled)
-
-  $('#tgl_upnp').bootstrapSwitch('disabled', false)
-  $('#tgl_upnp').bootstrapSwitch('state', accessData.upnp_enabled)
-  $('#tgl_upnp_loading').removeClass('opacity-visible')
-
-  if (accessData.upnp_available) {
-    $('#upnp_warning').hide('slow')
-  } else {
-    $('#upnp_warning').show('slow')
-  }
-
-  if (accessData.upnp_available) {
-    $('#label_upnp').css('color', 'black')
-  } else {
-    $('#label_upnp').css('color', 'red')
-  }
-
-  $('#btn_save').button('reset')
-
-  $('#tgl_external').bootstrapSwitch('disabled', false)
-  $('#tgl_upnp').bootstrapSwitch('disabled', false)
-
-  uiPrepareExternalAccess()
-  uiPrepareAddress()
-  uiUpnp()
-}
-
-function disableAccessControls (disabled) {
-  $('#tgl_external').bootstrapSwitch('disabled', disabled)
-  $('#tgl_ip_autodetect').bootstrapSwitch('disabled', disabled)
-  $('#tgl_upnp').bootstrapSwitch('disabled', disabled)
-  $('#public_ip').prop('disabled', disabled)
-  $('#certificate_port').prop('disabled', disabled)
-  $('#access_port').prop('disabled', disabled)
-}
-
-function uiPrepareExternalAccess () {
-  var toggle = $('#tgl_external')
-  var enabled = toggle.bootstrapSwitch('state')
-  if (enabled) {
-    $('#external_block').show('slow')
-  } else {
-    $('#external_block').hide('slow')
-  }
-}
-
-function uiPrepareAddress () {
-  var toggle = $('#tgl_ip_autodetect')
-  var enabled = toggle.bootstrapSwitch('state')
-  $('#public_ip').prop('disabled', enabled)
-}
-
-function uiUpnp () {
-  var toggle = $('#tgl_upnp')
-  var enabled = toggle.bootstrapSwitch('state')
-  $('#certificate_port').prop('disabled', enabled)
-  $('#access_port').prop('disabled', enabled)
-}
+import Switch from '@/components/Switch'
 
 function isValidPort (port) {
   return Number.isNaN(port) || port < 1 || port > 65535
@@ -285,35 +188,78 @@ export default {
   },
   data () {
     return {
-      interfaces: undefined
+      interfaces: undefined,
+      externalAccess: false,
+      ipAutoDetect: false,
+      publicIp: 0,
+      upnp: false,
+      upnpAvailable: false,
+      accessPort: { type: Number, default: 0 },
+      certificatePort: { type: Number, default: 0 },
+      progress: false,
+      saveBtn: HTMLButtonElement
     }
   },
   components: {
     Error,
-    Dialog
+    Dialog,
+    Switch
+  },
+  watch: {
+    externalAccess (val) {
+      if (val) {
+        $('#external_block').show('slow')
+      } else {
+        $('#external_block').hide('slow')
+      }
+    },
+    ipAutoDetect (val) {
+      if (val) {
+        $('#public_ip_block').hide('slow')
+      } else {
+        $('#public_ip_block').show('slow')
+      }
+    },
+    upnp (val) {
+      if (val) {
+        $('#ports_block').hide('slow')
+      } else {
+        $('#ports_block').show('slow')
+      }
+    },
+    upnpAvailable (val) {
+      if (val) {
+        $('#upnp_warning').hide('slow')
+        $('#label_upnp').css('color', 'black')
+      } else {
+        $('#upnp_warning').show('slow')
+        $('#label_upnp').css('color', 'red')
+      }
+    },
+    progress (val) {
+      if (val) {
+        $('#btn_save').button('loading')
+      } else {
+        $('#btn_save').button('reset')
+      }
+    },
+    certificatePort (val) {
+      if (val !== 80) {
+        $('#certificate_port_warning').show('slow')
+      } else {
+        $('#certificate_port_warning').hide('slow')
+      }
+    },
+    accessPort (val) {
+      if (val !== 443) {
+        $('#access_port_warning').show('slow')
+      } else {
+        $('#access_port_warning').hide('slow')
+      }
+    }
   },
   mounted () {
-    $('[type=\'checkbox\']').each(function () {
-      $(this).bootstrapSwitch()
-    })
-
-    $('#tgl_external').on('switchChange.bootstrapSwitch', function (event, state) {
-      // console.log('change external access: ' + state)
-      event.preventDefault()
-      uiPrepareExternalAccess()
-    })
-
-    $('#tgl_ip_autodetect').on('switchChange.bootstrapSwitch', function (event, state) {
-      event.preventDefault()
-      uiPrepareAddress()
-    })
-
-    $('#tgl_upnp').on('switchChange.bootstrapSwitch', function (event, state) {
-      event.preventDefault()
-      uiUpnp()
-    })
-
-    this.uiCheckAccess()
+    this.reload()
   },
   methods: {
     showUpnpDisabledWarning () {
@@ -328,83 +274,100 @@ export default {
     showExternalAccessInfo () {
       this.$refs.external_access_info.show()
     },
-    uiCheckAccess () {
+    reload () {
+      const that = this
       const error = this.$refs.error
-      disableAccessControls(true)
+      this.progress = true
 
-      $('#tgl_external_loading').addClass('opacity-visible')
-      $('#tgl_upnp_loading').addClass('opacity-visible')
-      $('#tgl_ip_autodetect_loading').addClass('opacity-visible')
-      $('#btn_save').button('loading')
-
+      const onError = (err) => {
+        error.showAxios(err)
+        this.reloadPortMappings()
+      }
+      const onComplete = (data) => {
+        const accessData = data
+        that.externalAccess = accessData.external_access
+        if ('public_ip' in accessData) {
+          that.ipAutoDetect = false
+          that.publicIp = accessData.public_ip
+        } else {
+          that.ipAutoDetect = true
+        }
+        that.upnp = accessData.upnp_enabled
+        that.upnpAvailable = accessData.upnp_available
+        this.reloadPortMappings()
+      }
       axios.get('/rest/access/access')
-        .then((data) => {
-          Common.checkForServiceError(
-            data,
-            () => uiDisplayAccess(data.data),
-            err => error.show(err))
-        })
-        .catch(err => error.showAxios(err))
-
+        .then(resp => Common.checkForServiceError(resp.data.data, () => onComplete(resp.data.data), onError))
+        .catch(onError)
+    },
+    reloadPortMappings () {
       axios.get('/rest/access/port_mappings')
-        .then(resp => uiDisplayPortMappings(resp.data))
-        .catch(err => error.showAxios(err))
+        .then(resp => {
+          const certificatePortMapping = resp.data.port_mappings.find(function (mapping) {
+            return mapping.local_port === 80
+          })
+          if (certificatePortMapping) {
+            this.certificatePort = certificatePortMapping.external_port
+          }
+          const accessPortMapping = resp.data.port_mappings.find(function (mapping) {
+            return mapping.local_port === 443
+          })
+          if (accessPortMapping) {
+            this.accessPort = accessPortMapping.external_port
+          }
+          this.progress = false
+        })
+        .catch(err => {
+          error.showAxios(err)
+          this.progress = false
+        })
     },
     save (event) {
+      this.progress = true
+
       event.preventDefault()
       const that = this
-      const accessEnabled = $('#tgl_external').bootstrapSwitch('state')
       const requestData = {
-        external_access: accessEnabled,
+        external_access: this.externalAccess,
         upnp_enabled: false,
         certificate_port: 0,
         access_port: 0
       }
-      // console.log('save external access: ' + accessEnabled)
-      if (accessEnabled) {
-        const upnpEnabled = $('#tgl_upnp').bootstrapSwitch('state')
-        requestData.upnp_enabled = upnpEnabled
-        if (!upnpEnabled) {
-          const certificatePortString = $('#certificate_port').val()
-          const certificatePort = parseInt(certificatePortString)
-          const accessPortString = $('#access_port').val()
-          const accessPort = parseInt(accessPortString)
-          if (isValidPort(certificatePort)) {
-            this.$refs.error.show(error('certificate port (' + certificatePortString + ') has to be between 1 and 65535'))
+      if (this.externalAccess) {
+        requestData.upnp_enabled = this.upnp
+        if (!this.upnp) {
+          if (isValidPort(this.certificatePort)) {
+            this.$refs.error.showAxios(error('certificate port (' + this.certificatePort + ') has to be between 1 and 65535'))
             return
           }
-          requestData.certificate_port = certificatePort
-          if (isValidPort(accessPort)) {
-            this.$refs.error.show(error('access port (' + accessPortString + ') has to be between 1 and 65535'))
+          requestData.certificate_port = this.certificatePort
+          if (isValidPort(this.accessPort)) {
+            this.$refs.error.showAxios(error('access port (' + this.accessPort + ') has to be between 1 and 65535'))
             return
           }
-          requestData.access_port = accessPort
+          requestData.access_port = this.accessPort
         }
-        const ipAutoDetect = $('#tgl_ip_autodetect').bootstrapSwitch('state')
-        const publicIp = $('#public_ip').val().trim()
-        if (!ipAutoDetect) {
-          requestData.public_ip = publicIp
+        if (!this.ipAutoDetect) {
+          requestData.public_ip = this.publicIp
         }
       }
 
-      disableAccessControls(true)
-      const btn = $('#btn_save')
-      btn.button('loading')
+      const onError = (err) => {
+        that.$refs.error.showAxios(err)
+        that.reload()
+      }
       axios.post('/rest/access/set_access', requestData)
-        .then(response => {
-          Common.checkForServiceError(
-            response.data,
-            this.uiCheckAccess,
-            err => {
-              that.$refs.error.showAxios(err)
-              that.uiCheckAccess()
-            }
-          )
-        })
-        .catch(err => {
-          that.$refs.error.showAxios(err)
-          this.uiCheckAccess()
-        })
+        .then(response => Common.checkForServiceError(response.data, this.reload, onError))
+        .catch(onError)
+    },
+    toggleExternalAccess () {
+      this.externalAccess = !this.externalAccess
+    },
+    toggleIpAutoDetect () {
+      this.ipAutoDetect = !this.ipAutoDetect
+    },
+    toggleUpnp () {
+      this.upnp = !this.upnp
     }
   }
 }

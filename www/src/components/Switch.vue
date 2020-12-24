@@ -1,15 +1,15 @@
 <template>
   <label>
-    <input ref="switch"
+    <input :id="id"
+           ref="switch"
            type="checkbox"
            :data-on-text="onLabel"
            :data-off-text="offLabel"
            data-label-width="8"
-           @click="$emit('toggle')"
     />
   </label>
-  <i style="margin-left: 10px" class="fa fa-circle-o-notch fa-spin switchloading"
-     :class="{ 'opacity-visible': !!progress, 'opacity-invisible': !!!progress }"></i>
+  <i style="margin-left: 5px" class="fa fa-circle-o-notch fa-spin switchloading"
+     :class="{ 'opacity-visible': progress, 'opacity-invisible': !progress }"></i>
 </template>
 <script>
 import 'bootstrap'
@@ -20,8 +20,9 @@ export default {
   name: 'Switch',
   emits: ['toggle'],
   props: {
-    checked: Boolean,
-    progress: Boolean,
+    id: String,
+    checked: { type: Boolean, default: false },
+    progress: { type: Boolean, default: false },
     onLabel: String,
     offLabel: String
   },
